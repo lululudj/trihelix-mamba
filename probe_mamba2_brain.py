@@ -179,7 +179,8 @@ def main():
     p = argparse.ArgumentParser(description="Mamba2 大脑模型退化诊断")
     p.add_argument("--model", required=True,
                    choices=["three_chain_mamba2", "three_chain_mamba2_lite",
-                            "three_chain_mamba2_bp", "three_chain"])
+                            "three_chain_mamba2_bp", "three_chain_mamba2_bpv2",
+                            "three_chain", "transformer"])
     p.add_argument("--config", default="configs/matched_mamba2.yaml")
     p.add_argument("--max_steps", type=int, default=100)
     p.add_argument("--seed", type=int, default=42)

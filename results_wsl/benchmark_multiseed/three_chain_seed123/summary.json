@@ -1,0 +1,8 @@
+{
+  "model": "three_chain",
+  "seed": 123,
+  "params": 4768962,
+  "max_steps": 3000,
+  "best_val": 0.5943778430969984,
+  "elapsed": 772.6
+}

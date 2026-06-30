@@ -1,0 +1,8 @@
+{
+  "model": "concat_mamba",
+  "seed": 123,
+  "params": 1347600,
+  "max_steps": 2000,
+  "best_val": 0.5653196714252611,
+  "elapsed": 309.2
+}

@@ -1,0 +1,8 @@
+{
+  "model": "three_chain_mamba2",
+  "seed": 42,
+  "params": 3263440,
+  "max_steps": 2000,
+  "best_val": 0.22963672887604192,
+  "elapsed": 804.8
+}

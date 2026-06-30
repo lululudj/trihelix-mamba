@@ -1,0 +1,90 @@
+{
+  "experiment": "exp2_causal_needle",
+  "description": "因果律大海捞针 - 长序列反事实推演基准",
+  "config": {
+    "num_sequences": 10,
+    "steps_per_seq": 5000
+  },
+  "questions": [
+    {
+      "seq_id": 0,
+      "total_steps": 5000,
+      "question": "在世界日志中，第1047步发生了一笔交易: \"交易: NPC_2->NPC_3 3x铁剑\"。如果这笔交易没有发生（NPC_2没有把那批铁剑交给NPC_3），那么在第4999步时，NPC_3的背包里有几把铁剑？",
+      "answer": 244,
+      "event_step": 1047,
+      "event_desc": "交易: NPC_2->NPC_3 3x铁剑"
+    },
+    {
+      "seq_id": 1,
+      "total_steps": 5000,
+      "question": "在世界日志中，第278步发生了一笔交易: \"交易: NPC_1->NPC_0 2x金币\"。如果这笔交易没有发生（NPC_1没有把那批金币交给NPC_0），那么在第4999步时，NPC_0的背包里有几把金币？",
+      "answer": 335,
+      "event_step": 278,
+      "event_desc": "交易: NPC_1->NPC_0 2x金币"
+    },
+    {
+      "seq_id": 2,
+      "total_steps": 5000,
+      "question": "在世界日志中，第2641步发生了一笔交易: \"交易: NPC_2->NPC_1 2x金币\"。如果这笔交易没有发生（NPC_2没有把那批金币交给NPC_1），那么在第4999步时，NPC_1的背包里有几把金币？",
+      "answer": 260,
+      "event_step": 2641,
+      "event_desc": "交易: NPC_2->NPC_1 2x金币"
+    },
+    {
+      "seq_id": 3,
+      "total_steps": 5000,
+      "question": "在世界日志中，第2330步发生了一笔交易: \"交易: NPC_3->NPC_1 2x木盾\"。如果这笔交易没有发生（NPC_3没有把那批木盾交给NPC_1），那么在第4999步时，NPC_1的背包里有几把木盾？",
+      "answer": 386,
+      "event_step": 2330,
+      "event_desc": "交易: NPC_3->NPC_1 2x木盾"
+    },
+    {
+      "seq_id": 4,
+      "total_steps": 5000,
+      "question": "在世界日志中，第2076步发生了一笔交易: \"交易: NPC_0->NPC_2 2x金币\"。如果这笔交易没有发生（NPC_0没有把那批金币交给NPC_2），那么在第4999步时，NPC_2的背包里有几把金币？",
+      "answer": 255,
+      "event_step": 2076,
+      "event_desc": "交易: NPC_0->NPC_2 2x金币"
+    },
+    {
+      "seq_id": 5,
+      "total_steps": 5000,
+      "question": "在世界日志中，第1318步发生了一笔交易: \"交易: NPC_0->NPC_2 2x木盾\"。如果这笔交易没有发生（NPC_0没有把那批木盾交给NPC_2），那么在第4999步时，NPC_2的背包里有几把木盾？",
+      "answer": 330,
+      "event_step": 1318,
+      "event_desc": "交易: NPC_0->NPC_2 2x木盾"
+    },
+    {
+      "seq_id": 6,
+      "total_steps": 5000,
+      "question": "在世界日志中，第1039步发生了一笔交易: \"交易: NPC_2->NPC_3 3x金币\"。如果这笔交易没有发生（NPC_2没有把那批金币交给NPC_3），那么在第4999步时，NPC_3的背包里有几把金币？",
+      "answer": 421,
+      "event_step": 1039,
+      "event_desc": "交易: NPC_2->NPC_3 3x金币"
+    },
+    {
+      "seq_id": 7,
+      "total_steps": 5000,
+      "question": "在世界日志中，第868步发生了一笔交易: \"交易: NPC_3->NPC_2 3x药水\"。如果这笔交易没有发生（NPC_3没有把那批药水交给NPC_2），那么在第4999步时，NPC_2的背包里有几把药水？",
+      "answer": 410,
+      "event_step": 868,
+      "event_desc": "交易: NPC_3->NPC_2 3x药水"
+    },
+    {
+      "seq_id": 8,
+      "total_steps": 5000,
+      "question": "在世界日志中，第3900步发生了一笔交易: \"交易: NPC_0->NPC_2 2x药水\"。如果这笔交易没有发生（NPC_0没有把那批药水交给NPC_2），那么在第4999步时，NPC_2的背包里有几把药水？",
+      "answer": 283,
+      "event_step": 3900,
+      "event_desc": "交易: NPC_0->NPC_2 2x药水"
+    },
+    {
+      "seq_id": 9,
+      "total_steps": 5000,
+      "question": "在世界日志中，第329步发生了一笔交易: \"交易: NPC_1->NPC_2 3x药水\"。如果这笔交易没有发生（NPC_1没有把那批药水交给NPC_2），那么在第4999步时，NPC_2的背包里有几把药水？",
+      "answer": 249,
+      "event_step": 329,
+      "event_desc": "交易: NPC_1->NPC_2 3x药水"
+    }
+  ]
+}

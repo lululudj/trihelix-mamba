@@ -28,7 +28,7 @@ from utils import (
 
 
 MODELS = ["three_chain", "three_chain_mamba2", "three_chain_mamba2_lite",
-          "three_chain_mamba2_bp",
+          "three_chain_mamba2_bp", "three_chain_mamba2_bpv2",
           "single_chain", "concat_mamba", "transformer",
           "gnn", "three_chain_no_eagle", "three_chain_no_bind", "three_chain_bp"]
 

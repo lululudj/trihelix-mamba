@@ -1,0 +1,41 @@
+{
+  "experiment": "exp1_chain_ablation",
+  "probing": {
+    "spatial_probe": {
+      "chain": "space chain(mamba_s)",
+      "accuracy": 1.0,
+      "target": "row density"
+    },
+    "causal_probe": {
+      "chain": "causal chain(mamba_c)",
+      "accuracy": 1.0,
+      "target": "action type"
+    },
+    "temporal_probe": {
+      "chain": "time chain(mamba_t)",
+      "accuracy": 1.0,
+      "target": "time step"
+    }
+  },
+  "ablation": {
+    "normal": {
+      "acc_final": 0.6833333551883698,
+      "changed_acc": 0.47962223887443545
+    },
+    "ablate_spatial": {
+      "acc_final": 0.6833333551883698,
+      "changed_acc": 0.47962223887443545,
+      "collapse_pct": 0.0
+    },
+    "ablate_causal": {
+      "acc_final": 0.27777778506278994,
+      "changed_acc": 0.18720245808362962,
+      "collapse_pct": 59.3
+    },
+    "ablate_temporal": {
+      "acc_final": 0.6833333551883698,
+      "changed_acc": 0.47962223887443545,
+      "collapse_pct": 0.0
+    }
+  }
+}

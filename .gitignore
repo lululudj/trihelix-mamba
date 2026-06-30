@@ -1,20 +1,31 @@
-# ===== 大文件 / 二进制 (不进 git) =====
+# ===== Large binaries (never commit) =====
 *.pt
 *.npz
 *.pth
 *.ckpt
 *.bin
+*.onnx
 
-# ===== 数据与结果 (可重新生成) =====
-data/
-data_cache/
+# ===== Exception: include OOD test data for reproducibility (6.2M, 72 files) =====
+!data/ood_T150/
+!data/ood_T150/**
+
+# ===== Data: exclude large/generated, keep OOD test set + scripts =====
+data/data/
+data/data_cache/
+data/ood_T200_noise/
+data/ood_T250_mask/
 data_split/
-results_wsl/
+data_cache/
+
+# ===== Results: exclude checkpoints, keep JSON metrics (for reproducibility) =====
+results_wsl/**/*.pt
+results_wsl/**/*.npz
 results/
 runs/
 killer_experiments/
 
-# ===== Python 缓存 =====
+# ===== Python cache =====
 __pycache__/
 *.pyc
 *.pyo
@@ -22,12 +33,12 @@ __pycache__/
 .pytest_cache/
 *.egg-info/
 
-# ===== 日志 =====
+# ===== Logs =====
 *.log
 *.out
 *.err
 
-# ===== 环境 / IDE =====
+# ===== Environment / IDE =====
 .vscode/
 .idea/
 .trae/
@@ -36,7 +47,6 @@ __pycache__/
 .DS_Store
 Thumbs.db
 
-# ===== 临时文件 =====
+# ===== Temp files =====
 _*.txt
-_bp_2000_log.txt
 safe_benchmark.log

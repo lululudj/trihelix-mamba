@@ -1,0 +1,8 @@
+{
+  "model": "single_chain",
+  "seed": 456,
+  "params": 1148688,
+  "max_steps": 3000,
+  "best_val": 0.5783814841917917,
+  "elapsed": 676.2
+}

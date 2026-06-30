@@ -1,0 +1,8 @@
+{
+  "model": "transformer",
+  "seed": 0,
+  "params": 1852688,
+  "max_steps": 3000,
+  "best_val": 0.6437785411436184,
+  "elapsed": 625.0
+}

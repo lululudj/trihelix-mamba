@@ -1,0 +1,98 @@
+{
+  "experiment": "exp4_maze_navigation",
+  "num_trials": 10,
+  "maze_size": 8,
+  "avg_compression_ratio": 0.3572,
+  "results": [
+    {
+      "trial": 0,
+      "maze_size": 8,
+      "steps": 200,
+      "keypoints": 25,
+      "m3_snapshots": 160,
+      "compression_ratio": 0.7960199004975125,
+      "trajectory_length": 201
+    },
+    {
+      "trial": 1,
+      "maze_size": 8,
+      "steps": 200,
+      "keypoints": 23,
+      "m3_snapshots": 12,
+      "compression_ratio": 0.05970149253731343,
+      "trajectory_length": 201
+    },
+    {
+      "trial": 2,
+      "maze_size": 8,
+      "steps": 200,
+      "keypoints": 23,
+      "m3_snapshots": 104,
+      "compression_ratio": 0.5174129353233831,
+      "trajectory_length": 201
+    },
+    {
+      "trial": 3,
+      "maze_size": 8,
+      "steps": 200,
+      "keypoints": 27,
+      "m3_snapshots": 105,
+      "compression_ratio": 0.5223880597014925,
+      "trajectory_length": 201
+    },
+    {
+      "trial": 4,
+      "maze_size": 8,
+      "steps": 200,
+      "keypoints": 25,
+      "m3_snapshots": 100,
+      "compression_ratio": 0.4975124378109453,
+      "trajectory_length": 201
+    },
+    {
+      "trial": 5,
+      "maze_size": 8,
+      "steps": 200,
+      "keypoints": 24,
+      "m3_snapshots": 23,
+      "compression_ratio": 0.11442786069651742,
+      "trajectory_length": 201
+    },
+    {
+      "trial": 6,
+      "maze_size": 8,
+      "steps": 200,
+      "keypoints": 24,
+      "m3_snapshots": 6,
+      "compression_ratio": 0.029850746268656716,
+      "trajectory_length": 201
+    },
+    {
+      "trial": 7,
+      "maze_size": 8,
+      "steps": 200,
+      "keypoints": 23,
+      "m3_snapshots": 9,
+      "compression_ratio": 0.04477611940298507,
+      "trajectory_length": 201
+    },
+    {
+      "trial": 8,
+      "maze_size": 8,
+      "steps": 200,
+      "keypoints": 24,
+      "m3_snapshots": 9,
+      "compression_ratio": 0.04477611940298507,
+      "trajectory_length": 201
+    },
+    {
+      "trial": 9,
+      "maze_size": 8,
+      "steps": 200,
+      "keypoints": 25,
+      "m3_snapshots": 190,
+      "compression_ratio": 0.945273631840796,
+      "trajectory_length": 201
+    }
+  ]
+}
