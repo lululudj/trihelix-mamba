@@ -1,0 +1,52 @@
+# 三链 DNA-Mamba2 对照实验配置
+# 与 default.yaml 完全对齐(严格控制变量), 仅用于标识 Mamba2 实验组
+# 训练命令: python train.py --model three_chain_mamba2 --config configs/matched_mamba2.yaml
+
+# ========== 任务设定 ==========
+task:
+  cell_types: 16          # C: 空格(0) + 智能体ID(1-12) + 物品ID(13-15)
+  action_dim: 5           # A: 上/下/左/右/停留
+
+# ========== 模型默认 ==========
+model:
+  d_model: 256           # 每条链的隐藏维度
+  n_layers: 2             # 每条链的 Mamba2 层数
+  bind_heads: 4           # CrossAttn 头数(Lite 版用)
+  fusion_hidden: 512
+
+# ========== Eagle 校验 (仅 Lite 版有 eagle 属性) ==========
+eagle:
+  tau_init: 1.0e9         # 训练初期 τ = +∞（关闭校验）
+  tau_target: 1.0         # 退火目标
+  tau_warmup_steps: 2000  # 退火开始步
+  tau_anneal_steps: 10000 # 退火持续步
+
+# ========== 数据 ==========
+data:
+  root: ./data_cache
+  num_train: 8000
+  num_val: 1000
+  num_test: 1000
+  N_choices: [6, 8, 12]
+  K_choices: [4, 8, 12]
+  T_choices: [30, 60, 100]
+  p_transfer_choices: [0.0, 0.3, 0.6]
+  scenario_mix: {random: 0.5, goal_directed: 0.3, adversarial: 0.2}
+
+# ========== 训练 ==========
+train:
+  batch_size: 16          # 与 default 对齐
+  max_steps: 50000
+  lr: 3.0e-4
+  weight_decay: 0.01
+  warmup_steps: 500
+  loss_aux_weight: 0.3    # \hat{S}_t 的 CE 权重
+  grad_clip: 1.0
+  seed: 0
+
+# ========== 评估 ==========
+eval:
+  acc_steps: [1, 5, 10, 30, 60, 100]
+  ood_T: [30, 60, 100, 150]
+  ood_N: [6, 8, 12, 16]
+  tau_sweep: [0.5, 1.0, 2.0, 5.0, 1.0e9]

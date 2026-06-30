@@ -1,0 +1,71 @@
+data:
+  K_choices:
+  - 4
+  - 8
+  - 12
+  N_choices:
+  - 6
+  - 8
+  - 12
+  T_choices:
+  - 30
+  - 60
+  - 100
+  num_test: 1000
+  num_train: 8000
+  num_val: 1000
+  p_transfer_choices:
+  - 0.0
+  - 0.3
+  - 0.6
+  root: ./data_cache
+  scenario_mix:
+    adversarial: 0.2
+    goal_directed: 0.3
+    random: 0.5
+eagle:
+  tau_anneal_steps: 10000
+  tau_init: 1.0e9
+  tau_target: 1.0
+  tau_warmup_steps: 2000
+eval:
+  acc_steps:
+  - 1
+  - 5
+  - 10
+  - 30
+  - 60
+  - 100
+  ood_N:
+  - 6
+  - 8
+  - 12
+  - 16
+  ood_T:
+  - 30
+  - 60
+  - 100
+  - 150
+  tau_sweep:
+  - 0.5
+  - 1.0
+  - 2.0
+  - 5.0
+  - 1.0e9
+model:
+  bind_heads: 4
+  d_model: 300
+  fusion_hidden: 512
+  n_layers: 2
+task:
+  action_dim: 5
+  cell_types: 16
+train:
+  batch_size: 8
+  grad_clip: 1.0
+  loss_aux_weight: 0.3
+  lr: 0.0003
+  max_steps: 2000
+  seed: 0
+  warmup_steps: 500
+  weight_decay: 0.01

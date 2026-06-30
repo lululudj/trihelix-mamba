@@ -1,0 +1,42 @@
+# ===== 大文件 / 二进制 (不进 git) =====
+*.pt
+*.npz
+*.pth
+*.ckpt
+*.bin
+
+# ===== 数据与结果 (可重新生成) =====
+data/
+data_cache/
+data_split/
+results_wsl/
+results/
+runs/
+killer_experiments/
+
+# ===== Python 缓存 =====
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+*.egg-info/
+
+# ===== 日志 =====
+*.log
+*.out
+*.err
+
+# ===== 环境 / IDE =====
+.vscode/
+.idea/
+.trae/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# ===== 临时文件 =====
+_*.txt
+_bp_2000_log.txt
+safe_benchmark.log

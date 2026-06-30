@@ -1,0 +1,17 @@
+# TriHelix-Mamba 依赖
+# Python >= 3.10 (3.14 可能缺 mamba_ssm 预编译 wheel)
+
+# 核心
+torch>=2.1
+numpy>=1.24
+pyyaml>=6.0
+matplotlib>=3.7
+
+# Mamba2 (SSD) — 需 CUDA, 安装前先装 triton
+# pip install triton
+mamba_ssm>=2.2.0
+causal_conv1d>=1.4.0
+
+# 可选: ONNX 边缘部署 (阶段 2)
+# onnx>=1.16
+# onnxruntime>=1.17
