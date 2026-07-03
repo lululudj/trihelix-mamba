@@ -74,9 +74,9 @@
 
 ```bash
 # 1. 下载预训练权重（从 GitHub Release 或 GitLink Release）
-#    GitHub:  https://github.com/lulululudj/trihelix-mamba/releases/download/v1.0-weights/best.pt
+#    GitHub:  https://github.com/lululudj/trihelix-mamba/releases/download/v1.0-weights/best.pt
 #    GitLink: https://www.gitlink.org.cn/lulululudj/ThreeChainMamba/releases
-curl -L -o best.pt https://github.com/lulululudj/trihelix-mamba/releases/download/v1.0-weights/best.pt
+curl -L -o best.pt https://github.com/lululudj/trihelix-mamba/releases/download/v1.0-weights/best.pt
 
 # 2. 直接跑 OOD 长程评估（训练 T=100 → 评估 T=150，1.5× 外推）
 python eval_ood.py --checkpoint best.pt \
@@ -116,7 +116,7 @@ python scripts_sdd/eval_negative_shadow.py \
 
 **复现实验数据**：41+ 实验原始指标 JSON 留存于 `results_stage2/`（SDD 真实数据）、`results_stage3/`（机制消融）、`results_wsl/`（WSL2 本地基准）目录，指标可追溯。
 
-> 📌 **关于模型权重**：模型权重文件因体积较大未上传至 git 仓库，所有实验均可通过训练脚本从零复现，指标原始数据已全部开源留存（`results_stage2/`、`results_stage3/`、`results_wsl/`）。3.26M GridWorld 预训练权重已通过 [Release](https://github.com/lulululudj/trihelix-mamba/releases) 提供「秒级验证」通道（见上方 📦 段）。
+> 📌 **关于模型权重**：模型权重文件因体积较大未上传至 git 仓库，所有实验均可通过训练脚本从零复现，指标原始数据已全部开源留存（`results_stage2/`、`results_stage3/`、`results_wsl/`）。3.26M GridWorld 预训练权重已通过 [Release](https://github.com/lululudj/trihelix-mamba/releases) 提供「秒级验证」通道（见上方 📦 段）。
 
 ---
 
@@ -414,7 +414,7 @@ trihelix-mamba/
   title={ThreeChainMamba2: Three-Chain DNA-Mamba2 for Long-Range Spatiotemporal Extrapolation},
   author={lulululudj},
   year={2026},
-  url={https://github.com/lulululudj/trihelix-mamba}
+  url={https://github.com/lululudj/trihelix-mamba}
 }
 ```
 
