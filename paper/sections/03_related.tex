@@ -1,0 +1,50 @@
+\section{Related Work}
+\label{sec:related}
+
+\paragraph{State-space models.}
+Structured state-space models (SSMs)~\cite{hippo,s4} recast sequence modelling
+as linear time-invariant systems learned in a structured basis (HiPPO), with
+S4~\cite{s4} making such models practical for long sequences. Mamba~\cite{mamba}
+introduced \emph{selectivity}---input-dependent state parameters---yielding a
+linear-time model competitive with attention. Mamba2~\cite{mamba2} reframed
+selective SSMs through \emph{structured state-space duality} (SSD), connecting
+them to linear attention and enabling a faster, hardware-friendly kernel. We
+build on Mamba2 as our per-chain backbone. RWKV~\cite{rwkv} and
+hybrid SSM/attention designs~\cite{poli2023strip} pursue similar goals of
+linear-time long-context modelling; we do not compare against them directly but
+our matched-parameter Transformer ablation isolates the SSM-vs-attention axis.
+
+\paragraph{Transformers and long-range generalisation.}
+Transformers~\cite{transformer} dominate sequence modelling but are known to
+struggle with systematic length generalisation, motivating benchmarks such as
+Long Range Arena~\cite{tay2020long}. Our matched-parameter ablation
+(\cref{sec:exp-ablation}) provides a controlled, same-budget contrast in the
+world-state-extrapolation setting: an equally sized Transformer collapses to
+the all-zero predictor where the three-chain SSM does not, suggesting the
+failure is an inductive-bias mismatch rather than a capacity issue.
+
+\paragraph{World models.}
+Learned world models~\cite{worldmodels,dreamer} roll latent dynamics forward to
+imagine trajectories, typically for control. They are usually evaluated
+in-distribution. Our setting is complementary: we evaluate \emph{extrapolation}
+beyond the training horizon on the raw, discrete state space rather than a
+learned latent, exposing a degenerate-prediction failure mode that latent
+world-model benchmarks often mask.
+
+\paragraph{Grid-world benchmarks.}
+Grid worlds are standard generalisation probes in reinforcement
+learning~\cite{gridworld}. We use a deterministic multi-agent GridWorld
+($N{=}8$, $K{=}8$) as a controllable prediction benchmark: the dynamics are
+known, the state is discrete and sparse, and the difficulty is entirely in
+\emph{rolling forward longer than trained}---precisely the regime where
+degenerate prediction appears.
+
+\paragraph{The DNA metaphor.}
+The double helix~\cite{watson1953molecular} pairs complementary strands through
+base-pair rungs, coupling strands that otherwise carry independent information.
+We borrow this metaphor for an architecture of three strands (temporal, spatial,
+causal) and empirically test two formalisations of base-pair rungs as
+ablations: \emph{in-chain} pairing (BPv1, within each strand) and
+\emph{cross-chain} pairing (BPv2, across the three strands).
+\Cref{sec:exp-ablation} reports that neither helps---a negative result that
+sharpens the architecture's design lessons.

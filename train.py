@@ -27,8 +27,8 @@ from utils import (
 )
 
 
-MODELS = ["three_chain", "three_chain_mamba2", "three_chain_mamba2_lite",
-          "three_chain_mamba2_bp", "three_chain_mamba2_bpv2",
+MODELS = ["three_chain", "three_chain_mamba2", "three_chain_mamba2_hta",
+          "three_chain_mamba2_lite", "three_chain_mamba2_bp", "three_chain_mamba2_bpv2", "three_chain_mamba3",
           "single_chain", "concat_mamba", "transformer",
           "gnn", "three_chain_no_eagle", "three_chain_no_bind", "three_chain_bp"]
 
@@ -46,6 +46,8 @@ def parse_args():
     p.add_argument("--log_every", type=int, default=50)
     p.add_argument("--save_every", type=int, default=5000)
     p.add_argument("--resume", default=None)
+    p.add_argument("--shuffle_labels", action="store_true",
+                   help="随机标签 sanity check: 训练集 S_t 在组内打乱 (验证 decay 指标有效性)")
     return p.parse_args()
 
 
@@ -119,7 +121,7 @@ def main():
 
     # 数据
     loaders = make_loaders(args.data_root, batch_size=cfg["train"]["batch_size"],
-                           seed=args.seed)
+                           seed=args.seed, shuffle_labels=args.shuffle_labels)
     if "train" not in loaders:
         print("[ERROR] 未找到训练数据。请先执行数据划分：")
         print('  python -c "import sys; sys.path.insert(0,\'.\'); '

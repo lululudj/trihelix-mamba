@@ -1,0 +1,58 @@
+# SDD 多场景 nexus 验证配置 (阶段 2 实验 2)
+# 模型参数与 sdd_mamba2_30m.yaml 完全一致 (零模型改动, 严格控制变量)
+# 仅改 data.root 指向 nexus 划分目录, scenario_mix 改 nexus
+# 目的: 验证 SSM 在多 agent 交互复杂场景的 OOD 外推 (nexus 12 视频 > bookstore 7)
+
+# ========== 任务设定 ==========
+task:
+  cell_types: 16
+  action_dim: 5
+
+# ========== 模型 ==========
+model:
+  d_model: 768
+  n_layers: 2
+  bind_heads: 4
+  fusion_hidden: 1536
+  enable_m3: false
+  enable_jepa: false
+  jepa_weight: 0.3
+  max_T: 256
+  use_checkpoint: true
+
+# ========== Eagle 校验 (此版无 eagle 属性, 不读) ==========
+eagle:
+  tau_init: 1.0e9
+  tau_target: 1.0
+  tau_warmup_steps: 2000
+  tau_anneal_steps: 10000
+
+# ========== 数据 ==========
+data:
+  root: ./data_sdd_split_nexus    # ← nexus 划分目录 (12 视频)
+  num_train: 8000
+  num_val: 1000
+  num_test: 1000
+  N_choices: [24]
+  K_choices: [8]
+  T_choices: [100]
+  p_transfer_choices: [0.0]
+  scenario_mix: {nexus: 1.0}      # ← 改 nexus
+
+# ========== 训练 ==========
+train:
+  batch_size: 2
+  max_steps: 50000
+  lr: 3.0e-4
+  weight_decay: 0.01
+  warmup_steps: 500
+  loss_aux_weight: 0.3
+  grad_clip: 1.0
+  seed: 0
+
+# ========== 评估 ==========
+eval:
+  acc_steps: [1, 5, 10, 30, 60, 100]
+  ood_T: [150]
+  ood_N: [24]
+  tau_sweep: [1.0e9]

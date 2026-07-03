@@ -25,6 +25,7 @@ import math
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+import torch.utils.checkpoint as cp
 
 from mamba_ssm import Mamba2
 
@@ -35,21 +36,84 @@ from .common import (
 )
 
 
+# ========== C 方案: gradient checkpointing (突破 1B OOM) ==========
+
+def _ckpt_call(mamba, x, use_checkpoint=False):
+    """梯度检查点包装 Mamba2 调用 (突破大模型 OOM)。
+
+    必要性: 1B 参数模型 (d_model=5120) forward 激活值 ~25GB > 24G 显存。
+    checkpoint 让 forward 不保存中间值, backward 时重算, 内存 O(L)→O(1)。
+    代价: backward 慢 ~1.5x (Mamba2 有 Triton 内核, 比 Mamba3 快)。
+    eval 时 (no_grad) 自动直通, 不影响推理速度。
+    """
+    if use_checkpoint and torch.is_grad_enabled() and x.requires_grad:
+        return cp.checkpoint(mamba, x, use_reentrant=False)
+    return mamba(x)
+
+
+# ========== 白嫖自 Mamba3: heavy_tail_activation ==========
+# 来源: state-spaces/mamba 官方 mamba3.py (mamba_ssm 2.3.2.post1)
+# 作用: 替换 Mamba2 的 A 参数激活 exp→heavy_tail, 让 A 范围更紧凑、训练更稳
+# 移植方式: register_parametrization, 完全不碰 mamba_ssm 系统包源码和 forward
+
+def heavy_tail_activation(x):
+    """Mamba3 的 A 激活函数 (白嫖自官方 mamba3.py)。
+    f(x) = x+1       if x >= 0  (线性, 梯度恒 1 不饱和)
+         = 1/(1-x)   if x < 0   (重尾, >1 但有限, 防爆炸)
+    总是 >0, 连续可微。比 exp 更稳: exp 在大值爆炸, heavy_tail 正侧线性不爆。
+    """
+    neg = x.clamp_max(0)
+    pos = x.clamp_min(0)
+    return pos + torch.reciprocal(1 - neg)
+
+
+class _HTAParametrization(torch.nn.Module):
+    """把 raw 参数 r 映射成 log(heavy_tail(r))。
+
+    注册到 Mamba2.A_log 后, forward 里:
+        A = -torch.exp(self.A_log)           # Mamba2 原始公式
+          = -torch.exp(log(heavy_tail(r)))   # parametrize 后 self.A_log = log(heavy_tail(r))
+          = -heavy_tail(r)                   # exp(log(x)) = x
+    等价于把 A 的激活函数从 exp 换成 heavy_tail, 但 forward 一行都不改。
+    """
+
+    def forward(self, r):
+        h = heavy_tail_activation(r)
+        return torch.log(h.clamp(min=1e-8))
+
+
+def apply_hta_patch(mamba2_module):
+    """对一个 Mamba2 实例注册 heavy_tail_activation 参数化。
+    调用后该实例的 A 计算从 -exp(A_log) 变成 -heavy_tail(raw)。
+    不影响其他 Mamba2 实例, 不改系统包源码。
+    """
+    import torch.nn.utils.parametrize as P
+    P.register_parametrization(mamba2_module, 'A_log', _HTAParametrization())
+    # 保留 _no_weight_decay 标记 (Mamba2 原本对 A_log 设了此标记)
+    raw = mamba2_module.parametrizations.A_log.original
+    raw._no_weight_decay = True
+    return mamba2_module
+
+
 # ========== Mamba2 工具组件 ==========
 
-def make_mamba2(d_model, d_state, d_conv, expand, headdim):
+def make_mamba2(d_model, d_state, d_conv, expand, headdim, use_hta=False):
     """构造 Mamba2 (SSD)。参数约束:
         - d_conv ∈ {2, 3, 4}
         - headdim 必须整除 d_model * expand
         - 空间链 (expand=1) 用 headdim=32 规避 causal_conv1d stride 对齐
+        - use_hta=True: 白嫖 Mamba3 的 heavy_tail_activation 替换 A 的激活函数 (exp→heavy_tail)
     """
-    return Mamba2(
+    m = Mamba2(
         d_model=d_model,
         d_state=d_state,
         d_conv=d_conv,
         expand=expand,
         headdim=headdim,
     )
+    if use_hta:
+        apply_hta_patch(m)
+    return m
 
 
 class BidirectionalMamba2(nn.Module):
@@ -59,14 +123,14 @@ class BidirectionalMamba2(nn.Module):
     共享参数以控制参数量(等价于一个 Mamba2 做两次 forward)。
     """
 
-    def __init__(self, d_model, d_state, d_conv, expand, headdim):
+    def __init__(self, d_model, d_state, d_conv, expand, headdim, use_hta=False):
         super().__init__()
-        self.mamba = make_mamba2(d_model, d_state, d_conv, expand, headdim)
+        self.mamba = make_mamba2(d_model, d_state, d_conv, expand, headdim, use_hta=use_hta)
 
-    def forward(self, x):
+    def forward(self, x, use_checkpoint=False):
         # x: (B, L, d)
-        y_fwd = self.mamba(x)
-        y_bwd = self.mamba(torch.flip(x, dims=[1]))
+        y_fwd = _ckpt_call(self.mamba, x, use_checkpoint=use_checkpoint)
+        y_bwd = _ckpt_call(self.mamba, torch.flip(x, dims=[1]), use_checkpoint=use_checkpoint)
         return y_fwd + torch.flip(y_bwd, dims=[1])
 
 
@@ -89,18 +153,24 @@ class HeteroMamba2(nn.Module):
     残差融合: x = Norm(x + x_s + x_t + c_inject)
     """
 
-    def __init__(self, d_model=256, n_layers=2):
+    def __init__(self, d_model=256, n_layers=2, use_hta=False, use_checkpoint=False,
+                 ablate_s=False, ablate_t=False, ablate_c=False):
         super().__init__()
         self.d_model = d_model
         self.n_layers = n_layers
+        self.use_checkpoint = use_checkpoint  # C 方案: gradient checkpointing
+        # 阶段 3.2: 消融开关（置零某链输出，不删模块，保持参数量不变）
+        self.ablate_s = ablate_s  # 消融空间链
+        self.ablate_t = ablate_t  # 消融时间链
+        self.ablate_c = ablate_c  # 消融因果链
 
         # 空间链: 行 + 列 双向扫描(2 个独立 BidirectionalMamba2)
         self.mamba_s_row = nn.ModuleList([
-            BidirectionalMamba2(d_model, d_state=128, d_conv=4, expand=1, headdim=32)
+            BidirectionalMamba2(d_model, d_state=128, d_conv=4, expand=1, headdim=32, use_hta=use_hta)
             for _ in range(n_layers)
         ])
         self.mamba_s_col = nn.ModuleList([
-            BidirectionalMamba2(d_model, d_state=128, d_conv=4, expand=1, headdim=32)
+            BidirectionalMamba2(d_model, d_state=128, d_conv=4, expand=1, headdim=32, use_hta=use_hta)
             for _ in range(n_layers)
         ])
         self.fusion_s = nn.ModuleList([
@@ -109,13 +179,13 @@ class HeteroMamba2(nn.Module):
 
         # 时间链: 因果 Mamba2 (Mamba2 默认因果)
         self.mamba_t = nn.ModuleList([
-            make_mamba2(d_model, d_state=64, d_conv=4, expand=2, headdim=64)
+            make_mamba2(d_model, d_state=64, d_conv=4, expand=2, headdim=64, use_hta=use_hta)
             for _ in range(n_layers)
         ])
 
         # 因果链: 对 K 维因果扫描
         self.mamba_c = nn.ModuleList([
-            make_mamba2(d_model, d_state=32, d_conv=4, expand=2, headdim=64)
+            make_mamba2(d_model, d_state=32, d_conv=4, expand=2, headdim=64, use_hta=use_hta)
             for _ in range(n_layers)
         ])
 
@@ -128,25 +198,32 @@ class HeteroMamba2(nn.Module):
             nn.Linear(d_model, d_model) for _ in range(n_layers)
         ])
 
-    def forward(self, x, act_emb):
+    def forward(self, x, act_emb, collect_states=False):
         """
         x: (B, T, N², d)
         act_emb: (B, K, T, d)
-        Returns: (x, act_emb) 同形状
+        collect_states: 是否收集每层三链状态（供 .m3 存储和 JEPA 用，省显存时关）
+        Returns: (x, act_emb, chain_states)
+            chain_states: list of (h_s, h_t, h_c) per layer，或 None（当 collect_states=False）
+                h_s: (B, T, N², d) 空间链输出（残差融合前）
+                h_t: (B, T, N², d) 时间链输出（残差融合前）
+                h_c: (B, K, T, d) 因果链 act_emb 更新后
         """
         B, T, N2, D = x.shape
         K = act_emb.shape[1]
         N = int(math.isqrt(N2))
 
+        chain_states = [] if collect_states else None
+
         for i in range(self.n_layers):
             # --- 空间链: 行+列双向扫描 ---
             # 行优先: (B*T, N², d)
             x_row = x.reshape(B * T, N2, D)
-            row_out = self.mamba_s_row[i](x_row)  # (B*T, N², d)
+            row_out = self.mamba_s_row[i](x_row, use_checkpoint=self.use_checkpoint)  # (B*T, N², d)
             # 列优先: 转置 N×N 后展平
             x_2d = x.reshape(B, T, N, N, D)
             x_col = x_2d.permute(0, 1, 3, 2, 4).reshape(B * T, N2, D)  # 列优先
-            col_out = self.mamba_s_col[i](x_col)
+            col_out = self.mamba_s_col[i](x_col, use_checkpoint=self.use_checkpoint)
             # 转回行优先顺序
             col_out = col_out.reshape(B, T, N, N, D).permute(0, 1, 3, 2, 4).reshape(B * T, N2, D)
             # 融合行+列
@@ -156,13 +233,13 @@ class HeteroMamba2(nn.Module):
             # --- 时间链: 因果 Mamba2 ---
             # (B*N², T, d): 对每个 cell 沿时间因果扫描
             x_t = x.permute(0, 2, 1, 3).reshape(B * N2, T, D)  # (B*N², T, d)
-            x_t = self.mamba_t[i](x_t)
+            x_t = _ckpt_call(self.mamba_t[i], x_t, use_checkpoint=self.use_checkpoint)
             x_t = x_t.reshape(B, N2, T, D).permute(0, 2, 1, 3)  # (B, T, N², d)
 
             # --- 因果链: K 维因果扫描 ---
             # act_emb (B, K, T, d) → (B*T, K, d)
             x_c = act_emb.permute(0, 2, 1, 3).reshape(B * T, K, D)
-            x_c = self.mamba_c[i](x_c)  # (B*T, K, d)
+            x_c = _ckpt_call(self.mamba_c[i], x_c, use_checkpoint=self.use_checkpoint)  # (B*T, K, d)
             # 更新 act_emb (残差)
             act_emb = x_c.reshape(B, T, K, D).permute(0, 2, 1, 3)  # (B, K, T, d)
             # 聚合 K 维 → 注入 x
@@ -170,10 +247,22 @@ class HeteroMamba2(nn.Module):
             c_inject = self.causal_inject[i](c_pool)  # (B*T, d)
             c_inject = c_inject.reshape(B, T, 1, D)  # 广播到 N²
 
+            # --- 收集每层三链状态（供 .m3 存储和 JEPA）---
+            if collect_states:
+                chain_states.append((x_s, x_t, act_emb))
+
+            # --- 消融：置零某链输出（不删模块，保持参数量不变，严格控制变量）---
+            if self.ablate_s:
+                x_s = torch.zeros_like(x_s)
+            if self.ablate_t:
+                x_t = torch.zeros_like(x_t)
+            if self.ablate_c:
+                c_inject = torch.zeros_like(c_inject)
+
             # --- 残差融合 ---
             x = self.norm_fuse[i](x + x_s + x_t + c_inject)
 
-        return x, act_emb
+        return x, act_emb, chain_states
 
 
 # ========== A 版本模型: ThreeChainMamba2 ==========
@@ -193,19 +282,27 @@ class ThreeChainMamba2(nn.Module):
     """
 
     def __init__(self, cell_types=16, action_dim=5, d_model=256, n_layers=2,
-                 max_T=256):
+                 max_T=256, enable_m3=False, enable_jepa=False, jepa_weight=0.3,
+                 use_hta=False, use_checkpoint=False,
+                 ablate_s=False, ablate_t=False, ablate_c=False):
         super().__init__()
         self.cell_types = cell_types
         self.d_model = d_model
         self.n_layers = n_layers
+        self.enable_m3 = enable_m3
+        self.enable_jepa = enable_jepa
+        self.jepa_weight = jepa_weight  # 接通 config: cfg["model"]["jepa_weight"]
+        self.use_hta = use_hta  # 白嫖 Mamba3 的 heavy_tail_activation (默认关, 保 baseline)
+        self.use_checkpoint = use_checkpoint  # C 方案: gradient checkpointing (默认关)
 
         # embeddings
         self.cell_embed = nn.Embedding(cell_types, d_model)
         self.action_embed = nn.Embedding(action_dim, d_model)
         self.time_embed = nn.Embedding(max_T, d_model)
 
-        # 三链核心
-        self.mamba = HeteroMamba2(d_model, n_layers)
+        # 三链核心 (use_hta=True 时所有 Mamba2 的 A 激活从 exp→heavy_tail)
+        self.mamba = HeteroMamba2(d_model, n_layers, use_hta=use_hta, use_checkpoint=use_checkpoint,
+                                  ablate_s=ablate_s, ablate_t=ablate_t, ablate_c=ablate_c)
 
         # 输出头: Linear 直接投影(不用 attention, 解决问题2)
         self.head = nn.Sequential(
@@ -214,6 +311,13 @@ class ThreeChainMamba2(nn.Module):
             nn.GELU(),
             nn.Linear(d_model // 2, cell_types),
         )
+
+        # 阶段 A: .m3 记忆 + JEPA 预言（开关控制，默认关闭保留 baseline）
+        if enable_m3:
+            self.m3 = M3SnapshotManager()
+        if enable_jepa:
+            self.jepa = JEPA_Predictor(d_state_total=d_model, n_future=3, hidden=64)
+        self._last_chain_states = None  # 缓存最近一次 forward 的 chain_states，供 save_m3 用
 
     @property
     def mamba_s(self):
@@ -253,8 +357,9 @@ class ThreeChainMamba2(nn.Module):
              + act_mean.unsqueeze(2)                    # (B, T, 1, d)
              + time_emb.view(1, T, 1, D))              # (1, T, 1, d)
 
-        # --- 三链演化 ---
-        x, act_emb_out = self.mamba(x, act_emb)
+        # --- 三链演化（开关控制是否收集每层状态，省显存）---
+        collect = self.enable_m3 or self.enable_jepa
+        x, act_emb_out, chain_states = self.mamba(x, act_emb, collect_states=collect)
 
         # --- 输出头: Linear 直接投影 ---
         logits = self.head(x)  # (B, T, N², C)
@@ -264,17 +369,81 @@ class ThreeChainMamba2(nn.Module):
             "h_last": x[:, -1],           # (B, N², d) 最后时间步
             "act_emb_out": act_emb_out,   # (B, K, T, d)
         }
+
+        # --- 阶段 A 钩子：JEPA 预言（接空间链）---
+        if self.enable_jepa and chain_states is not None:
+            # 取最后一层空间链 h_s: (B, T, N², d) → N² 维 mean-pool → (B, T, d)
+            h_s_last = chain_states[-1][0]  # (B, T, N², d)
+            h_seq = h_s_last.mean(dim=2)    # (B, T, d)
+            # JEPA 输入最后一步，target 用最后 3 步（余弦相似度 loss）
+            jepa_pred = self.jepa(h_seq[:, -1])      # (B, 3, d)
+            jepa_target = h_seq[:, -3:]               # (B, 3, d)
+            info["jepa_pred"] = jepa_pred
+            info["jepa_target"] = jepa_target
+
+        # --- 阶段 A 钩子：.m3 记忆（缓存 chain_states 供 save_m3 用）---
+        if self.enable_m3 and chain_states is not None:
+            self._last_chain_states = [
+                (s[0].detach(), s[1].detach(), s[2].detach()) for s in chain_states
+            ]
+
         return logits, info
 
-    def loss(self, logits, S_t, info, aux_weight=0.3):
-        """balanced_ce_loss + 轻量正则。
+    def loss(self, logits, S_t, info, aux_weight=0.3, jepa_weight=None):
+        """balanced_ce_loss + 轻量正则 + JEPA 潜空间预测 loss（阶段 A）。
 
         logits: (B, T, N, N, C)
         S_t: (B, T+1, N, N)
+        info: dict，含 jepa_pred/jepa_target（当 enable_jepa=True 时）
+        aux_weight: balanced_ce_loss 的辅助权重
+        jepa_weight: JEPA loss 权重；None 时用 self.jepa_weight（来自 config），
+                    传具体值则 override（向后兼容）
         """
         S_0 = S_t[:, 0]
         total, loss_info = balanced_ce_loss(logits, S_t, S_0, aux_weight=aux_weight)
+
+        # 阶段 A: JEPA 潜空间预测 loss（余弦相似度）
+        if "jepa_pred" in info and "jepa_target" in info:
+            w = self.jepa_weight if jepa_weight is None else jepa_weight
+            jepa_loss = self.jepa.compute_loss(info["jepa_pred"], info["jepa_target"])
+            total = total + w * jepa_loss
+            loss_info["jepa_loss"] = jepa_loss.item()
+
         return total, loss_info
+
+    def save_m3(self, path, sample_id, N, K, T, step=0, scenario_type="random", batch_idx=0):
+        """把最近一次 forward 缓存的三链状态存成 .m3 文件（仅 enable_m3=True 时可用）。
+
+        从 self._last_chain_states（含 batch 维 B）切第 batch_idx 个样本，每层存:
+            h_s: (N², d)  空间链最后时间步（树干）
+            h_t: (T,  d)  时间链整段 N² 均值（树根）
+            h_c: (K,  d)  因果链最后时间步所有 agent（枝叶）
+
+        必须在 forward 之后、下一次 forward 之前调用（_last_chain_states 会被覆盖）。
+        """
+        if not self.enable_m3:
+            raise RuntimeError("enable_m3=False，无法保存 .m3（forward 未缓存 chain_states）")
+        if self._last_chain_states is None:
+            raise RuntimeError("尚未 forward，_last_chain_states 为空，无法 save_m3")
+
+        chain_states_sq = []
+        for (h_s, h_t, h_c) in self._last_chain_states:
+            # h_s: (B, T, N², d) → 最后时间步 → batch_idx → (N², d)
+            s = h_s[batch_idx, -1]
+            # h_t: (B, T, N², d) → N² 维 mean → batch_idx → (T, d)
+            t = h_t[batch_idx].mean(dim=1)
+            # h_c: (B, K, T, d) → 最后时间步 → batch_idx → (K, d)
+            c = h_c[batch_idx, :, -1, :]
+            chain_states_sq.append({"h_s": s, "h_t": t, "h_c": c})
+
+        meta = {
+            "N": int(N), "K": int(K), "T": int(T),
+            "d_model": int(self.d_model),
+            "n_layers": int(self.n_layers),
+            "step": int(step), "sample_id": int(sample_id),
+            "scenario_type": str(scenario_type),
+        }
+        self.m3.save_to_file(path, meta, chain_states_sq)
 
 
 # ========== B 版本核心: HeteroMamba2Lite (骨架保留换 Mamba2) ==========

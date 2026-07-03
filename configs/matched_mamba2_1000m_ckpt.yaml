@@ -1,0 +1,58 @@
+# C 方案: 1000M + gradient checkpointing (突破 OOM)
+# d_model=5120 (~1.1B params), 之前 OOM (~25GB > 24G)
+# 加 use_checkpoint=True: forward 不保存激活值, backward 重算, 显存大幅降低
+# 预计: 激活值从 ~18GB 降到 ~6GB, 总显存 ~12-15GB (4090 24G 充裕)
+
+# ========== 任务设定 ==========
+task:
+  cell_types: 16
+  action_dim: 5
+
+# ========== 模型 ==========
+model:
+  d_model: 5120          # 20× baseline, ~1.1B params
+  n_layers: 2
+  bind_heads: 4
+  fusion_hidden: 3840    # 与 d_model 同比放大
+  enable_m3: false
+  enable_jepa: false
+  jepa_weight: 0.3
+  max_T: 256             # 训练用 T=100, 256 足够
+  use_checkpoint: true   # 关键: 开启 gradient checkpointing 突破 OOM
+
+# ========== Eagle 校验 ==========
+eagle:
+  tau_init: 1.0e9
+  tau_target: 1.0
+  tau_warmup_steps: 2000
+  tau_anneal_steps: 10000
+
+# ========== 数据 ==========
+data:
+  root: ./data_cache
+  num_train: 8000
+  num_val: 1000
+  num_test: 1000
+  N_choices: [6, 8, 12]
+  K_choices: [4, 8, 12]
+  T_choices: [30, 60, 100]
+  p_transfer_choices: [0.0, 0.3, 0.6]
+  scenario_mix: {random: 0.5, goal_directed: 0.3, adversarial: 0.2}
+
+# ========== 训练 ==========
+train:
+  batch_size: 1          # 1B 极限, batch=1
+  max_steps: 50000
+  lr: 3.0e-4
+  weight_decay: 0.01
+  warmup_steps: 500
+  loss_aux_weight: 0.3
+  grad_clip: 1.0
+  seed: 0
+
+# ========== 评估 ==========
+eval:
+  acc_steps: [1, 5, 10, 30, 60, 100]
+  ood_T: [30, 60, 100, 150]
+  ood_N: [6, 8, 12, 16]
+  tau_sweep: [0.5, 1.0, 2.0, 5.0, 1.0e9]

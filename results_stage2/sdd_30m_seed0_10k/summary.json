@@ -1,0 +1,12 @@
+{
+  "ch_acc_100_single": 0.1777404159425743,
+  "ch_acc_150_single": 0.2722620214853022,
+  "decay_pct_single": 0.5317957935535981,
+  "ch_acc_100_window": 0.24656522137745893,
+  "ch_acc_150_window": 0.2754600067085848,
+  "decay_pct_window": 0.11718921739936607,
+  "n_samples": 316,
+  "train_T": 100,
+  "ood_T": 150,
+  "model": "three_chain_mamba2"
+}

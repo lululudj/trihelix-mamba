@@ -1,0 +1,52 @@
+# Transformer 30M 规模对照 (阶段 3.3: SSM vs Transformer 机制对比)
+# d_model=768, n_layers=4 → ~28M params (匹配 ThreeChainMamba2 30M 的 26.59M, ±5% 内)
+# 验证: Transformer 在同参数量下是否同样能长程外推 (预期退化, 对照 SSM 不退化)
+
+# ========== 任务设定 ==========
+task:
+  cell_types: 16          # C: 空格(0) + 智能体ID(1-12) + 物品ID(13-15)
+  action_dim: 5           # A: 上/下/左/右/停留
+
+# ========== 模型 ==========
+model:
+  d_model: 768            # 与 matched_mamba2_30m 一致
+  n_layers: 4             # 4 层 TransformerEncoder ≈ 28M (匹配 SSM 26.59M)
+  bind_heads: 4           # Fusion CrossAttn 头数
+  fusion_hidden: 1536     # 与 d_model 成比例
+
+# ========== Eagle 校验 (TransformerBaseline 无 eagle, 不读) ==========
+eagle:
+  tau_init: 1.0e9
+  tau_target: 1.0
+  tau_warmup_steps: 2000
+  tau_anneal_steps: 10000
+
+# ========== 数据 ==========
+data:
+  root: ./data_cache
+  num_train: 8000
+  num_val: 1000
+  num_test: 1000
+  N_choices: [6, 8, 12]
+  K_choices: [4, 8, 12]
+  T_choices: [30, 60, 100]
+  p_transfer_choices: [0.0, 0.3, 0.6]
+  scenario_mix: {random: 0.5, goal_directed: 0.3, adversarial: 0.2}
+
+# ========== 训练 ==========
+train:
+  batch_size: 2           # 与 matched_mamba2_30m 一致 (24G GPU 稳定)
+  max_steps: 50000
+  lr: 3.0e-4
+  weight_decay: 0.01
+  warmup_steps: 500
+  loss_aux_weight: 0.3
+  grad_clip: 1.0
+  seed: 0
+
+# ========== 评估 ==========
+eval:
+  acc_steps: [1, 5, 10, 30, 60, 100]
+  ood_T: [30, 60, 100, 150]
+  ood_N: [6, 8, 12, 16]
+  tau_sweep: [0.5, 1.0, 2.0, 5.0, 1.0e9]

@@ -1,0 +1,59 @@
+# 阶段 3.2 消融实验: 置零时间链输出 (ablate_t=true)
+# 基于 matched_mamba2_30m.yaml, 保持参数量不变 (置零输出不删模块)
+# 训练命令: python train.py --model three_chain_mamba2 --config configs/ablation_no_temporal.yaml --seed 2 --max_steps 500 --batch_size 2
+
+# ========== 任务设定 ==========
+task:
+  cell_types: 16
+  action_dim: 5
+
+# ========== 模型默认 ==========
+model:
+  d_model: 768
+  n_layers: 2
+  bind_heads: 4
+  fusion_hidden: 1536
+  enable_m3: false
+  enable_jepa: false
+  jepa_weight: 0.3
+  # 阶段 3.2 消融开关
+  ablate_s: false
+  ablate_t: true          # 消融时间链 (置零 x_t)
+  ablate_c: false
+
+# ========== Eagle 校验 (此版无 eagle 属性, 不读) ==========
+eagle:
+  tau_init: 1.0e9
+  tau_target: 1.0
+  tau_warmup_steps: 2000
+  tau_anneal_steps: 10000
+
+# ========== 数据 ==========
+data:
+  root: ./data_cache
+  num_train: 8000
+  num_val: 1000
+  num_test: 1000
+  N_choices: [6, 8, 12]
+  K_choices: [4, 8, 12]
+  T_choices: [30, 60, 100]
+  p_transfer_choices: [0.0, 0.3, 0.6]
+  scenario_mix: {random: 0.5, goal_directed: 0.3, adversarial: 0.2}
+
+# ========== 训练 ==========
+train:
+  batch_size: 2
+  max_steps: 50000
+  lr: 3.0e-4
+  weight_decay: 0.01
+  warmup_steps: 500
+  loss_aux_weight: 0.3
+  grad_clip: 1.0
+  seed: 0
+
+# ========== 评估 ==========
+eval:
+  acc_steps: [1, 5, 10, 30, 60, 100]
+  ood_T: [30, 60, 100, 150]
+  ood_N: [6, 8, 12, 16]
+  tau_sweep: [0.5, 1.0, 2.0, 5.0, 1.0e9]

@@ -44,15 +44,35 @@ def build_model(name, cfg):
     """从 MODEL_REGISTRY 构建模型。
 
     所有模型统一接受 (cell_types, action_dim, d_model, n_layers)。
+    three_chain_mamba2 额外接受 enable_m3/enable_jepa 开关（阶段 A）。
     """
     from models import MODEL_REGISTRY  # 延迟 import
     cls = MODEL_REGISTRY[name]
-    return cls(
+    kwargs = dict(
         cell_types=cfg["task"]["cell_types"],
         action_dim=cfg["task"]["action_dim"],
         d_model=cfg["model"]["d_model"],
         n_layers=cfg["model"]["n_layers"],
     )
+    # 阶段 A：给 three_chain_mamba2 / three_chain_mamba3 传 .m3/JEPA 开关 + jepa_weight
+    # （两模型同接口），其他模型不接这些参数
+    if name in ("three_chain_mamba2", "three_chain_mamba2_hta", "three_chain_mamba3"):
+        m = cfg.get("model", {})
+        kwargs["enable_m3"] = m.get("enable_m3", False)
+        kwargs["enable_jepa"] = m.get("enable_jepa", False)
+        kwargs["jepa_weight"] = m.get("jepa_weight", 0.3)
+        # 极限测试: max_T 可从 config 覆盖 (默认 256, 评估 T>256 时需提升)
+        kwargs["max_T"] = m.get("max_T", 256)
+        # C 方案: gradient checkpointing (默认关, 1B 模型时开)
+        kwargs["use_checkpoint"] = m.get("use_checkpoint", False)
+        # 阶段 3.2: 消融开关（置零某链输出，保持参数量不变，严格控制变量）
+        kwargs["ablate_s"] = m.get("ablate_s", False)
+        kwargs["ablate_t"] = m.get("ablate_t", False)
+        kwargs["ablate_c"] = m.get("ablate_c", False)
+        # three_chain_mamba2_hta: 白嫖 Mamba3 heavy_tail_activation (A 激活 exp→heavy_tail)
+        if name == "three_chain_mamba2_hta":
+            kwargs["use_hta"] = True
+    return cls(**kwargs)
 
 
 # ---------- 调度 ----------

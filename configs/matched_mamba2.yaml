@@ -13,6 +13,10 @@ model:
   n_layers: 2             # 每条链的 Mamba2 层数
   bind_heads: 4           # CrossAttn 头数(Lite 版用)
   fusion_hidden: 512
+  # 阶段 A 开关（默认关闭，保留原 baseline 行为，5 seed 2000 步结果可复现）
+  enable_m3: false        # .m3 快照文件存储（关 = 不存文件）
+  enable_jepa: false      # JEPA 潜空间预测辅助 loss（关 = 不算 jepa_loss）
+  jepa_weight: 0.3        # JEPA loss 权重（仅 enable_jepa=true 时生效）
 
 # ========== Eagle 校验 (仅 Lite 版有 eagle 属性) ==========
 eagle:

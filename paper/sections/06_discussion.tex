@@ -1,0 +1,58 @@
+\section{Discussion}
+\label{sec:discuss}
+
+\paragraph{Why does the three-chain SSM extrapolate where attention collapses?}
+The matched-parameter Transformer ablation isolates the inductive-bias axis:
+data, loss, schedule, and parameter budget are held fixed, and only the
+sequence-mixing operator changes. Two structural factors plausibly explain the
+gap. First, selective state-space models~\cite{mamba,mamba2} compress history
+into a fixed-size recurrent state, which imposes a \emph{lossy but stable}
+summary of the past; attention, by contrast, recomputes a soft average over all
+past tokens and is known to drift toward dominant (here: empty) tokens under
+distribution shift, a failure consistent with the unstable training and
+all-zero collapse we observe. Second, the three-chain decomposition matches the
+\emph{actual causal structure} of the task: a single scan direction cannot
+simultaneously be causal in time, bidirectional in space, and causal over
+agents. Forcing one operator to serve all three---as a vanilla Transformer or
+single-chain SSM must---either violates a causal constraint or wastes capacity
+relearning it. The heterogeneous-chain design assigns each structure to the
+operator that natively supports it.
+
+\paragraph{Why does the simple residual fusion suffice?}
+A natural worry is that three independently scanned chains might ``fly apart''
+without explicit coupling. Our two base-pair ablations address this directly.
+Cross-chain rungs (BPv2) that pull the chains toward a shared consensus are
+\emph{neutral}: they neither help nor hurt OOD, and the learned coupling
+coefficient $\alpha$ goes negative, indicating the model actively resists the
+consensus pull to preserve chain diversity. This means the implicit coupling
+supplied by residual fusion on a \emph{unified tensor} (\cref{eq:fusion}) is
+already sufficient---the three chains read and write the same $x$, so they are
+coupled by construction. Adding explicit rungs is redundant, and the model
+treats them as a tunable diversity regulariser rather than a coupling
+mechanism.
+
+\paragraph{Why does BPv1 hurt but BPv2 not?}
+The contrast between BPv1 and BPv2 sharpens the design lesson. BPv1 inserts
+constraints \emph{inside} each chain (complementary gates and anti-symmetric
+heads), disrupting the per-chain computation that the chain was specialised to
+perform. The damage shows up only at OOD: training accuracy is unchanged, but
+extrapolation breaks. BPv2 inserts constraints \emph{between} chains at the
+fusion point, where coupling is already implicit, so the constraint is either
+redundant (and dialled to zero/negative) or harmless. The lesson generalises:
+\emph{constraints placed incorrectly are harmful; constraints placed correctly
+are neutral; the simple architecture already captures the useful structure}.
+This is an Occam's-razor result~\cite{_occams_razor}---the simplest model that
+respects the task's causal structure wins, and added complexity must justify
+itself against an architecture that is already sufficient.
+
+\paragraph{Evaluation hygiene as a contribution.}
+The all-zero-collapse trap and the zero-variance evaluation bug are not
+idiosyncratic to our setup; they are general pitfalls for sparse-state
+prediction benchmarks. Global accuracy is actively misleading whenever the
+empty class dominates, and a zero 5-seed standard deviation is a red flag, not
+a virtue. We recommend the \texttt{ch\_acc} + zero-ratio + non-degeneracy-gate
+protocol used here as a minimum bar for any long-range state-extrapolation
+claim. Reporting only \texttt{acc}---or reporting a ``stable'' OOD number
+without a degeneracy certificate---risks publishing artefacts.
+
+

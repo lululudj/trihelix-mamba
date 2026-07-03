@@ -1,0 +1,8 @@
+  [val step 1000] acc=0.9943 ch_acc=0.2400
+  [val] 新最佳 0.9943，保存 best.pt
+  [val step 2000] acc=0.9910 ch_acc=0.4197
+  [val step 3000] acc=0.9869 ch_acc=0.5023
+  [val step 4000] acc=0.9786 ch_acc=0.5141
+  [val step 5000] acc=0.9847 ch_acc=0.4691
+  [val step 6000] acc=0.9793 ch_acc=0.5028
+[23:04:25] SSM 10k train done

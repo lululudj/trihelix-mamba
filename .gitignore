@@ -50,3 +50,26 @@ Thumbs.db
 # ===== Temp files =====
 _*.txt
 safe_benchmark.log
+
+# ===== Large local artifacts (TeX Live installer, third-party refs, m3 data/snapshots) =====
+# 这些是本地构建/下载产物, 不属于源码, 且体积巨大, 永不提交
+_texlive/
+_mamba3_ref/
+data_split_m3/
+m3_snapshots/
+*.zip
+
+# ===== Stage 3 results: 保留 JSON 指标用于复现, 忽略巨大 checkpoint =====
+results_stage3/**/*.pt
+results_stage3/**/*.npz
+results_stage3/**/*.pth
+results_stage3/**/*.ckpt
+
+# ===== Cloud orchestration scratch (临时编排脚本输出, 与本地 results 重叠) =====
+results_cloud/
+
+# ===== Build / packaging artifacts =====
+build/
+dist/
+*.tar.gz
+*.tgz

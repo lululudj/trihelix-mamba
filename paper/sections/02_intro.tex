@@ -1,0 +1,81 @@
+\section{Introduction}
+\label{sec:intro}
+
+A world model that can roll a dynamical system forward in time is a
+foundational ingredient of planning, model-based control, and physical
+simulation. The hardest setting is \emph{long-range extrapolation}: the model
+is trained on trajectories of length $T_{\text{train}}$ and must predict
+correctly at horizons $T_{\text{test}} \gg T_{\text{train}}$ that it has never
+observed. In multi-agent grid worlds---a clean, controllable proxy for
+wargaming, traffic, and embodied AI---we find that this setting exposes a
+systematic failure mode that is invisible to standard top-line metrics.
+
+\paragraph{The degenerate-prediction failure mode.}
+When a sequence model is trained on short multi-agent trajectories and then
+asked to predict longer ones, a tempting local optimum appears: predict
+\emph{nothing}---i.e.\ emit the empty cell (class 0) everywhere. Because
+grid-world states are sparse (the empty cell dominates), this degenerate
+predictor achieves a high global accuracy ($\approx 0.87$ on our benchmark)
+while being completely useless. We show that an earlier Mamba1-based
+three-chain architecture~\cite{mamba} silently falls into this trap, predicting
+zero on \textbf{97.7\%} of training cells, while its top-line accuracy of
+$0.873$ disguised the collapse. Worse, its reported out-of-distribution (OOD)
+accuracy had standard deviation \emph{exactly zero} across five seeds---a
+mathematical impossibility for independently trained models, exposing an
+evaluation artefact rather than a real result. This motivates two contributions
+of methodology, not just architecture: (i) the \emph{changed-cell accuracy}
+metric, which scores only cells that genuinely change and is therefore immune
+to the all-zero shortcut, and (ii) the \emph{zero-ratio / non-zero-prediction
+gate} as a non-degeneracy certificate.
+
+\paragraph{Why three chains?}
+A multi-agent grid state $S_t \in \mathbb{Z}^{N\times N}$ evolves under three
+distinct causal structures simultaneously:
+\begin{itemize}[leftmargin=*,itemsep=2pt]
+  \item \textbf{Temporal}: $S_t$ depends on $S_{t-1}$ and the actions taken
+        between them---a causal order along $t$.
+  \item \textbf{Spatial}: within a single $t$, cells interact with neighbours
+        (collisions, occupancy) without a canonical left-to-right order---a
+        \emph{bidirectional} structure over the $N^2$ grid.
+  \item \textbf{Causal (agent-wise)}: agents act in a fixed priority order, so
+        agent $k$'s effect is conditioned on agents $<k$---a causal order along
+        the $K$-agent axis.
+\end{itemize}
+A single scan direction cannot respect all three. The natural DNA metaphor---
+a triple helix in which three strands carry complementary information and are
+coupled by rungs---translates directly into an architecture: three selective
+state-space scans with heterogeneous hyperparameters, operating as three
+\emph{views} of one unified spatiotemporal tensor and fused residually each
+layer. We call this \textbf{TriHelix-Mamba2}.
+
+\paragraph{Contributions.}
+\begin{enumerate}[leftmargin=*,itemsep=2pt]
+  \item \textbf{Architecture.} A unified-tensor three-chain Mamba2 (SSD)
+        model~\cite{mamba2,mamba} in which temporal, spatial, and causal chains
+        scan $x{:}(B,T,N^{2},d)$ as three views with heterogeneous state
+        dimensions and scan directions, fused by residual addition plus
+        LayerNorm at every layer. The model has 3.26M parameters.
+  \item \textbf{Long-range extrapolation with zero decay.} On GridWorld
+        ($N{=}8, K{=}8$), trained at $T{=}100$ and tested OOD at $T{=}150$,
+        TriHelix-Mamba2 achieves changed-cell accuracy $0.5952\pm0.0034$ over
+        five seeds with OOD decay $-0.0042$ (effectively zero), and a
+        zero-prediction ratio of 17.2\%---curing the 97.7\% degeneracy of the
+        Mamba1 baseline.
+  \item \textbf{Matched-parameter Transformer collapses.} An equally sized
+        Transformer (3.43M, 1.05$\times$ our parameter count) trained with the
+        same data, loss, and schedule collapses to the all-zero predictor on
+        100\% of OOD cells---direct evidence that the SSM inductive bias, not
+        parameter count, drives long-range generalisation.
+  \item \textbf{Two base-pair ablations isolate \emph{where} constraints help.}
+        In-chain base pairing (BPv1) \emph{harms} OOD by 5.6\%; cross-chain base
+        pairing (BPv2) ties the baseline, with the learnable coupling
+        coefficient going negative. The lesson: constraints placed
+        \emph{incorrectly} are harmful, constraints placed \emph{correctly} are
+        neutral, and the simple unified architecture already captures the
+        useful coupling---an Occam's-razor result.
+  \item \textbf{Evaluation hygiene.} We expose the all-zero-collapse trap and
+        the zero-variance evaluation bug as reproducible pitfalls, and provide
+        a non-degeneracy gate (zero-ratio $<0.9$, OOD non-zero predictions
+        $>5\%$ of target) alongside all metrics, code, and an open 72-sample
+        OOD test set for reproducibility.
+\end{enumerate}

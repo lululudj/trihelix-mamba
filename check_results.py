@@ -1,0 +1,20 @@
+import paramiko
+c = paramiko.SSHClient()
+c.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+c.connect('connect.bjb1.seetacloud.com', port=50472, username='root', password='i9D1S9IoRMLR', timeout=10)
+def run(cmd):
+    _, o, _ = c.exec_command(cmd, timeout=15)
+    return o.read().decode(errors='replace').strip()
+
+print('=== 已生成的结果文件 ===')
+print(run('ls -la /root/three_chain_v3/results/run_100m_maxT1024_seed0_500/*.json 2>&1'))
+print()
+print('=== D1 T200noise 错误详情 ===')
+print(run('grep -A3 "CUDA error" /root/extreme_test.log 2>&1 | head -10'))
+print()
+print('=== 最新日志 (最后20行) ===')
+print(run('tail -20 /root/extreme_test.log'))
+print()
+print('=== GPU ===')
+print(run('nvidia-smi --query-gpu=utilization.gpu,memory.used --format=csv,noheader'))
+c.close()

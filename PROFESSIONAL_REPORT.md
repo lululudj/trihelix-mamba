@@ -1,5 +1,19 @@
 # 三链 DNA-Mamba2 专业模型测评报告
 
+> 🌳 **旗帜 / Flag**
+>
+> **想看世界树的分支吗？三螺旋带你见证未来。**
+> *Care to witness Yggdrasil's branches? Three helices bear every future.*
+>
+> 三链 = 世界树的根/干/枝：
+> - 时间链 `h_t` — 深入时间长河（树根）
+> - 空间链 `h_s` — 展开世界结构（树干）
+> - 因果链 `h_c` — 分叉出多种未来（枝叶）
+>
+> 同参数 Transformer-tiny 看不见枝叶（zero_ratio=1.0，全猜 0）；三螺旋在长程外推里看见每一个分支（OOD decay≈0）。
+
+---
+
 > **本工作核心**：以 Mamba2 (SSD) 为底座，按时间/空间/因果做 3 链特异性改造，解决旧 ThreeChain 的 6 大架构问题，让 3 链 DNA-Mamba 的真正威力发挥出来。
 
 ---

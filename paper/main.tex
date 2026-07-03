@@ -1,0 +1,46 @@
+\documentclass[11pt]{article}
+
+% --- arXiv-compatible packages ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage[capitalize]{cleveref}
+\usepackage{enumitem}
+\usepackage[margin=1in]{geometry}
+\usepackage{caption}
+
+\hypersetup{colorlinks=true,linkcolor=blue!60!black,citecolor=green!50!black,urlcolor=blue!60!black}
+
+% \alert is a Beamer macro; define it for article class (used to flag failures).
+\newcommand{\alert}[1]{\textcolor{red!75!black}{\textbf{#1}}}
+
+\title{\textbf{TriHelix-Mamba2: Three-Chain State-Space Models for\\Long-Range World-State Extrapolation}}
+
+\author{Anonymous Authors\\
+\textit{Paper submission — under review}}
+
+\date{}
+
+\begin{document}
+\maketitle
+
+\input{sections/01_abstract}
+\input{sections/02_intro}
+\input{sections/03_related}
+\input{sections/04_method}
+\input{sections/05_experiments}
+\input{sections/06_discussion}
+\input{sections/07_conclusion}
+
+\bibliographystyle{plain}
+\bibliography{references}
+
+\appendix
+\input{sections/08_appendix}
+
+\end{document}

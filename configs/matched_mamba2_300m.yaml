@@ -1,0 +1,57 @@
+# 三链 DNA-Mamba2 300M 极限规模化实验配置
+# d_model 256 → 2048 (8× baseline, ~2.7× 100M)
+# 预计参数量: ~189M (实际算 200M 级别)
+# 显存估算: ~20-22GB (4090 24G 极限, batch=1)
+# 目标: 验证 SSM 优势在 60× 规模放大后是否保持 (可能 OOM, 失败也可接受)
+
+# ========== 任务设定 ==========
+task:
+  cell_types: 16
+  action_dim: 5
+
+# ========== 模型 ==========
+model:
+  d_model: 2048          # 256 → 2048 (8× baseline)
+  n_layers: 2
+  bind_heads: 4
+  fusion_hidden: 1536    # 与 d_model 同比放大
+  enable_m3: false
+  enable_jepa: false
+  jepa_weight: 0.3
+
+# ========== Eagle 校验 ==========
+eagle:
+  tau_init: 1.0e9
+  tau_target: 1.0
+  tau_warmup_steps: 2000
+  tau_anneal_steps: 10000
+
+# ========== 数据 ==========
+data:
+  root: ./data_cache
+  num_train: 8000
+  num_val: 1000
+  num_test: 1000
+  N_choices: [6, 8, 12]
+  K_choices: [4, 8, 12]
+  T_choices: [30, 60, 100]
+  p_transfer_choices: [0.0, 0.3, 0.6]
+  scenario_mix: {random: 0.5, goal_directed: 0.3, adversarial: 0.2}
+
+# ========== 训练 ==========
+train:
+  batch_size: 1          # 300M 极限, batch=1 防 OOM
+  max_steps: 50000
+  lr: 3.0e-4
+  weight_decay: 0.01
+  warmup_steps: 500
+  loss_aux_weight: 0.3
+  grad_clip: 1.0
+  seed: 0
+
+# ========== 评估 ==========
+eval:
+  acc_steps: [1, 5, 10, 30, 60, 100]
+  ood_T: [30, 60, 100, 150]
+  ood_N: [6, 8, 12, 16]
+  tau_sweep: [0.5, 1.0, 2.0, 5.0, 1.0e9]

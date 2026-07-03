@@ -1,0 +1,40 @@
+\section{Limitations}
+\label{sec:limits}
+
+\begin{itemize}[leftmargin=*,itemsep=2pt]
+  \item \textbf{Single grid size and task.} All experiments use $N{=}8$,
+        $K{=}8$ GridWorld. Whether the three-chain decomposition generalises to
+        larger boards, continuous state spaces, or vision-based world models is
+        left to future work.
+  \item \textbf{Moderate extrapolation horizon.} OOD is $1.5\times$ the training
+        horizon. Much longer horizons (e.g.\ $5\times$) remain untested and may
+        reveal a decay point the current results do not show.
+  \item \textbf{BPv1 is single-seed.} The BPv1 ablation is reported at seed 42
+        against the same-seed baseline; the $-5.6\%$ gap far exceeds the
+        5-seed baseline std of $0.0034$, so the sign of the effect is robust,
+        but its exact magnitude is not averaged over seeds.
+  \item \textbf{Specialised, not general-purpose.} TriHelix-Mamba2 is a
+        world-state predictor, not a language model; it has no dialogue or
+        instruction-following capability. Comparisons to general-purpose LLMs
+        are out of scope for this paper.
+  \item \textbf{Modest scale.} 3.26M parameters on a single 8\,GB GPU. Scaling
+        laws for three-chain SSMs are unexplored.
+\end{itemize}
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+We presented TriHelix-Mamba2, a three-chain state-space model in which
+temporal, spatial, and causal scans operate as three views of a unified
+spatiotemporal tensor and fuse residually at every layer. On a GridWorld
+long-range-extrapolation benchmark, the model predicts $50\%$ beyond its
+training horizon with essentially zero OOD decay and cures a $97.7\%$
+all-zero degeneracy exhibited by a Mamba1 baseline. A matched-parameter
+Transformer trained identically collapses to the all-zero predictor, isolating
+the SSM inductive bias as the cause of generalisation. Two base-pair ablations
+show that explicit cross-chain coupling is redundant once the unified-tensor
+residual fusion is in place, and that constraints placed inside chains actively
+harm extrapolation. The takeaway is deliberately simple: respect the task's
+causal structure with heterogeneous chains, fuse on a shared tensor, and let
+the SSM inductive bias do the work. Code, metrics, and an open OOD test set are
+released for reproducibility.

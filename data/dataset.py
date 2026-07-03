@@ -20,7 +20,7 @@ class GridWorldDataset(Dataset):
         N, K, T, p_transfer, scenario_type: 元数据
     """
 
-    def __init__(self, root, max_T=None):
+    def __init__(self, root, max_T=None, shuffle_labels=False, seed=0):
         self.files = sorted(Path(root).glob("scen_*.npz"))
         if not self.files:
             raise FileNotFoundError(f"No scen_*.npz under {root}")
@@ -37,6 +37,26 @@ class GridWorldDataset(Dataset):
                     T = min(T, max_T)
                 self.Ts.append(T)
         self.max_T = max_T  # 截断到 max_T 步（用于 OOD 长程泛化测试）
+        # 随机标签 sanity check: 在同 (N,K,T) 组内打乱 S_t 索引
+        # 使 S_0/actions 配别的样本的 S_t, 破坏输入-标签映射, 验证 decay 指标有效性
+        self.shuffle_labels = shuffle_labels
+        self.label_perm = list(range(len(self.files)))
+        if shuffle_labels:
+            rng = np.random.default_rng(seed)
+            groups = defaultdict(list)
+            for i, (n, k, t) in enumerate(zip(self.Ns, self.Ks, self.Ts)):
+                groups[(n, k, t)].append(i)
+            for indices in groups.values():
+                if len(indices) < 2:
+                    continue
+                perm = list(indices)
+                # 尽量 derangement (无固定点), 试 10 次
+                for _ in range(10):
+                    rng.shuffle(perm)
+                    if all(p != o for p, o in zip(perm, indices)):
+                        break
+                for orig, shuffled in zip(indices, perm):
+                    self.label_perm[orig] = shuffled
 
     def __len__(self):
         return len(self.files)
@@ -45,8 +65,14 @@ class GridWorldDataset(Dataset):
         d = np.load(self.files[idx], allow_pickle=True)
         S_0 = torch.from_numpy(d["S_0"]).long()
         actions = torch.from_numpy(d["actions"]).long()
-        S_t = torch.from_numpy(d["S_t"]).long()
         T = int(d["T"])
+        # 标签: 正常取自己的 S_t; 随机标签模式取组内其他样本的 S_t (破坏输入-标签映射)
+        label_idx = self.label_perm[idx] if self.shuffle_labels else idx
+        if label_idx != idx:
+            d2 = np.load(self.files[label_idx], allow_pickle=True)
+            S_t = torch.from_numpy(d2["S_t"]).long()
+        else:
+            S_t = torch.from_numpy(d["S_t"]).long()
         if self.max_T is not None and T > self.max_T:
             actions = actions[:, :self.max_T]
             S_t = S_t[:self.max_T + 1]
@@ -118,10 +144,11 @@ def collate_fn(batch):
     return out
 
 
-def make_loaders(data_root, batch_size=64, seed=0, max_T=None):
+def make_loaders(data_root, batch_size=64, seed=0, max_T=None, shuffle_labels=False):
     """构建 train/val/test DataLoader。
 
     假设数据已分成 train/val/test 三个子目录。
+    shuffle_labels=True 时训练集标签在组内打乱 (sanity check)。
     """
     root = Path(data_root)
     loaders = {}
@@ -129,7 +156,10 @@ def make_loaders(data_root, batch_size=64, seed=0, max_T=None):
         split_dir = root / split
         if not split_dir.exists():
             continue
-        ds = GridWorldDataset(split_dir, max_T=max_T)
+        # 仅训练集打乱标签 (val/test 保持真实标签用于评估)
+        ds = GridWorldDataset(split_dir, max_T=max_T,
+                              shuffle_labels=(shuffle_labels and split == "train"),
+                              seed=seed)
         sampler = GroupedByNSampler(
             ds.Ns, batch_size=batch_size,
             shuffle=(split == "train"), seed=seed,

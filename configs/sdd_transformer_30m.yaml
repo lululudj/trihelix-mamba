@@ -1,0 +1,56 @@
+# SDD Transformer 对照配置 (阶段 2.5: SSM vs Transformer 真实数据对照)
+# 基于 matched_transformer_30m.yaml + SDD 数据设定
+# 目标: 验证 SSM 不退化是否为架构特异性 (预期 Transformer 在真实数据上也退化, 对照 SSM 不退化)
+# d_model=768, n_layers=4 → ~28M params (匹配 SSM 26.59M, ±5% 内)
+# 注意: TransformerBaseline 无 use_checkpoint (无 SSM triton backward OOM 问题), batch=2 稳
+
+# ========== 任务设定 ==========
+task:
+  cell_types: 16
+  action_dim: 5
+
+# ========== 模型 ==========
+model:
+  d_model: 768
+  n_layers: 4             # 4 层 TransformerEncoder ≈ 28M
+  bind_heads: 4
+  fusion_hidden: 1536
+  max_T: 256               # 与 SSM 一致 (TransformerBaseline 也用 time_embed)
+  # TransformerBaseline 不读 use_checkpoint / ablate_* / enable_m3 等 SSM 专用字段
+
+# ========== Eagle 校验 (TransformerBaseline 无 eagle, 不读) ==========
+eagle:
+  tau_init: 1.0e9
+  tau_target: 1.0
+  tau_warmup_steps: 2000
+  tau_anneal_steps: 10000
+
+# ========== 数据 (与 SSM SDD 完全一致) ==========
+data:
+  root: ./data_sdd_split
+  num_train: 8000
+  num_val: 1000
+  num_test: 1000
+  N_choices: [24]
+  K_choices: [8]
+  T_choices: [100]
+  p_transfer_choices: [0.0]
+  scenario_mix: {bookstore: 1.0}
+
+# ========== 训练 ==========
+train:
+  batch_size: 2           # Transformer 无 triton OOM, batch=2 稳 (与 GridWorld matched_transformer 一致)
+  max_steps: 50000
+  lr: 3.0e-4
+  weight_decay: 0.01
+  warmup_steps: 500
+  loss_aux_weight: 0.3
+  grad_clip: 1.0
+  seed: 0
+
+# ========== 评估 ==========
+eval:
+  acc_steps: [1, 5, 10, 30, 60, 100]
+  ood_T: [150]
+  ood_N: [24]
+  tau_sweep: [1.0e9]

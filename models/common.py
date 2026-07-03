@@ -8,7 +8,9 @@
 - M3SnapshotManager: .m3 快照管理器（占位实现）
 - balanced_ce_loss: 平衡奖惩交叉熵（变化 cell 加权，答对奖励答错惩罚）
 """
+import json
 import math
+from pathlib import Path
 
 import torch
 import torch.nn as nn
@@ -271,14 +273,30 @@ class BasePairCoupling(nn.Module):
 
 
 class M3SnapshotManager:
-    """ .m3 快照管理器（占位实现，spec §2.3）。
+    """ .m3 快照管理器（阶段 A 升级版：内存 dict + 真文件存储）。
 
-    训练期保留 in-graph dict 模拟快照回滚，完整外置硬盘存储为后续工程。
+    内存模式（save/load/latest_step）：训练期 in-graph dict 模拟快照回滚，
+        B 版 ThreeChainMamba2Lite 仍在用，保留不动。
+    文件模式（save_to_file/load_from_file）：阶段 A 新增，把每层三链状态
+        存到硬盘供阶段 B 外脑（外置 transformer）读取。
+
+    .m3 文件格式（魔数 M3SNP01 = 版本 1）：
+        [Magic 8B]    b"M3SNP01\\n"
+        [HeaderLen 4B] little-endian uint32，JSON 头的字节长度
+        [Header JSON] utf-8 字节，含 N/K/T/d_model/n_layers/step/sample_id/scenario_type
+        [Raw bytes]   每层三链状态拼接（float32）：
+            layer_0: h_s (N²,d) + h_t (T,d) + h_c (K,d)
+            layer_1: ...
+    体积约 350KB/快照（d=256, n_layers=2, N=8, T=100, K=8）。
     """
+
+    MAGIC = b"M3SNP01\n"
+    VERSION = 1
 
     def __init__(self):
         self.snapshots = {}
 
+    # ---- 内存模式（B 版 Lite 兼容，不动）----
     def save(self, step, h_state):
         self.snapshots[step] = h_state.detach().clone()
 
@@ -287,6 +305,59 @@ class M3SnapshotManager:
 
     def latest_step(self):
         return max(self.snapshots.keys()) if self.snapshots else None
+
+    # ---- 文件模式（阶段 A 新增）----
+    @staticmethod
+    def save_to_file(path, meta, chain_states):
+        """写 .m3 文件（原子写）。
+
+        Args:
+            path: 输出路径（str 或 Path）
+            meta: dict，必须含 N/K/T/d_model/n_layers；可选 step/sample_id/scenario_type
+            chain_states: list[dict]，每层 {"h_s": (N²,d), "h_t": (T,d), "h_c": (K,d)}
+                          张量会被 detach+cpu+float32+contiguous
+        """
+        path = Path(path)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        tmp = path.with_suffix(path.suffix + ".tmp")
+
+        with open(tmp, "wb") as f:
+            f.write(M3SnapshotManager.MAGIC)
+            header_json = json.dumps(meta, ensure_ascii=False).encode("utf-8")
+            f.write(len(header_json).to_bytes(4, "little"))
+            f.write(header_json)
+            for layer in chain_states:
+                for key in ("h_s", "h_t", "h_c"):
+                    t = layer[key].detach().cpu().contiguous().float()
+                    f.write(t.numpy().tobytes())
+        tmp.replace(path)
+
+    @staticmethod
+    def load_from_file(path):
+        """读 .m3 文件。
+
+        Returns:
+            (meta: dict, chain_states: list[dict])
+            chain_states[i] = {"h_s": (N²,d) float32, "h_t": (T,d), "h_c": (K,d)}
+        """
+        with open(path, "rb") as f:
+            magic = f.read(8)
+            if magic != M3SnapshotManager.MAGIC:
+                raise ValueError(f"不是 .m3 文件或版本不兼容：magic={magic!r}")
+            header_len = int.from_bytes(f.read(4), "little")
+            meta = json.loads(f.read(header_len).decode("utf-8"))
+            d = int(meta["d_model"])
+            N2 = int(meta["N"]) ** 2
+            T = int(meta["T"])
+            K = int(meta["K"])
+            n_layers = int(meta["n_layers"])
+            chain_states = []
+            for _ in range(n_layers):
+                h_s = torch.frombuffer(f.read(N2 * d * 4), dtype=torch.float32).reshape(N2, d).clone()
+                h_t = torch.frombuffer(f.read(T * d * 4), dtype=torch.float32).reshape(T, d).clone()
+                h_c = torch.frombuffer(f.read(K * d * 4), dtype=torch.float32).reshape(K, d).clone()
+                chain_states.append({"h_s": h_s, "h_t": h_t, "h_c": h_c})
+        return meta, chain_states
 
 
 # ========== 损失函数 ==========

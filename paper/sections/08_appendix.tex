@@ -1,0 +1,117 @@
+\section{Reproducibility}
+\label{app:repro}
+
+All code, configuration, the 72-sample OOD test set, and the full per-seed
+metric JSONs are released at the project repository. The model is implemented
+in PyTorch with \texttt{mamba\_ssm} 2.2.4 (Mamba2/SSD kernel).
+
+\paragraph{Environment.}
+Python 3.10+, PyTorch with CUDA, \texttt{mamba-ssm==2.2.4},
+\texttt{causal-conv1d}. A single 8\,GB GPU suffices; we set
+\texttt{PYTORCH\_CUDA\_ALLOC\_CONF=expandable\_segments:True} and use batch
+size 4. (Note: under Python 3.14 a prebuilt \texttt{mamba\_ssm} wheel may be
+unavailable and a source build is required.)
+
+\paragraph{Commands.}
+\begin{verbatim}
+# 1. Generate training + OOD data
+python data/gen_grid_world.py
+python data/gen_ood.py
+
+# 2. Train TriHelix-Mamba2 (5 seeds)
+python train.py --model three_chain_mamba2 \
+                --config configs/matched_mamba2.yaml \
+                --max_steps 2000 --seed 42   # repeat: 123 456 789 1024
+
+# 3. Evaluate OOD at T=150
+python eval.py  --model three_chain_mamba2 --ood_T 150
+
+# 4. Ablations (same config, 2000 steps)
+python train.py --model three_chain_mamba2_bp   --seed 42   # BPv1
+python train.py --model three_chain_mamba2_bpv2 --seed 42   # BPv2
+python train.py --model transformer \
+                --config configs/matched_transformer_tiny.yaml --seed 42
+\end{verbatim}
+
+\paragraph{Non-degeneracy gate.}
+A run is certified non-degenerate iff zero-ratio $<0.9$ \emph{and} OOD
+non-zero predictions $>5\%$ of the target count. The diagnostic script
+\texttt{probe\_mamba2\_brain.py} reports both.
+
+\section{Hyperparameters}
+\label{app:hyper}
+
+\begin{table}[h]
+\centering
+\small
+\caption{TriHelix-Mamba2 hyperparameters.}
+\label{tab:hyper}
+\begin{tabular}{lc}
+\toprule
+Hyperparameter & Value \\
+\midrule
+Model dimension $d$ & 256 \\
+Number of layers $L$ & 2 \\
+Cell classes $C$ & 16 \\
+Grid size $N$ & 8 \\
+Agents $K$ & 8 \\
+Train horizon $T_{\text{train}}$ & 100 \\
+OOD horizon $T_{\text{test}}$ & 150 \\
+\midrule
+\multicolumn{2}{l}{\emph{Spatial chain (row \& col, bidirectional)}} \\
+$d_{\text{state}}$ / \texttt{d\_conv} / expand / headdim & 128 / 4 / 1 / 32 \\
+\midrule
+\multicolumn{2}{l}{\emph{Temporal chain (causal)}} \\
+$d_{\text{state}}$ / \texttt{d\_conv} / expand / headdim & 64 / 4 / 2 / 64 \\
+\midrule
+\multicolumn{2}{l}{\emph{Causal chain (agent-wise, causal)}} \\
+$d_{\text{state}}$ / \texttt{d\_conv} / expand / headdim & 32 / 4 / 2 / 64 \\
+\midrule
+\multicolumn{2}{l}{\emph{Loss (\texttt{balanced\_ce\_loss})}} \\
+Change weight / unchanged weight & 20 / 1.0 \\
+Empty-class weight & 0.1 \\
+Aux weight (intermediate steps) & 0.3 \\
+\midrule
+\multicolumn{2}{l}{\emph{Optimisation}} \\
+Optimiser & AdamW \\
+Batch size & 4 \\
+Training steps & 2000 \\
+Seeds & 42, 123, 456, 789, 1024 \\
+\midrule
+Total parameters & 3,263,440 (3.26M) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Per-seed OOD metrics}
+\label{app:seed}
+
+\Cref{tab:seed} reports the full per-seed OOD metrics for TriHelix-Mamba2,
+computed on the released 72-sample OOD set at $T{=}150$.
+
+\begin{table}[h]
+\centering
+\small
+\caption{Per-seed OOD metrics for TriHelix-Mamba2 (2000 steps).
+\texttt{ch\_acc}@150 is the changed-cell accuracy at the OOD horizon;
+\texttt{decay} is $\texttt{ch\_acc}@150 - \texttt{ch\_acc}@100$.}
+\label{tab:seed}
+\begin{tabular}{lccc}
+\toprule
+Seed & \texttt{ch\_acc}@150 & \texttt{decay} (abs) & \texttt{decay} (\%) \\
+\midrule
+42   & 0.59887 & $-0.00024$ & $-0.04\%$ \\
+123  & 0.59801 & $-0.00159$ & $-0.26\%$ \\
+456  & 0.59548 & $-0.00862$ & $-1.43\%$ \\
+789  & 0.59218 & $-0.00697$ & $-1.16\%$ \\
+1024 & 0.59132 & $-0.00353$ & $-0.59\%$ \\
+\midrule
+\textbf{mean$\pm$std} & \textbf{0.5952$\pm$0.0034} & \textbf{$-0.00419$} & \textbf{$-0.70\%$} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+All five seeds pass the non-degeneracy gate (zero-ratio $<0.9$, OOD non-zero
+predictions well above $5\%$ of target), and the per-seed OOD decay is negative
+but small in every case---no seed exhibits the catastrophic $-9\%$ decay seen
+in the BPv1 ablation.

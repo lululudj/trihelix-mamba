@@ -1,0 +1,181 @@
+\section{Method}
+\label{sec:method}
+
+\subsection{Problem setting}
+\label{sec:problem}
+
+A GridWorld instance is defined by an initial board $S_0 \in
+\mathbb{Z}^{N\times N}$ over $C=16$ cell types (empty, walls, and agent colours)
+and a sequence of $K$-agent actions $a_{1:t} \in \mathbb{Z}^{K\times t}$. The
+environment is deterministic with a fixed agent priority order: at each step,
+agents $1,\dots,K$ move in turn, and collisions are resolved by priority. The
+learning task is to predict the full board trajectory
+$S_{1:T} \in \mathbb{Z}^{T\times N\times N}$ from $(S_0, a_{1:T})$. Crucially,
+the model is trained on trajectories of length $T_{\text{train}}{=}100$ and
+evaluated out-of-distribution at $T_{\text{test}}{=}150$, i.e.\ $50\%$ beyond
+the training horizon. All state predictions are causal in time:
+$\hat{S}_t$ may depend only on $S_0$ and $a_{1:t}$.
+
+\subsection{The unified spatiotemporal tensor}
+\label{sec:tensor}
+
+The central design choice is to keep the entire spatiotemporal state as a
+single tensor $x\in\mathbb{R}^{B\times T\times N^{2}\times d}$ throughout the
+network, rather than maintaining separate hidden states per chain. Each of the
+three chains then scans $x$ as a different \emph{view}: the temporal chain
+partitions $x$ by cell ($B N^2$ sequences of length $T$); the spatial chain
+partitions $x$ by timestep ($B T$ sequences of length $N^2$); the causal chain
+operates on the action embedding $a \in \mathbb{R}^{B\times K\times T\times d}$
+($B T$ sequences of length $K$). Because all three chains read and write the
+same tensor, cross-chain coupling is provided \emph{implicitly} by residual
+fusion at every layer---an alternative to explicit base-pair rungs that we
+ablate in \cref{sec:exp-ablation}.
+
+\paragraph{Anchor initialisation.}
+The tensor is initialised by summing three embeddings:
+\begin{equation}
+x_{b,t,i,:} \;=\; \mathrm{emb}_{\text{cell}}(S_{0,b,i})
+               \;+\; \tfrac{1}{K}\textstyle\sum_{k} \mathrm{emb}_{\text{act}}(a_{b,k,t})
+               \;+\; \mathrm{emb}_{\text{time}}(t),
+\label{eq:anchor}
+\end{equation}
+where $i$ indexes the $N^2$ cells flattened in row-major order. The initial
+board $S_0$ is broadcast across all $T$ timesteps (the model must learn to
+\emph{modify} it forward in time), the mean action embedding injects
+per-step intent, and the time embedding provides absolute position. We use
+$d=256$.
+
+\subsection{HeteroMamba2: three heterogeneous chains}
+\label{sec:hetero}
+
+The core block $\mathrm{HeteroMamba2}$ stacks $L=2$ layers, each performing
+three parallel scans followed by residual fusion. The three chains have
+heterogeneous Mamba2 hyperparameters chosen to match their structural
+characteristics (\cref{tab:chains}).
+
+\begin{table}[h]
+\centering
+\small
+\caption{Per-chain Mamba2 (SSD) configuration. ``Dir.'' is the scan direction;
+``Causal'' means strictly left-to-right, ``Bi'' means bidirectional (sum of
+forward and flipped scans with shared parameters).}
+\label{tab:chains}
+\begin{tabular}{lccccc}
+\toprule
+Chain & Scans over & $d_{\text{state}}$ & expand & headdim & Dir. \\
+\midrule
+Spatial (row) & $N^2$ cells per $(b,t)$ & 128 & 1 & 32 & Bi \\
+Spatial (col) & $N^2$ cells per $(b,t)$ & 128 & 1 & 32 & Bi \\
+Temporal      & $T$ steps per $(b,i)$   & 64  & 2 & 64 & Causal \\
+Causal        & $K$ agents per $(b,t)$  & 32  & 2 & 64 & Causal \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Spatial chain (bidirectional, row + column).}
+The grid has no canonical left-to-right order over cells, so the spatial chain
+is bidirectional: $y = \mathrm{Mamba2}(x) + \mathrm{flip}(\mathrm{Mamba2}(\mathrm{flip}(x)))$
+with shared parameters to control the budget. Because a 2-D grid has two natural
+orders (row-major and column-major), we run two independent bidirectional
+Mamba2 modules---one over the row-major flattening, one over the column-major
+flattening (transposed)---and fuse their outputs:
+\begin{equation}
+x_s \;=\; W_s\,\big[\,\mathrm{BiMamba2}_{\text{row}}(x_{\text{row}})\,;\,
+                      \mathrm{BiMamba2}_{\text{col}}(x_{\text{col}})\,\big],
+\label{eq:spatial}
+\end{equation}
+with $W_s\in\mathbb{R}^{d\times 2d}$. The spatial chain uses $d_{\text{state}}{=}128$
+(the grid is large and benefits from a richer state) and \texttt{headdim=32} with
+\texttt{expand=1}, which we found necessary to avoid a \texttt{causal\_conv1d}
+stride-alignment error in the Mamba2 kernel.
+
+\paragraph{Temporal chain (causal).}
+For each cell $i$ independently, a causal Mamba2 scans along $t$:
+$x_t = \mathrm{Mamba2}_{\text{causal}}(x_{[:,\,:,i,:]})$, reshaped to
+$(B N^2, T, d)$ and back. Causality is the Mamba2 default (the convolution and
+recurrence are masked), so $\hat{S}_t$ depends only on
+$S_0$ and $a_{1:t}$ as required.
+
+\paragraph{Causal chain (agent-wise).}
+The action embedding $a\in\mathbb{R}^{B\times K\times T\times d}$ is scanned
+causally along the $K$-agent axis, matching the environment's fixed priority
+order: agent $k$'s representation is conditioned on agents $<k$. The resulting
+per-agent representation is updated residually, and its mean across $K$ is
+projected and broadcast back into the cell tensor as an injection:
+\begin{equation}
+c_{\text{inject}} \;=\; W_c\,\big(\tfrac{1}{K}\textstyle\sum_{k} \mathrm{Mamba2}_{\text{causal}}(a)\big),
+\label{eq:causal}
+\end{equation}
+with $W_c\in\mathbb{R}^{d\times d}$, broadcast from $(B,T,1,d)$ to $(B,T,N^2,d)$.
+
+\paragraph{Residual fusion.}
+Each layer updates the unified tensor by residual addition followed by
+LayerNorm:
+\begin{equation}
+x \;\leftarrow\; \mathrm{LN}\!\big(x + x_s + x_t + c_{\text{inject}}\big).
+\label{eq:fusion}
+\end{equation}
+This is the single point of cross-chain interaction. We deliberately avoid
+global pooling, cross-attention, or learned gates at fusion---the ablations in
+\cref{sec:exp-ablation} show that adding explicit coupling here is either
+harmful or neutral.
+
+\subsection{Output head and loss}
+\label{sec:head}
+
+A simple MLP head projects each cell back to the $C=16$ cell classes:
+$\mathrm{head}(x) = \mathrm{Linear}_{d\to C}(\mathrm{GELU}(\mathrm{Linear}_{d\to d/2}(\mathrm{LN}(x))))$,
+yielding logits $\hat{S}\in\mathbb{R}^{B\times T\times N\times N\times C}$.
+
+\paragraph{Balanced cross-entropy loss.}
+A naive cross-entropy on all cells admits the all-zero shortcut: since the
+empty cell dominates, predicting class~0 everywhere yields low loss and high
+accuracy. We use a \emph{balanced} cross-entropy that up-weights cells which
+actually change between $S_0$ and $S_t$, and down-weights the empty class:
+\begin{equation}
+\mathcal{L} \;=\; \sum_{b,t,i,j} w_{ij}^{(t)}\,w_{\text{class}}(S_{t,b,i,j})\;
+                  \mathrm{CE}\!\big(\hat{S}_{t,b,i,j},\, S_{t,b,i,j}\big),
+\label{eq:loss}
+\end{equation}
+where $w_{ij}^{(t)}{=}20$ if $S_{t,i,j}\neq S_{0,i,j}$ and $1$ otherwise, and
+$w_{\text{class}}(0){=}0.1$ with $w_{\text{class}}(c){=}1$ for $c\neq 0$. The
+loss is computed on the final timestep plus an auxiliary term (weight $0.3$)
+on intermediate timesteps to stabilise credit assignment over the long horizon.
+This loss is necessary but, as the Transformer ablation shows, not sufficient:
+the same loss with the same data still collapses for an equally sized
+attention model.
+
+\subsection{Base-pair ablation variants}
+\label{sec:method-bp}
+
+To test whether explicit DNA-style base-pair rungs complement the implicit
+residual coupling of \cref{eq:fusion}, we define two architectural variants
+that are otherwise identical to TriHelix-Mamba2 (same tensor, same chains, same
+head, same loss):
+
+\begin{itemize}[leftmargin=*,itemsep=2pt]
+  \item \textbf{BPv1 (in-chain base pair).} Each chain applies an internal
+        complementary-gate plus an anti-symmetric head before its output is
+        fused. This formalises base-pairing \emph{within} a strand.
+  \item \textbf{BPv2 (cross-chain base pair).} A single learned rung pulls the
+        three chains toward a shared state $\bar{x}$ before residual fusion:
+        $x_c \leftarrow x_c + \alpha\,(\bar{x} - x_c)$ for each chain $c$, with
+        $\alpha\in\mathbb{R}^{2}$ initialised to $0$ and learned per layer.
+        This formalises base-pairing \emph{across} the three strands.
+\end{itemize}
+
+\noindent Both variants are evaluated in \cref{sec:exp-ablation}. The full
+(non-ablated) TriHelix-Mamba2 is our main model.
+
+\subsection{Implementation notes}
+\label{sec:impl}
+
+The model is implemented in PyTorch with the \texttt{mamba\_ssm} 2.2.4 kernel
+(Mamba2/SSD). Three hyperparameter constraints from the kernel shaped the
+design: (i) the 1-D convolution width \texttt{d\_conv} must be in $\{2,3,4\}$;
+(ii) the spatial chain's \texttt{expand=1} requires \texttt{headdim=32} to
+avoid a \texttt{causal\_conv1d} stride-alignment error
+(\texttt{headdim=64} fails); (iii) \texttt{headdim} must divide
+$d_{\text{model}}\times\texttt{expand}$. The total parameter count is 3.26M.
+Training uses AdamW with batch size 4 on a single 8\,GB GPU
+(\texttt{PYTORCH\_CUDA\_ALLOC\_CONF=expandable\_segments:True}) for 2000 steps.

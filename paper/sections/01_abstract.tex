@@ -1,0 +1,28 @@
+\begin{abstract}
+Predicting the future state of a multi-agent dynamical system far beyond the
+training horizon---\emph{long-range state extrapolation}---remains an open
+problem. Sequence models trained on short trajectories often degrade to the
+trivial all-zero predictor when evaluated on longer horizons, a failure mode we
+call \emph{degenerate prediction}. We introduce \textbf{TriHelix-Mamba2}, a
+state-space model (SSM) that organises computation into three specialised
+\emph{chains}---temporal, spatial, and causal---which scan a single unified
+spatiotemporal tensor $x{:}(B,T,N^{2},d)$ as three views and fuse residually at
+every layer. Built on Mamba2 (SSD), the model has 3.26M parameters. On a
+GridWorld multi-agent benchmark (8$\times$8 grid, 8 agents), trained on
+trajectories of length $T{=}100$ and tested out-of-distribution at $T{=}150$
+(50\% longer, never seen), TriHelix-Mamba2 achieves a changed-cell accuracy of
+\textbf{0.5952$\pm$0.0034} across five seeds with an OOD decay of
+\textbf{$-$0.0042}, i.e.\ essentially zero degradation, while reducing its
+zero-prediction ratio from 97.7\% (a degenerate Mamba1 baseline) to 17.2\%. In
+a matched-parameter ablation, an equally sized Transformer (3.43M) trained
+identically collapses completely, predicting all zeros on 100\% of OOD cells.
+Two further ablations probe whether explicit DNA-style base-pair constraints
+help: in-chain pairing (BPv1) \emph{harms} OOD by 5.6\%, whereas cross-chain
+pairing (BPv2) ties the baseline, with the learnable coupling coefficient going
+\emph{negative}---the model uses base pairs to preserve three-chain diversity
+rather than enforce consensus. Together the results support a simple thesis:
+\emph{a unified three-chain SSM architecture is sufficient for long-range
+extrapolation; constraints placed incorrectly hurt, constraints placed
+correctly are neutral, and equally sized Transformers collapse where SSMs
+generalise.}
+\end{abstract}
