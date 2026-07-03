@@ -68,6 +68,27 @@
 | [`scripts_sdd/eval_ood_advanced.py`](scripts_sdd/eval_ood_advanced.py) | 高级指标分解（pos_iou / agent_id / enter / leave） | ~220 |
 | [`scripts_sdd/eval_negative_shadow.py`](scripts_sdd/eval_negative_shadow.py) | 三链负面分身消融评估 | ~180 |
 
+### 📦 秒级验证（无需训练，直接下载预训练权重）
+
+不想花几小时训练？直接下载 3.26M GridWorld 预训练权重（`best.pt`，39 MB），10 秒内见证 OOD 长程外推不退化：
+
+```bash
+# 1. 下载预训练权重（从 GitHub Release 或 GitLink Release）
+#    GitHub:  https://github.com/lulululudj/trihelix-mamba/releases/download/v1.0-weights/best.pt
+#    GitLink: https://www.gitlink.org.cn/lulululudj/ThreeChainMamba/releases
+curl -L -o best.pt https://github.com/lulululudj/trihelix-mamba/releases/download/v1.0-weights/best.pt
+
+# 2. 直接跑 OOD 长程评估（训练 T=100 → 评估 T=150，1.5× 外推）
+python eval_ood.py --checkpoint best.pt \
+                  --config configs/matched_mamba2.yaml \
+                  --data_root ./data/ood_T150
+# 期望输出: OOD changed_acc ≈ 0.59, ood_decay_pct ≈ 0% (不退化)
+```
+
+> 💡 上面的 `best.pt` 是 3.26M 三链主力模型（GridWorld 100 步训练），OOD changed_acc@T=150 = 0.5952 ± 0.0034，decay ≈ 0。SDD 30M 模型 checkpoint 因体积较大（>100MB）未入 Release，可联系 owner 获取。
+
+### 🛠️ 从零训练（完整复现）
+
 ```bash
 # 1. 环境（mamba_ssm 需 --no-build-isolation 避免 torch 隔离）
 pip install -e . --no-build-isolation
@@ -95,7 +116,7 @@ python scripts_sdd/eval_negative_shadow.py \
 
 **复现实验数据**：41+ 实验原始指标 JSON 留存于 `results_stage2/`（SDD 真实数据）、`results_stage3/`（机制消融）、`results_wsl/`（WSL2 本地基准）目录，指标可追溯。
 
-> 📌 **关于模型权重**：模型权重因体积未上传，可通过训练脚本从零复现，所有实验指标原始数据已全部开源留存（`results_stage2/`、`results_stage3/`、`results_wsl/`）。
+> 📌 **关于模型权重**：模型权重文件因体积较大未上传至 git 仓库，所有实验均可通过训练脚本从零复现，指标原始数据已全部开源留存（`results_stage2/`、`results_stage3/`、`results_wsl/`）。3.26M GridWorld 预训练权重已通过 [Release](https://github.com/lulululudj/trihelix-mamba/releases) 提供「秒级验证」通道（见上方 📦 段）。
 
 ---
 
@@ -228,7 +249,7 @@ python scripts_sdd/eval_negative_shadow.py \
 | 数据集 | 视频数 | 模型规模 | 训练 | OOD decay（窗口） | 结论 |
 |---|---|---|---|---|---|
 | SDD bookstore | 7 视频 | 30M | 10k 步充分 | **+11.72%** | 不退化，长程增强 |
-| SDD nexus | 12 视频 | 30M | 10k 步充分 | 见 `results_stage2/nexus_30m_seed0_10k/` | 多 agent 交互复杂场景验证 |
+| SDD nexus | 12 视频 | 30M | 10k 步充分 | **-6.9%**（window） | 因果链消融 -55%，**学到 agent 身份**（2.3× 随机） |
 
 #### 🔬 Nexus 多智能体场景核心数据（评审首页直读，无需点进报告）
 
