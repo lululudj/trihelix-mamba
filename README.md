@@ -34,6 +34,47 @@
 - 沐曦 **MXMACA** 软件栈提供 Triton 编译后端（Triton-MXMACA），可在不修改任何 Python / Triton 源码的前提下编译本仓库的全部 kernel；
 - 端侧人形机器人多智能体实时推演场景：线性复杂度 + 1B 量级不退化 → 适合在沐曦端侧 GPU 上做长时序多智能体世界模型推演。
 
+### ⚡ 快速验证（一键复现，评审可运行）
+
+仓库含**完整可运行源码**（非纯文档项目），关键文件：
+
+| 文件 | 作用 | 行数 |
+|---|---|---|
+| [`models/three_chain_mamba2.py`](models/three_chain_mamba2.py) | 三链 SSM 核心架构（HeteroMamba2 + ThreeChainMamba2 + AnchorInit2） | ~430 |
+| [`train.py`](train.py) | 训练入口（含 balanced_ce_loss + OOD eval） | ~250 |
+| [`eval_ood.py`](eval_ood.py) | OOD 长程外推评估（T=150 曲线 + decay 指标） | ~200 |
+| [`data/dataset.py`](data/dataset.py) | GridWorld + SDD 数据加载（含 shuffle_labels sanity） | ~150 |
+| [`data/gen_sdd_grid.py`](data/gen_sdd_grid.py) | SDD 真实数据 → .npz 网格化 | ~200 |
+| [`scripts_sdd/eval_ood_advanced.py`](scripts_sdd/eval_ood_advanced.py) | 高级指标分解（pos_iou / agent_id / enter / leave） | ~220 |
+| [`scripts_sdd/eval_negative_shadow.py`](scripts_sdd/eval_negative_shadow.py) | 三链负面分身消融评估 | ~180 |
+
+```bash
+# 1. 环境（mamba_ssm 需 --no-build-isolation 避免 torch 隔离）
+pip install -e . --no-build-isolation
+
+# 2. 训练（30M 模型, 任何 GPU 单卡可跑）
+python train.py --config configs/matched_mamba2_30m.yaml --max_steps 500
+
+# 3. OOD 长程评估（训练 T=100 → 评估 T=150, 1.5× 外推）
+python eval_ood.py --checkpoint results/matched_mamba2_30m/best.pt \
+                  --config configs/matched_mamba2_30m.yaml \
+                  --data_root ./data/ood_T150
+
+# 4. SDD 真实数据高级指标（含 position_iou / agent_id 分解）
+python scripts_sdd/eval_ood_advanced.py \
+    --checkpoint results_stage2/nexus_30m_seed0_10k/best.pt \
+    --config configs/sdd_mamba2_30m_nexus.yaml \
+    --data_root ./data/ood_T150_sdd_nexus
+
+# 5. 三链负面分身消融（验证三链 SSM 贡献）
+python scripts_sdd/eval_negative_shadow.py \
+    --checkpoint results_stage2/nexus_30m_seed0_10k/best.pt \
+    --config configs/sdd_mamba2_30m_nexus.yaml \
+    --data_root ./data/ood_T150_sdd_nexus
+```
+
+**复现实验数据**:41+ 实验原始 metrics JSON 在 `results_stage2/` 与 `results_cloud/`(指标可追溯,checkpoint 因体积未上传)。
+
 ---
 
 ## 🎯 解决什么问题
