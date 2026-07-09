@@ -1,0 +1,51 @@
+# M3 外置快照对接测试配置
+
+task:
+  cell_types: 16
+  action_dim: 5
+
+model:
+  d_model: 256
+  n_layers: 2
+  bind_heads: 4
+  fusion_hidden: 512
+  # 阶段 A: 启用 .m3 外置快照
+  enable_m3: true
+  enable_jepa: false
+  max_T: 100
+
+eagle:
+  tau_init: 1.0e9
+  tau_target: 1.0
+  tau_warmup_steps: 2000
+  tau_anneal_steps: 10000
+
+data:
+  root: ./data_cache
+  num_train: 100
+  num_val: 20
+  num_test: 20
+  N_choices: [8]
+  K_choices: [4]
+  T_choices: [30]
+  p_transfer_choices: [0.0]
+  scenario_mix: {random: 1.0}
+
+train:
+  batch_size: 4
+  max_steps: 50
+  lr: 3.0e-4
+  weight_decay: 0.01
+  warmup_steps: 10
+  loss_aux_weight: 0.3
+  grad_clip: 1.0
+  seed: 0
+
+# 阶段 A: .m3 外置快照配置
+m3:
+  save_interval: 10   # 每 10 步保存一次
+
+eval:
+  acc_steps: [1, 5, 10, 30]
+  ood_T: [30, 60]
+  ood_N: [8]

@@ -10,7 +10,7 @@ try:
 except ImportError:
     ThreeChainMamba3 = None
 from .baselines import (
-    SingleChain, ConcatMamba, TransformerBaseline, GNNBaseline,
+    SingleChain, SingleChainMamba3, ConcatMamba, TransformerBaseline, GNNBaseline,
     ThreeChainNoEagle, ThreeChainNoBind, ThreeChainBP,
 )
 
@@ -22,6 +22,7 @@ MODEL_REGISTRY = {
     "three_chain_mamba2_bp": ThreeChainMamba2BP,
     "three_chain_mamba2_bpv2": ThreeChainMamba2BPv2,
     "single_chain": SingleChain,
+    "single_chain_mamba3": SingleChainMamba3,
     "concat_mamba": ConcatMamba,
     "transformer": TransformerBaseline,
     "gnn": GNNBaseline,

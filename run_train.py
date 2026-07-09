@@ -1,110 +1,63 @@
-"""启动训练: wrapper 脚本激活 conda, nohup 后台跑, 轮询日志"""
-import sys
-import time
+"""跑 CodeBERT 训练 (后台 nohup, 轮询输出)。"""
 import paramiko
+import time
+import sys
 
 HOST = "connect.bjb1.seetacloud.com"
-PORT = 50472
+PORT = 16141
 USER = "root"
-PASSWORD = "i9D1S9IoRMLR"
-WORKDIR = "/root/three_chain_v3"
-TRAIN_LOG = "/root/cloud_train.log"
-WRAPPER_SH = "/root/run_train_wrapper.sh"
+PASS = "BaJ+0sL75oMj"
+PROJ = "/root/autodl-tmp/mambacoding"
 
-# Wrapper: 激活 conda + 跑 run_cloud_30m.sh
-WRAPPER_SCRIPT = """#!/bin/bash
-# 激活 conda 环境 (云机器默认 PATH 没有python)
-source /root/miniconda3/etc/profile.d/conda.sh
-conda activate base
+INIT = "source /root/miniconda3/etc/profile.d/conda.sh && conda activate base && export HF_ENDPOINT=https://hf-mirror.com && "
 
-# 设 CUDA 环境 (mamba_ssm 编译时已用, 运行时也需)
-export CUDA_HOME=/usr/local/cuda
-export PATH=$CUDA_HOME/bin:$PATH
-export LD_LIBRARY_PATH=$CUDA_HOME/lib64:$LD_LIBRARY_PATH
+client = paramiko.SSHClient()
+client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+client.connect(HOST, port=PORT, username=USER, password=PASS, timeout=30)
+print(f"[SSH] 连接成功\n{'='*60}")
 
-cd /root/three_chain_v3
-echo "=== 环境检查 ==="
-echo "python: $(which python)"
-echo "torch: $(python -c 'import torch; print(torch.__version__)')"
-echo "mamba_ssm: $(python -c 'import mamba_ssm; print(mamba_ssm.__version__)')"
-echo "GPU: $(nvidia-smi --query-gpu=name,memory.total --format=csv,noheader)"
-echo ""
-echo "=== 启动 run_cloud_30m.sh ==="
-bash run_cloud_30m.sh
-echo ""
-echo "=== TRAIN_DONE ==="
-"""
+# 1. 先验证 sandbox 能 import
+print("\n--- Step 1: 验证 sandbox import ---")
+cmd = INIT + f"cd {PROJ} && python -c 'import sandbox; print(\"sandbox ok, BRAIN=\", type(sandbox.BRAIN).__name__)'"
+stdin, stdout, stderr = client.exec_command(cmd, timeout=120)
+out = stdout.read().decode("utf-8", errors="ignore")
+err = stderr.read().decode("utf-8", errors="ignore")
+print(out[-1000:])
+if err.strip():
+    print(f"[stderr] {err[-1000:]}")
 
+# 2. 启动训练 (nohup 后台)
+print("\n--- Step 2: 启动 CodeBERT 训练 (后台) ---")
+cmd = INIT + f"cd {PROJ} && nohup python train_b_codebert.py > train_b_codebert.log 2>&1 & echo $! > train.pid && sleep 2 && cat train.pid && echo '训练已启动'"
+stdin, stdout, stderr = client.exec_command(cmd, timeout=30)
+out = stdout.read().decode("utf-8", errors="ignore")
+print(out)
 
-def run_cmd_streaming(cli, cmd, max_wait=1800):
-    """流式打印 + 永久等待 (训练 20 分钟)"""
-    transport = cli.get_transport()
-    chan = transport.open_session()
-    chan.exec_command(cmd + " 2>&1")
-    out_buf = []
-    last_print = time.time()
-    start = time.time()
-    last_heartbeat = 0
-    while True:
-        if chan.recv_ready():
-            data = chan.recv(4096).decode("utf-8", errors="replace")
-            out_buf.append(data)
-            for line in data.splitlines():
-                print("    " + line.rstrip())
-            last_print = time.time()
-        elif chan.exit_status_ready():
-            while chan.recv_ready():
-                data = chan.recv(4096).decode("utf-8", errors="replace")
-                out_buf.append(data)
-                for line in data.splitlines():
-                    print("    " + line.rstrip())
-            break
-        else:
-            time.sleep(1)
-            elapsed = int(time.time() - start)
-            # 每 60 秒打一次心跳
-            if elapsed - last_heartbeat >= 60:
-                print(f"    [心跳 {elapsed}s] 训练中... (正常, 100 步 ~10-15 分钟)")
-                last_heartbeat = elapsed
-            if elapsed > max_wait:
-                print(f"    ✗ 总超时 {max_wait}s")
-                break
-    return "".join(out_buf), chan.recv_exit_status()
+# 3. 轮询训练进度
+print("\n--- Step 3: 轮询训练进度 ---")
+max_wait = 600  # 最多等 10 分钟
+wait = 0
+last_size = 0
+while wait < max_wait:
+    time.sleep(20)
+    wait += 20
+    cmd = f"tail -5 {PROJ}/train_b_codebert.log 2>/dev/null; echo '---'; ps -p $(cat {PROJ}/train.pid 2>/dev/null) -o pid,etime,cmd --no-headers 2>/dev/null || echo 'PROCESS_DONE'"
+    stdin, stdout, stderr = client.exec_command(cmd, timeout=15)
+    out = stdout.read().decode("utf-8", errors="ignore")
+    # 检查是否完成
+    if "PROCESS_DONE" in out:
+        print(f"\n[+{wait}s] 训练进程已结束")
+        print(out)
+        break
+    print(f"\n[+{wait}s]")
+    print(out)
 
+# 4. 训练完成后查看完整结果
+print("\n--- Step 4: 训练结果 ---")
+cmd = f"tail -30 {PROJ}/train_b_codebert.log; echo '==='; ls -la {PROJ}/checkpoints/text_encoder_b_codebert*.pt 2>/dev/null; echo '==='; cat {PROJ}/checkpoints/text_encoder_b_codebert_loss.json 2>/dev/null | tail -5"
+stdin, stdout, stderr = client.exec_command(cmd, timeout=30)
+out = stdout.read().decode("utf-8", errors="ignore")
+print(out)
 
-def main():
-    print("[1] 连接 ...")
-    cli = paramiko.SSHClient()
-    cli.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    cli.connect(HOST, port=PORT, username=USER, password=PASSWORD, timeout=30)
-    print("    ✓ 连上了")
-
-    print("\n[2] 上传 run_train_wrapper.sh ...")
-    sftp = cli.open_sftp()
-    with sftp.open(WRAPPER_SH, "w") as f:
-        f.write(WRAPPER_SCRIPT)
-    sftp.chmod(WRAPPER_SH, 0o755)
-    sftp.close()
-    print(f"    ✓ 写入 {WRAPPER_SH}")
-
-    print("\n[3] 启动训练 (前台流式打印, 100 步训练 + OOD eval, 约 15-20 分钟) ...")
-    print("    " + "=" * 60)
-    out, rc = run_cmd_streaming(cli, f"bash {WRAPPER_SH}", max_wait=1800)
-    print("    " + "=" * 60)
-    print(f"\n[4] 训练完成, rc={rc}")
-
-    if "TRAIN_DONE" in out:
-        print("\n🎉🎉🎉 训练 + OOD eval 全部完成!")
-        # 提取关键结果
-        if "OOD decay" in out:
-            for line in out.splitlines():
-                if "decay" in line.lower() or "changed_acc" in line.lower() or "趋势" in line or "退化" in line or "✅" in line or "❌" in line or "⚠" in line:
-                    print(f"  {line.strip()}")
-        return 0
-    else:
-        print("\n✗ 训练中断")
-        return 1
-
-
-if __name__ == "__main__":
-    sys.exit(main())
+client.close()
+print(f"\n{'='*60}\n[SSH] 完成")

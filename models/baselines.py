@@ -19,6 +19,18 @@ from .common import (AnchorInit, BasePairCoupling, CrossAttention, Fusion,
                      _GRUSeq, make_ssm, balanced_ce_loss)
 from .three_chain import ThreeChain
 
+# 纯 Mamba3 单链 baseline (延迟 import 避免循环依赖)
+def _make_mamba3_seq(d_model, n_layers):
+    """用 Mamba3 堆叠 n_layers 层 (官方Triton优先, 回退mamba3_ref)。"""
+    from .three_chain_mamba3 import make_mamba3, Mamba3 as _M3
+    if _M3 is None:
+        raise RuntimeError("Mamba3 不可用, 无法构造 SingleChainMamba3")
+    import torch.nn as nn
+    return nn.Sequential(*[
+        make_mamba3(d_model, d_state=64, expand=2, headdim=64)
+        for _ in range(n_layers)
+    ])
+
 
 def _base_loss(logits, S_t, aux_weight=0.3):
     """平衡奖惩损失：变化 cell 加权 ×5，不变 cell ×1。S_0 从 S_t 提取。"""
@@ -37,6 +49,38 @@ class SingleChain(nn.Module):
         self.action_embed = nn.Embedding(action_dim, d_model)
         # n_layers 加倍以匹配三链总参数
         self.mamba = make_ssm(d_model, n_layers)
+        self.norm = nn.LayerNorm(d_model)
+        self.fusion = Fusion(d_model, cell_types, n_heads=4)
+
+    def forward(self, S_0, actions):
+        B, N, _ = S_0.shape
+        K, T = actions.shape[1], actions.shape[2]
+        cell_emb = self.cell_embed(S_0.reshape(B, N * N))  # (B, N², d)
+        act_emb = self.action_embed(actions).mean(dim=1)   # (B, T, d)
+        h = torch.cat([cell_emb, act_emb], dim=1)
+        h = self.norm(self.mamba(h))
+        h_bind = h[:, N * N:]   # (B, T, d)
+        h_s = h[:, :N * N]      # (B, N², d)
+        logits = self.fusion(h_bind, h_s)
+        return logits, {"rollback_mask": None, "drift": None}
+
+    def loss(self, logits, S_t, aux_weight=0.3):
+        return _base_loss(logits, S_t, aux_weight)
+
+
+class SingleChainMamba3(nn.Module):
+    """单链 Mamba3：拼接 (S_0, actions) 送单条 Mamba3。验证三链 vs 单链 Mamba3。
+
+    与 SingleChain 唯一区别：底层 SSM 从 Mamba1 -> Mamba3 (复数状态+dt-RoPE)。
+    用于隔离 Mamba3 内核 vs Mamba1 的纯效果 (控制变量)。
+    """
+
+    def __init__(self, cell_types=16, action_dim=5, d_model=256, n_layers=3, **kw):
+        super().__init__()
+        self.cell_types = cell_types
+        self.cell_embed = nn.Embedding(cell_types, d_model)
+        self.action_embed = nn.Embedding(action_dim, d_model)
+        self.mamba = _make_mamba3_seq(d_model, n_layers)
         self.norm = nn.LayerNorm(d_model)
         self.fusion = Fusion(d_model, cell_types, n_heads=4)
 

@@ -1,0 +1,46 @@
+# setup/environment.yml — conda 环境固化
+#
+# 用法 (在 WSL Ubuntu 里):
+#   conda env create -f setup/environment.yml
+#   conda activate mamba
+#
+# 注意: mamba_ssm / causal_conv1d 无法通过 conda yml 安装 (需要 --no-build-isolation flag)
+# 用本 yml 创建环境后, 还需手动跑:
+#   bash _wsl_setup/install_mamba.sh
+# 或:
+#   pip install --no-build-isolation mamba_ssm causal_conv1d
+#
+# 完整一键安装推荐用 setup/setup_env.sh (会自动调 install_mamba.sh)
+
+name: mamba
+channels:
+  - pytorch
+  - nvidia
+  - conda-forge
+dependencies:
+  - python=3.11
+  # PyTorch (CUDA 12.1 build, RTX 4060 cc8.9 兼容)
+  - pytorch>=2.1,<2.6
+  - pytorch-cuda=12.1
+  # 基础科学计算
+  - numpy>=1.24
+  - pyyaml>=6.0
+  - matplotlib>=3.7
+  # 编译工具 (mamba_ssm 编译需要)
+  - gcc-12
+  - g++-12
+  - ninja
+  # 包管理
+  - pip
+  - pip:
+    # triton (mamba_ssm CUDA kernel 依赖)
+    - triton>=2.0
+    # .env 加载 (api_kimi.py / ask_deepseek.py 用)
+    - python-dotenv>=1.0.0
+    # ⚠️ mamba_ssm / causal_conv1d 不能从这里装 (需 --no-build-isolation)
+    # 装完本 yml 后手动跑:
+    #   export TORCH_CUDA_ARCH_LIST="8.9"
+    #   export FORCE_CUDA=1
+    #   pip install --no-build-isolation mamba_ssm causal_conv1d
+    # 或直接用:
+    #   bash _wsl_setup/install_mamba.sh

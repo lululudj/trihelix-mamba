@@ -26,6 +26,16 @@ from utils import (
     Logger, cell_accuracy,
 )
 
+# 阶段 A: .m3 外置快照适配器 (可选)
+try:
+    sys.path.insert(0, r"e:\\.m3空间快照存储技术")
+    from m3_core.m3_snapshot_adapter import M3SnapshotAdapter
+    _M3_AVAILABLE = True
+except Exception as e:
+    M3SnapshotAdapter = None
+    _M3_AVAILABLE = False
+
+
 
 MODELS = ["three_chain", "three_chain_mamba2", "three_chain_mamba2_hta",
           "three_chain_mamba2_lite", "three_chain_mamba2_bp", "three_chain_mamba2_bpv2", "three_chain_mamba3",
@@ -132,6 +142,14 @@ def main():
     val_loader = loaders.get("val")
     print(f"loaders: train={len(train_loader)} val={len(val_loader) if val_loader else 0}")
 
+    # 阶段 A: .m3 外置快照管理器（仅在模型 enable_m3=True 且适配器可用时启用）
+    m3_adapter = None
+    m3_interval = cfg.get("m3", {}).get("save_interval", 0)
+    if getattr(model, "enable_m3", False) and _M3_AVAILABLE and m3_interval > 0:
+        m3_dir = out_dir / "m3_snapshots"
+        m3_adapter = M3SnapshotAdapter(storage_dir=str(m3_dir))
+        print(f"[M3] 启用外置快照，每 {m3_interval} 步保存到 {m3_dir}")
+
     # 优化器
     opt = torch.optim.AdamW(model.parameters(), lr=cfg["train"]["lr"],
                             weight_decay=cfg["train"]["weight_decay"])
@@ -189,6 +207,19 @@ def main():
 
         # forward
         logits, info = model(S_0, actions)
+
+        # 阶段 A: 自动保存 .m3 外置快照（不影响训练主路径）
+        if m3_adapter is not None:
+            m3_meta = {"model": args.model, "seed": args.seed}
+            m3_adapter.auto_save(
+                key=f"{args.model}_seed{args.seed}",
+                step=step + 1,
+                info=info,
+                interval=m3_interval,
+                branch_id=0,
+                metadata=m3_meta,
+            )
+
         try:
             loss, loss_info = model.loss(logits, S_t, info, aux_weight=aux_weight)
         except TypeError:

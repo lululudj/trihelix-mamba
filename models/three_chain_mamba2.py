@@ -27,7 +27,13 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.utils.checkpoint as cp
 
-from mamba_ssm import Mamba2
+try:
+    from mamba_ssm import Mamba2
+    HAS_MAMBA2 = True
+except ImportError:
+    HAS_MAMBA2 = False
+    Mamba2 = None
+    print("[warn] mamba_ssm 不可用，three_chain_mamba2 用 GRU fallback（仅供开发测试）")
 
 from .common import (
     AnchorInit, Bind, Eagle, Fusion, M3SnapshotManager,
@@ -98,22 +104,22 @@ def apply_hta_patch(mamba2_module):
 # ========== Mamba2 工具组件 ==========
 
 def make_mamba2(d_model, d_state, d_conv, expand, headdim, use_hta=False):
-    """构造 Mamba2 (SSD)。参数约束:
-        - d_conv ∈ {2, 3, 4}
-        - headdim 必须整除 d_model * expand
-        - 空间链 (expand=1) 用 headdim=32 规避 causal_conv1d stride 对齐
-        - use_hta=True: 白嫖 Mamba3 的 heavy_tail_activation 替换 A 的激活函数 (exp→heavy_tail)
-    """
-    m = Mamba2(
-        d_model=d_model,
-        d_state=d_state,
-        d_conv=d_conv,
-        expand=expand,
-        headdim=headdim,
-    )
-    if use_hta:
-        apply_hta_patch(m)
-    return m
+    """构造 Mamba2 (SSD)，mamba_ssm 不可用时退回为单层 GRU（仅供开发测试）。"""
+    if HAS_MAMBA2:
+        m = Mamba2(
+            d_model=d_model,
+            d_state=d_state,
+            d_conv=d_conv,
+            expand=expand,
+            headdim=headdim,
+        )
+        if use_hta:
+            apply_hta_patch(m)
+        return m
+
+    # fallback: GRU（接口兼容，但无 Mamba2 特性）
+    from .common import _GRUSeq
+    return _GRUSeq(d_model)
 
 
 class BidirectionalMamba2(nn.Module):
@@ -369,6 +375,12 @@ class ThreeChainMamba2(nn.Module):
             "h_last": x[:, -1],           # (B, N², d) 最后时间步
             "act_emb_out": act_emb_out,   # (B, K, T, d)
         }
+
+        # --- 阶段 A 钩子：.m3 记忆（把 chain_states 暴露给调用方做外置快照）---
+        if self.enable_m3 and chain_states is not None:
+            # chain_states: list of (h_s, h_t, h_c) per layer
+            # 保持 GPU tensor，由调用方决定是否 detach/转 CPU
+            info["chain_states"] = chain_states
 
         # --- 阶段 A 钩子：JEPA 预言（接空间链）---
         if self.enable_jepa and chain_states is not None:
