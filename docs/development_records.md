@@ -15,6 +15,7 @@
 - [Issue #6: C500 国产 GPU 适配（__pycache__ 缓存陷阱）](#issue-6-c500-国产-gpu-适配__pycache__缓存陷阱)
 - [Issue #7: 32 场景大规模实验设计与断点续跑](#issue-7-32-场景大规模实验设计与断点续跑)
 - [Issue #8: 实验结果分析与性能报告](#issue-8-实验结果分析与性能报告)
+- [里程碑: v13 并发评测 + v14 任务级并发自进化 (2026-07-10)](#里程碑-v13-并发评测--v14-任务级并发自进化-2026-07-10)
 
 ---
 
@@ -327,3 +328,67 @@ v2.1（加法，修复）:  x_t_new = x_t + reset_b * x_t + sgate_b * x_t
 ### 状态
 
 已关闭
+
+---
+
+## 里程碑: v13 并发评测 + v14 任务级并发自进化 (2026-07-10)
+
+> **信息来源**：v13/v14 全量实验完成（云服务器 autodl 4090 + vLLM）
+> **项目阶段**：MambaCoding 自进化效率优化 — vLLM 迁移后的并发优化
+> **完整结果文档**：[自进化效率优化v13v14实验结果.md](../.trae/documents/自进化效率优化v13v14实验结果.md)
+> **关联计划文档**：[v13 并发批处理计划](../.trae/documents/自进化效率优化v13并发批处理.md)、[v14 任务级并发计划](../.trae/documents/自进化效率优化v14任务级并发.md)、[vLLM 迁移续跑计划](../.trae/documents/自进化效率优化vLLM迁移续跑.md)
+
+### 问题描述
+
+在 vLLM 迁移 (v12) 基础上进一步优化自进化效率：v12 评测管线与 evolve 循环仍为顺序执行，GPU 在 CPU 测试期间空闲，利用率仅 ~30%。需 v13 评测并发化 + v14 自进化循环任务级并发。
+
+### 解决方案与结果
+
+**v13 评测并发优化**（concurrency=8, ProcessPool 全局共享 + 线程安全测试）：
+
+| 评测 | v12 (顺序) | v13 (并发8) | 加速比 | 准确率变化 |
+|------|-----------|------------|--------|-----------|
+| MBPP (257题) | 689.8s, 79.77% | 104.9s, 79.77% | 6.6x | 持平 |
+| HumanEval (164题) | 373.9s, 96.34% | 76.0s, 96.95% | 4.9x | +0.61% |
+
+**v14 任务级并发自进化**（两阶段分离 generate + learn；工具顺序 / LeetCode·课程并发 batch=5）：
+- 总成功率 29/30 (96.7%)；工具 9/10，LeetCode 10/10，课程 10/10
+- 总耗时 101.6s：Phase 1 工具顺序 69.3s，Phase 2 LeetCode 并发 15.1s，Phase 3 课程并发 17.2s
+- 案例池 pos=30 / neg=29，DPO 对 59
+- 并发加速估算 ~5.0x（LeetCode/课程），整体含顺序 Phase 1 ~2.3x
+
+### 关键技术决策
+
+1. **call_qwen_n (vLLM n参数)**：一次 HTTP 请求 `"n": N` 返回 N 个 completion，替代 ThreadPool N 次独立请求，vLLM 在一次 forward pass 中生成
+2. **两阶段分离**：generate（只读 BRAIN + HTTP + subprocess，线程安全）+ learn（写 BRAIN，顺序），避免 BRAIN 写竞争
+3. **任务依赖分析**：工具任务递进依赖必须顺序；LeetCode/课程独立可并发
+4. **MAMBA_BRAIN=mamba**：云端无法访问 huggingface.co，用 GRU proxy 替代 CodeBERT
+5. **3步修复 (repair_evolve)**：失败任务自动重试（直接修 → 换思路重写），最多 2 次额外 LLM 调用
+
+### 关键文件
+
+> 以下文件位于 `e:\mambacoding\`（MambaCoding 工作区），非 three_chain_v3 仓库内。
+
+- `e:\mambacoding\sandbox.py` — 核心运行时：[call_qwen_n](file:///e:/mambacoding/sandbox.py#L203) (L203), [repair_evolve](file:///e:/mambacoding/sandbox.py#L511) (L511), [run_task_multi](file:///e:/mambacoding/sandbox.py#L725) (L725), [run_task_generate](file:///e:/mambacoding/sandbox.py#L890) (L890), [run_task_learn](file:///e:/mambacoding/sandbox.py#L944) (L944)
+- `e:\mambacoding\run_real_evolve_v14.py` — v14 任务级并发 evolve 循环：[run_evolve_concurrent](file:///e:/mambacoding/run_real_evolve_v14.py#L94) (L94), Phase 1 (L184) / Phase 2 (L215) / Phase 3 (L224)
+- `e:\mambacoding\_cloud_eval_mbpp_v13.py` / `_cloud_eval_m3_v13.py` — v13 并发评测
+- `e:\mambacoding\evolve_v14_report.md` — v14 evolve 报告（已下载）
+- `e:\mambacoding\dpo_case_v14.jsonl` — 59 个 DPO 对（已下载）
+
+### 一致性校验与冲突标注 (2026-07-10)
+
+- 与 v12 评测基线一致：v12 MBPP 79.77% / HumanEval 96.34%，v13 持平或微升
+- 与 vLLM 迁移记录一致：v12 已用 vLLM n-batch，v13 在此基础上加 concurrency=8 ProcessPool
+- 与 mamba3 evolve 记录并行：mamba3 evolve（3任务, 67%）是不同编码器不同后端，不直接对比
+- **冲突项（已保留两版本）**：v14 实际运行用 `MAMBA_BRAIN=mamba`（GRU proxy），但 [evolve_v14_report.md](file:///e:/mambacoding/evolve_v14_report.md) 报告头部硬编码 "CodeBERT RAG" 标签。判定报告标签为硬编码未反映运行时配置，详见结果文档冲突标注章节。
+
+### 未完成 / 下一步
+
+- 检索 Top-1 仍为 0%（PROBES 期望工具名不匹配，非并发问题）
+- 需跑顺序版 30 任务 vLLM evolve 做精确对比（当前只有估算）
+- v14 case_pool pos=30 但 case_pool.jsonl 本地统计全 neg（export_case_pool 与落盘格式不一致，需排查）
+- 可考虑 Phase 1 工具任务也部分并发（无依赖的子集）
+
+### 状态
+
+已完成（结果已记录），部分后续项待办
