@@ -1,4 +1,4 @@
-# ThreeChainMamba2 🧬 三链 DNA-Mamba2
+# ThreeChainMamba3 🧬 三链 DNA-Mamba3
 
 > 🌳 **想看世界树的分支吗？三螺旋带你见证未来。**
 > *Care to witness Yggdrasil's branches? Three helices bear every future.*
@@ -6,8 +6,8 @@
 > **三链 = 世界树的根/干/枝**：时间链 `h_t` 深入时间长河（树根），空间链 `h_s` 展开世界结构（树干），因果链 `h_c` 分叉出多种未来（枝叶）。
 > 同参数 Transformer 看不见枝叶（zero_ratio=1.0 全猜 0），三链在长程外推里看见每一个分支（OOD decay≈0）。
 
-**Three-Chain DNA-Mamba2 for Long-Range Spatiotemporal Extrapolation**
-基于 Mamba2 (SSD) 的三链状态空间模型，用于多智能体长程时空预测，长程外推不退化。
+**Three-Chain DNA-Mamba3 for Long-Range Spatiotemporal Extrapolation**
+基于 Mamba3（dt-RoPE 复数状态空间 + 梯形离散化）的三链状态空间模型，用于多智能体长程时空预测，长程外推不退化。
 
 ---
 
@@ -15,10 +15,10 @@
 
 | 项 | 内容 |
 |---|---|
-| 项目名 | **ThreeChainMamba2（三链 DNA-Mamba2）** |
-| 一句话简介 | 基于 Mamba2 (SSD) 的三链状态空间模型，用于多智能体长程时空预测；在国产沐曦 MXMACA GPU 上可零修改迁移 |
-| 核心创新 | 三链（空间 / 时间 / 因果）异构扫描同一张量 + **AnchorInit2** 结构性锚定 → 100M→1.13B 参数长程外推不退化 |
-| 实验亮点 | GridWorld（参数扩展 30M→1.13B）+ SDD 真实数据（bookstore 7 视频 + nexus 12 视频）双场景验证 |
+| 项目名 | **ThreeChainMamba3（三链 DNA-Mamba3）** |
+| 一句话简介 | 基于 Mamba3（dt-RoPE 复数状态空间 + 梯形离散化）的三链 SSM + BP v2.1 碱基对耦合，用于多智能体长程时空预测；在国产沐曦 MXMACA GPU 上可零修改迁移 |
+| 核心创新 | 三链（空间 / 时间 / 因果）异构扫描同一张量 + **AnchorInit2** 结构性锚定 + **PairwiseBasePairMamba3** 两两碱基对耦合（v2.1加法独立调制）|
+| 实验亮点 | GridWorld（参数扩展 30M->1.13B）+ SDD 真实数据（bookstore+nexus）+ C500国产GPU 32场景BP v2.1验证 |
 | 国产 GPU 落地 | `mamba_ssm` 基于 Triton，沐曦 **Triton-MXMACA** 编译后端可零修改适配，适合端侧人形机器人多智能体实时推演 |
 | 开源许可 | MIT（OSI 认可） |
 
@@ -60,7 +60,7 @@
 
 | 文件 | 作用 | 行数 |
 |---|---|---|
-| [`models/three_chain_mamba2.py`](models/three_chain_mamba2.py) | 三链 SSM 核心架构（HeteroMamba2 + ThreeChainMamba2 + AnchorInit2） | ~430 |
+| [`models/three_chain_mamba3.py`](models/three_chain_mamba3.py) | 三链 SSM 核心架构（HeteroMamba3 + ThreeChainMamba3 + PairwiseBasePairMamba3） | ~430 |
 | [`train.py`](train.py) | 训练入口（含 balanced_ce_loss + OOD eval） | ~250 |
 | [`eval_ood.py`](eval_ood.py) | OOD 长程外推评估（T=150 曲线 + decay 指标） | ~200 |
 | [`data/dataset.py`](data/dataset.py) | GridWorld + SDD 数据加载（含 shuffle_labels sanity） | ~150 |
@@ -148,7 +148,7 @@ python scripts_sdd/eval_negative_shadow.py \
 | 模型 | 参数 | OOD changed_acc @ T=150 | OOD Decay | 状态 |
 |---|---|---|---|---|
 | 旧 ThreeChain (Mamba1) | 4.77M | 0.5433 | std=0.0000（脚本 bug 假象） | ❌ 退化 |
-| **ThreeChainMamba2（本工作）** | **3.26M** | **0.5952 ± 0.0034** | **−0.0042（≈ 0）** | ✅ 真实学习 |
+| **ThreeChainMamba3（本工作）** | **3.26M** | **0.5952 ± 0.0034** | **−0.0042（≈ 0）** | ✅ 真实学习 |
 | Transformer-tiny（同参数） | 3.43M | 0.0000（全猜 0 塌缩） | — | ❌ 塌缩 |
 
 - 训练 T=100 步，测试 T=150 步（超训练 50%，从未见过）
@@ -344,7 +344,7 @@ python train.py --config configs/sdd_mamba2_30m_nexus.yaml    --max_steps 10000
 ```
 trihelix-mamba/
 ├── models/
-│   ├── three_chain_mamba2.py        # 主力：ThreeChainMamba2（3.26M / 可扩到 1.13B）
+│   ├── three_chain_mamba3.py        # 主力：ThreeChainMamba3 + PairwiseBasePairMamba3（168K / 可扩到 1.13B）
 │   ├── three_chain_mamba2_bpv2.py   # 消融：跨链碱基对（3.40M）
 │   ├── three_chain_mamba2_bp.py     # 消融：链内碱基对 v1（已失败）
 │   ├── three_chain.py               # 旧基线（4.77M，退化）
@@ -484,7 +484,7 @@ trihelix-mamba/
 
 ```bibtex
 @misc{threechainmamba2026,
-  title={ThreeChainMamba2: Three-Chain DNA-Mamba2 for Long-Range Spatiotemporal Extrapolation},
+  title={ThreeChainMamba3: Three-Chain DNA-Mamba3 with Pairwise Base Pair Coupling for Long-Range Spatiotemporal Extrapolation},
   author={lulululudj},
   year={2026},
   url={https://github.com/lululudj/trihelix-mamba}
