@@ -1,6 +1,6 @@
 # Demo 演示说明文档
 
-> ThreeChainMamba 三链 DNA-Mamba 项目演示指南
+> ThreeChainMamba3 三链 DNA-Mamba3 项目演示指南
 > 本文档面向评审与复现者，提供三个可独立运行的 Demo，覆盖本地验证、梯度修复验证与国产 GPU 大规模实验。
 
 ---
@@ -18,7 +18,7 @@
 
 ## 1. 项目 Demo 概述
 
-ThreeChainMamba 是基于 Mamba2/Mamba3 (SSD) 的三链状态空间模型，用于多智能体长程时空预测。核心创新在于三条异构链（空间链 / 时间链 / 因果链）并行扫描同一统一时空张量，配合 AnchorInit2 结构性锚定，实现长程外推不退化。
+ThreeChainMamba3 是基于 Mamba3 (dt-RoPE 复数状态空间 + 梯形离散化) 的三链状态空间模型，用于多智能体长程时空预测。核心创新在于三条异构链（空间链 / 时间链 / 因果链）并行扫描同一统一时空张量，配合 PairwiseBasePairMamba3 两两碱基对耦合（v2.1加法独立调制），实现长程外推不退化。
 
 项目提供三个递进式 Demo：
 
@@ -304,6 +304,20 @@ C500（MXMACA）环境下存在 `rq_qos_wait` 内核死锁风险，实验脚本�
 
 ## 5. 运行截图说明
 
+### 5.1 终端运行截图
+
+`figures/screenshots/` 目录下包含 5 张终端运行截图，由 `_gen_screenshots.py` 生成（宇宙深色风格）：
+
+| 截图文件 | 内容说明 |
+|----------|----------|
+| `screenshot_demo2_gradtest.png` | **Demo 2 运行截图**：BP v2.1梯度验证完整输出，bp1_gate梯度=19.87，bp2_reset梯度=28.14，一步Adam后权重从0→0.32 |
+| `screenshot_demo2_v2_deadlock.png` | **v2乘法死锁对照**：v2版本bp1_gate/bp2_reset梯度=0.000000（死锁），v2.1对比表 |
+| `screenshot_c500_results.png` | **C500实验结果**：384次实验结果表，4模型对比，BP死锁修复验证（bp1_gate avg=0.3512） |
+| `screenshot_c500_monitor.png` | **C500实验监控**：93分钟实验进度，192个结果，0错误 |
+| `screenshot_training.png` | **Demo 1训练截图**：三链Mamba3训练2000步，OOD decay=-0.0042（不退化） |
+
+### 5.2 数据图表
+
 `figures/` 目录下包含 7 张关键图表，由 `regen_figures.py` 生成（宇宙深色风格）：
 
 | 图表文件 | 内容说明 |
@@ -316,9 +330,14 @@ C500（MXMACA）环境下存在 `rq_qos_wait` 内核死锁风险，实验脚本�
 | `fig6_seed_variance.png` | Seed 方差箱线图：5 seed OOD 性能分布（扁平箱 = std=0 BUG，分散箱 = 真实学习） |
 | `fig7_ablation.png` | 消融实验：BPv1（链内，OOD 降 5.6%）/ BPv2（跨链，持平）/ Transformer（塌缩）vs baseline |
 
-### 重新生成图表
+### 重新生成截图与图表
 
 ```bash
+# 生成终端运行截图
+python _gen_screenshots.py
+# 输出: figures/screenshots/*.png（宇宙深色风终端截图）
+
+# 生成数据图表
 python regen_figures.py
 # 输出: figures/fig1..fig7.png（宇宙深色风，ASCII 安全）
 ```
@@ -327,14 +346,21 @@ python regen_figures.py
 
 ## 6. 演示视频说明
 
-> **状态：待录制**
+> **录制指南**：详见 [video_recording_guide.md](video_recording_guide.md)（含完整旁白词与录制步骤）
 
 | 视频 | 内容 | 时长 | 链接 |
 |------|------|------|------|
-| Demo 1 演示 | 本地 GridWorld 数据生成 + 训练 + OOD 评估全流程 | ~5 分钟 | _待录制后填写_ |
-| Demo 2 演示 | BP v2.1 梯度验证运行与结果解读 | ~2 分钟 | _待录制后填写_ |
-| Demo 3 演示 | C500 国产 GPU 实验部署与进度监控 | ~5 分钟 | _待录制后填写_ |
-| 项目总览 | 三链架构讲解 + 核心实验结果解读 | ~10 分钟 | _待录制后填写_ |
+| Demo 2 演示 | BP v2.1 梯度验证运行与结果解读 | ~3 分钟 | _待录制后填写_ |
+| C500 实验展示 | 国产GPU实验部署与进度监控 | ~5 分钟 | _待录制后填写_ |
+| 项目总览 | 三链架构讲解 + 核心实验结果解读 | ~4 分钟 | _待录制后填写_ |
+| **完整合集** | **以上全部内容** | **~15-20 分钟** | _待录制后填写_ |
+
+### 视频内容概要
+
+1. **项目总览**（~4分钟）：三链架构创新 + Mamba3 dt-RoPE + BP v2.1碱基对耦合
+2. **Demo 2 梯度验证**（~3分钟）：实时运行 `_local_grad_test.py`，展示bp1_gate/bp2_reset梯度非零
+3. **C500实验展示**（~5分钟）：32场景×4模型×3seed=384次实验，监控进度与结果
+4. **结果分析**（~4分钟）：OOD外推曲线 + BP按场景类型提升 + 死锁修复验证
 
 ---
 
