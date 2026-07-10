@@ -34,7 +34,7 @@ import torch.utils.checkpoint as cp
 try:
     from mamba_ssm import Mamba3  # 官方 Triton 内核版 (mamba_ssm 2.3.x)
     HAS_OFFICIAL_MAMBA3 = True
-except ImportError:
+except Exception:  # ImportError + TypeError (triton 版本不兼容)
     HAS_OFFICIAL_MAMBA3 = False
     try:
         from .mamba3_ref import Mamba3  # fallback: 纯Python参考实现(本地验证用)
@@ -130,47 +130,60 @@ class BidirectionalMamba3(nn.Module):
 # ========== 两两碱基对耦合: PairwiseBasePairMamba3 ==========
 
 class PairwiseBasePairMamba3(nn.Module):
-    """三链Mamba3两两碱基对互联: s↔t, t↔c, c↔s 三对直接耦合。
+    """三链Mamba3两两碱基对互联: s↔t, t↔c, c↔s 三对直接耦合 (v2 纯残差版)。
 
     融合设计:
         - TriHelixBasePairCoupling (common.py:582) 的两两耦合语义 (3对碱基对)
-        - CrossChainBasePair (three_chain_mamba2_bpv2.py:42) 的统一张量接口 + alpha初始0
+        - CrossChainBasePair (three_chain_mamba2_bpv2.py:42) 的统一张量接口
 
     三对碱基对 (借鉴 TriHelixBasePairCoupling):
         BP1 (空间↔时间): Cross-Delta 调制 — 时间链生成 dt 系数调制空间链; 空间变化率门控时间链
         BP2 (时间↔因果): Reset Gate — 因果链能量门控时间链记忆; 时间相位注入因果链
         BP3 (因果↔空间): FiLM 仿射 — 因果链生成 gamma/beta 仿射空间链; 空间校验因果链
 
-    接口 (借鉴 CrossChainBasePair): forward(x, x_s, x_t, c_inject) → (x_s', x_t', c_inject')
+    接口: forward(x, x_s, x_t, c_inject) → (x_s', x_t', c_inject')
         x:        (B, T, N², d)  共享状态 (融合前的 x, 作螺旋轴参考)
         x_s:      (B, T, N², d)  空间链输出
         x_t:      (B, T, N², d)  时间链输出
         c_inject: (B, T, 1, d)   因果链输出 (广播到 N²)
 
-    alpha 初始 0: 训练开始时 (x_s', x_t', c_inject') = (x_s, x_t, c_inject) = baseline
-        → 公平对照: 关闭BP时参数量不变, 开启BP时从baseline出发自学拉力强度
+    v2 改进 (解决 v1 alpha 死锁问题):
+        v1 问题: 用 alpha (初始0) 门控整个调制项, 公式为
+            x_s_new = x_s + alpha * (gamma*delta*x_s + beta - x_s)
+          - alpha 初始 0 → 梯度信号极弱 → 100步后 alpha 均值仅 0.0007 (死锁)
+          - 公式含 "-x_s" 项: 即使 alpha>0 但 gamma/beta=0 时, 输出 = x_s*(1-alpha)
+            会缩小原始信号 (非中性!)
+        v2 方案: 去掉 alpha 门控, 改纯残差形式:
+            x_s_new = x_s + gamma*delta*x_s + beta
+          - 调制网络末层零初始化 → 初始 gamma=0, beta=0 → 输出 = x_s (等价 baseline)
+          - 训练后调制网络直接生效, 无 alpha 瓶颈
+          - 纯残差形式, 不含 "-x_s" 项, 不会缩小原始信号
+        公平对照保证: 关闭BP时参数量不变; 开启BP时初始=baseline (靠零初始化)
     """
 
     def __init__(self, d_model):
         super().__init__()
         D = d_model
-        # 可学习拉力强度, 初始 0 → 开始时无碱基对 (= baseline)
-        self.alpha = nn.Parameter(torch.zeros(1))
 
         # === BP1: 空间↔时间 (Cross-Delta) ===
         # 时间→空间: dt调制系数 (B,1) → 广播
+        # Sigmoid 保留: delta 作为乘法系数, 初始 Sigmoid(0)=0.5 → delta_mod=0.75
+        #   但 gamma=0 时 delta 不影响 (gamma*delta*x_s=0), 所以不破坏 baseline
         self.st_t2s_delta = nn.Sequential(
             nn.Linear(D, D // 4), nn.SiLU(), nn.Linear(D // 4, 1), nn.Sigmoid()
         )
         # 空间→时间: 空间变化率门控 (B,d)
+        # ★ 去掉末层 Sigmoid: Sigmoid(0)=0.5≠0 会破坏 baseline
+        #   改用纯 Linear (零初始化→0→增量0→精确baseline), 训练后自由学习
         self.st_s2t_gate = nn.Sequential(
-            nn.Linear(D, D // 4), nn.SiLU(), nn.Linear(D // 4, D), nn.Sigmoid()
+            nn.Linear(D, D // 4), nn.SiLU(), nn.Linear(D // 4, D)
         )
 
         # === BP2: 时间↔因果 (Memory Reset) ===
         # 因果→时间: reset gate (B,d)
+        # ★ 去掉末层 Sigmoid: 同理, 零初始化 Linear → 0 → 精确 baseline
         self.tc_c2t_reset = nn.Sequential(
-            nn.Linear(D, D // 4), nn.SiLU(), nn.Linear(D // 4, D), nn.Sigmoid()
+            nn.Linear(D, D // 4), nn.SiLU(), nn.Linear(D // 4, D)
         )
         # 时间→因果: 相位注入 (B,d)
         self.tc_t2c_phase = nn.Sequential(
@@ -190,7 +203,8 @@ class PairwiseBasePairMamba3(nn.Module):
             nn.Linear(D, D // 4), nn.SiLU(), nn.Linear(D // 4, D), nn.Tanh()
         )
 
-        # 零初始化所有末层 Linear → 调制初始为中性 (sigmoid(0)=0.5, gamma=0, beta=0)
+        # 零初始化所有末层 Linear → 调制增量初始为 0 (纯残差, 初始=baseline)
+        # 这是 v2 的关键: 不用 alpha 门控, 靠零初始化保证初始等价 baseline
         for mod in [self.st_t2s_delta, self.st_s2t_gate, self.tc_c2t_reset,
                     self.tc_t2c_phase, self.cs_c2s_gamma, self.cs_c2s_beta,
                     self.cs_s2c_check]:
@@ -205,6 +219,9 @@ class PairwiseBasePairMamba3(nn.Module):
         x_t:      (B, T, N², d)  时间链输出
         c_inject: (B, T, 1, d)   因果链输出 (广播到 N²)
         Returns: (x_s', x_t', c_inject') 同形状, 被两两碱基对耦合修正
+
+        v2 纯残差形式: output = input + modulation_increment
+        初始时 (零初始化) modulation_increment = 0 → output = input (baseline)
         """
         B = x_s.shape[0]
         D = x_s.shape[-1]
@@ -217,41 +234,68 @@ class PairwiseBasePairMamba3(nn.Module):
         # 2. 空间一阶差分 (沿 T) 作"变化率"特征
         s_diff = (x_s[:, 1:] - x_s[:, :-1]).mean(dim=(1, 2))  # (B, d)
 
-        # 3. 三对碱基对调制参数
+        # 3. 三对碱基对调制参数 (零初始化 → 初始全0, 训练后学到非零值)
         # BP1: 时间→空间 delta, 空间→时间 gate
-        delta_mod = 0.5 + 0.5 * self.st_t2s_delta(g_t)   # (B, 1)
-        s_gate = self.st_s2t_gate(s_diff)                 # (B, d)
+        delta_mod = 0.5 + 0.5 * self.st_t2s_delta(g_t)   # (B, 1) 初始0.5(中性)
+        s_gate = self.st_s2t_gate(s_diff)                 # (B, d) 初始0
 
         # BP2: 因果→时间 reset, 时间→因果 phase
         c_energy = torch.norm(g_c, dim=-1, keepdim=True) / (D ** 0.5)
-        reset_gate = self.tc_c2t_reset(g_c) * c_energy.sigmoid()  # (B, d)
-        t_phase = self.tc_t2c_phase(g_t)                  # (B, d)
+        reset_gate = self.tc_c2t_reset(g_c) * c_energy.sigmoid()  # (B, d) 初始0
+        t_phase = self.tc_t2c_phase(g_t)                  # (B, d) 初始0
 
         # BP3: 因果→空间 gamma/beta, 空间→因果 check
-        gamma = self.cs_c2s_gamma(g_c)                    # (B, d)
-        beta = self.cs_c2s_beta(g_c)                      # (B, d)
-        s_check = self.cs_s2c_check(g_s)                  # (B, d)
+        gamma = self.cs_c2s_gamma(g_c)                    # (B, d) 初始0
+        beta = self.cs_c2s_beta(g_c)                      # (B, d) 初始0
+        s_check = self.cs_s2c_check(g_s)                  # (B, d) 初始0
 
-        # 4. 应用耦合 (广播回原形状) + alpha 缩放
-        # BP1+BP3 → 空间链: FiLM 仿射 + delta 调制
+        # 4. 纯残差应用耦合 (无 alpha 门控, 靠零初始化保证初始=baseline)
+        # BP1+BP3 → 空间链: FiLM 仿射增量 (gamma*delta*x_s + beta)
+        #   初始: x_s + 0*0.5*x_s + 0 = x_s ✓
+        #   训练后: x_s + 学到的仿射变换 ✓
         gamma_b = gamma.view(B, 1, 1, D)
         beta_b = beta.view(B, 1, 1, D)
         delta_b = delta_mod.view(B, 1, 1, 1)              # (B,1,1,1) 标量调制
-        x_s_new = x_s + self.alpha * (gamma_b * delta_b * x_s + beta_b - x_s)
+        x_s_new = x_s + gamma_b * delta_b * x_s + beta_b
 
-        # BP1+BP2 → 时间链: reset gate + 空间变化率门控
+        # BP1+BP2 → 时间链: reset gate + 空间变化率门控 (加法独立调制)
+        #   v2.1 修复: v2 用 reset_b * sgate_b * x_t (乘法), 两个零初始化网络
+        #     相乘导致梯度互相阻塞 → reset和sgate永久死锁 (C500实测均为0.0000)
+        #   v2.1 改为加法: reset_b * x_t + sgate_b * x_t, 两个项梯度独立可流过
+        #   初始: x_t + 0*x_t + 0*x_t = x_t ✓
+        #   训练后: x_t + 学到的两种门控调制 ✓
         reset_b = reset_gate.view(B, 1, 1, D)
         sgate_b = s_gate.view(B, 1, 1, D)
-        x_t_new = x_t + self.alpha * (reset_b * sgate_b * x_t - x_t)
+        x_t_new = x_t + reset_b * x_t + sgate_b * x_t
 
-        # BP2+BP3 → 因果链: 时间相位注入 + 空间校验
+        # BP2+BP3 → 因果链: 时间相位注入 + 空间校验 (纯增量)
+        #   初始: c_inject + 0 + 0 = c_inject ✓
+        #   训练后: c_inject + 学到的相位/校验 ✓
         tphase_b = t_phase.view(B, 1, 1, D)
         scheck_b = s_check.view(B, 1, 1, D)
-        c_inject_new = c_inject + self.alpha * (
-            0.1 * tphase_b + 0.1 * scheck_b * c_inject
-        )
+        c_inject_new = c_inject + 0.1 * tphase_b + 0.1 * scheck_b * c_inject
 
         return x_s_new, x_t_new, c_inject_new
+
+    def modulation_strength(self):
+        """返回各调制网络的权重范数 (用于诊断 BP 是否生效)。
+        v2 无 alpha, 用权重范数衡量 BP 激活程度。
+        """
+        def _last_lin_norm(seq):
+            """取 Sequential 中最后一个 Linear 的权重范数。"""
+            for m in reversed(seq):
+                if isinstance(m, nn.Linear):
+                    return m.weight.norm().item()
+            return 0.0
+        return {
+            "bp1_delta": _last_lin_norm(self.st_t2s_delta),
+            "bp1_gate": _last_lin_norm(self.st_s2t_gate),
+            "bp2_reset": _last_lin_norm(self.tc_c2t_reset),
+            "bp2_phase": _last_lin_norm(self.tc_t2c_phase),
+            "bp3_gamma": _last_lin_norm(self.cs_c2s_gamma),
+            "bp3_beta": _last_lin_norm(self.cs_c2s_beta),
+            "bp3_check": _last_lin_norm(self.cs_s2c_check),
+        }
 
 
 # ========== A 版本核心: HeteroMamba3 (统一时空张量) ==========

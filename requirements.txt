@@ -1,30 +1,10 @@
-# TriHelix-Mamba 依赖
-# Python >= 3.10 (3.14 可能缺 mamba_ssm 预编译 wheel)
-#
-# 完整安装步骤 (WSL2 + RTX 4060 cc8.9):
-#   bash setup/setup_env.sh
-# 或手动:
-#   pip install torch numpy pyyaml matplotlib python-dotenv
-#   pip install triton
-#   pip install --no-build-isolation mamba_ssm causal_conv1d
-
-# 核心
-torch>=2.1,<2.6
-numpy>=1.24
+torch>=2.0.0
+numpy>=1.24.0
 pyyaml>=6.0
-matplotlib>=3.7
-
-# Mamba2 (SSD) — 需 CUDA, 安装前先装 triton
-triton>=2.0
-# ⚠️ mamba_ssm / causal_conv1d 必须用 --no-build-isolation 复用已装 torch 的 CUDA 版本编译:
-#     pip install --no-build-isolation mamba_ssm causal_conv1d
-# 详见 _wsl_setup/install_mamba.sh (RTX 4060 = sm_89, CUDA 12.6, gcc-12)
+matplotlib>=3.7.0
 mamba_ssm>=2.2.0
-causal_conv1d>=1.4.0
-
-# API 调用 (Kimi / DeepSeek / OpenAI)
+causal_conv1d>=1.2.0
+triton>=2.0.0
 python-dotenv>=1.0.0
-
-# 可选: ONNX 边缘部署 (阶段 2)
-# onnx>=1.16
-# onnxruntime>=1.17
+paramiko>=3.0.0
+scipy>=1.10.0

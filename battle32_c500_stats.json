@@ -1,0 +1,4229 @@
+{
+  "per_scene": {
+    "adv_n12_k12": {
+      "Transformer_val_ch_acc": {
+        "treatment_mean": 56.4,
+        "control_mean": 53.39,
+        "treatment_std": 0.86,
+        "control_std": 0.0,
+        "t_stat": 6.1043,
+        "p_value": 0.025802,
+        "cohen_d": 4.9842,
+        "ci_95": [
+          2.05,
+          3.98
+        ],
+        "significant": true
+      },
+      "Transformer_ood_ch_acc": {
+        "treatment_mean": 57.81,
+        "control_mean": 54.14,
+        "treatment_std": 0.53,
+        "control_std": 0.0,
+        "t_stat": 11.9681,
+        "p_value": 0.006909,
+        "cohen_d": 9.7719,
+        "ci_95": [
+          3.07,
+          4.27
+        ],
+        "significant": true
+      },
+      "Transformer_ood_decay_pct": {
+        "treatment_mean": 2.5,
+        "control_mean": 1.4,
+        "treatment_std": 0.63,
+        "control_std": 0.0,
+        "t_stat": 3.0275,
+        "p_value": 0.093973,
+        "cohen_d": 2.472,
+        "ci_95": [
+          0.39,
+          1.81
+        ],
+        "significant": false
+      },
+      "Mamba3单链_val_ch_acc": {
+        "treatment_mean": 56.4,
+        "control_mean": 53.39,
+        "treatment_std": 0.86,
+        "control_std": 0.0,
+        "t_stat": 6.1043,
+        "p_value": 0.025802,
+        "cohen_d": 4.9842,
+        "ci_95": [
+          2.05,
+          3.98
+        ],
+        "significant": true
+      },
+      "Mamba3单链_ood_ch_acc": {
+        "treatment_mean": 57.81,
+        "control_mean": 54.14,
+        "treatment_std": 0.53,
+        "control_std": 0.0,
+        "t_stat": 11.9681,
+        "p_value": 0.006909,
+        "cohen_d": 9.7719,
+        "ci_95": [
+          3.07,
+          4.27
+        ],
+        "significant": true
+      },
+      "Mamba3单链_ood_decay_pct": {
+        "treatment_mean": 2.5,
+        "control_mean": 1.4,
+        "treatment_std": 0.63,
+        "control_std": 0.0,
+        "t_stat": 3.0275,
+        "p_value": 0.093973,
+        "cohen_d": 2.472,
+        "ci_95": [
+          0.39,
+          1.81
+        ],
+        "significant": false
+      },
+      "三链Mamba3_val_ch_acc": {
+        "treatment_mean": 56.4,
+        "control_mean": 57.19,
+        "treatment_std": 0.86,
+        "control_std": 0.29,
+        "t_stat": -1.5081,
+        "p_value": 0.247578,
+        "cohen_d": -1.2313,
+        "ci_95": [
+          -1.81,
+          0.24
+        ],
+        "significant": false
+      },
+      "三链Mamba3_ood_ch_acc": {
+        "treatment_mean": 57.81,
+        "control_mean": 58.18,
+        "treatment_std": 0.53,
+        "control_std": 0.37,
+        "t_stat": -1.0019,
+        "p_value": 0.37964,
+        "cohen_d": -0.8181,
+        "ci_95": [
+          -1.1,
+          0.36
+        ],
+        "significant": false
+      },
+      "三链Mamba3_ood_decay_pct": {
+        "treatment_mean": 2.5,
+        "control_mean": 1.73,
+        "treatment_std": 0.63,
+        "control_std": 0.25,
+        "t_stat": 1.9576,
+        "p_value": 0.158383,
+        "cohen_d": 1.5983,
+        "ci_95": [
+          -0.0,
+          1.53
+        ],
+        "significant": false
+      }
+    },
+    "adv_n12_k8": {
+      "Transformer_val_ch_acc": {
+        "treatment_mean": 60.66,
+        "control_mean": 54.6,
+        "treatment_std": 0.79,
+        "control_std": 0.0,
+        "t_stat": 13.3388,
+        "p_value": 0.005573,
+        "cohen_d": 10.8911,
+        "ci_95": [
+          5.17,
+          6.95
+        ],
+        "significant": true
+      },
+      "Transformer_ood_ch_acc": {
+        "treatment_mean": 61.77,
+        "control_mean": 55.11,
+        "treatment_std": 0.46,
+        "control_std": 0.0,
+        "t_stat": 25.3114,
+        "p_value": 0.001557,
+        "cohen_d": 20.6667,
+        "ci_95": [
+          6.14,
+          7.18
+        ],
+        "significant": true
+      },
+      "Transformer_ood_decay_pct": {
+        "treatment_mean": 1.83,
+        "control_mean": 0.93,
+        "treatment_std": 0.59,
+        "control_std": 0.0,
+        "t_stat": 2.6423,
+        "p_value": 0.118339,
+        "cohen_d": 2.1574,
+        "ci_95": [
+          0.23,
+          1.57
+        ],
+        "significant": false
+      },
+      "Mamba3单链_val_ch_acc": {
+        "treatment_mean": 60.66,
+        "control_mean": 54.6,
+        "treatment_std": 0.79,
+        "control_std": 0.0,
+        "t_stat": 13.3388,
+        "p_value": 0.005573,
+        "cohen_d": 10.8911,
+        "ci_95": [
+          5.17,
+          6.95
+        ],
+        "significant": true
+      },
+      "Mamba3单链_ood_ch_acc": {
+        "treatment_mean": 61.77,
+        "control_mean": 55.11,
+        "treatment_std": 0.46,
+        "control_std": 0.0,
+        "t_stat": 25.3114,
+        "p_value": 0.001557,
+        "cohen_d": 20.6667,
+        "ci_95": [
+          6.14,
+          7.18
+        ],
+        "significant": true
+      },
+      "Mamba3单链_ood_decay_pct": {
+        "treatment_mean": 1.83,
+        "control_mean": 0.93,
+        "treatment_std": 0.59,
+        "control_std": 0.0,
+        "t_stat": 2.6423,
+        "p_value": 0.118339,
+        "cohen_d": 2.1574,
+        "ci_95": [
+          0.23,
+          1.57
+        ],
+        "significant": false
+      },
+      "三链Mamba3_val_ch_acc": {
+        "treatment_mean": 60.66,
+        "control_mean": 60.05,
+        "treatment_std": 0.79,
+        "control_std": 0.81,
+        "t_stat": 0.9379,
+        "p_value": 0.401439,
+        "cohen_d": 0.7658,
+        "ci_95": [
+          -0.66,
+          1.88
+        ],
+        "significant": false
+      },
+      "三链Mamba3_ood_ch_acc": {
+        "treatment_mean": 61.77,
+        "control_mean": 60.69,
+        "treatment_std": 0.46,
+        "control_std": 1.03,
+        "t_stat": 1.6685,
+        "p_value": 0.20177,
+        "cohen_d": 1.3623,
+        "ci_95": [
+          -0.19,
+          2.36
+        ],
+        "significant": false
+      },
+      "三链Mamba3_ood_decay_pct": {
+        "treatment_mean": 1.83,
+        "control_mean": 1.06,
+        "treatment_std": 0.59,
+        "control_std": 0.76,
+        "t_stat": 1.3906,
+        "p_value": 0.240715,
+        "cohen_d": 1.1354,
+        "ci_95": [
+          -0.32,
+          1.86
+        ],
+        "significant": false
+      }
+    },
+    "adv_n6_k12_p6": {
+      "Transformer_val_ch_acc": {
+        "treatment_mean": 51.45,
+        "control_mean": 4.29,
+        "treatment_std": 1.24,
+        "control_std": 0.54,
+        "t_stat": 60.4389,
+        "p_value": 2.3e-05,
+        "cohen_d": 49.3482,
+        "ci_95": [
+          45.63,
+          48.69
+        ],
+        "significant": true
+      },
+      "Transformer_ood_ch_acc": {
+        "treatment_mean": 51.91,
+        "control_mean": 4.1,
+        "treatment_std": 1.3,
+        "control_std": 0.32,
+        "t_stat": 62.0441,
+        "p_value": 0.000112,
+        "cohen_d": 50.6588,
+        "ci_95": [
+          46.3,
+          49.32
+        ],
+        "significant": true
+      },
+      "Transformer_ood_decay_pct": {
+        "treatment_mean": 0.91,
+        "control_mean": -3.83,
+        "treatment_std": 0.09,
+        "control_std": 7.79,
+        "t_stat": 1.0525,
+        "p_value": 0.402959,
+        "cohen_d": 0.8593,
+        "ci_95": [
+          -4.08,
+          13.56
+        ],
+        "significant": false
+      },
+      "Mamba3单链_val_ch_acc": {
+        "treatment_mean": 51.45,
+        "control_mean": 46.44,
+        "treatment_std": 1.24,
+        "control_std": 4.88,
+        "t_stat": 1.723,
+        "p_value": 0.212624,
+        "cohen_d": 1.4068,
+        "ci_95": [
+          -0.69,
+          10.7
+        ],
+        "significant": false
+      },
+      "Mamba3单链_ood_ch_acc": {
+        "treatment_mean": 51.91,
+        "control_mean": 46.65,
+        "treatment_std": 1.3,
+        "control_std": 3.68,
+        "t_stat": 2.335,
+        "p_value": 0.119557,
+        "cohen_d": 1.9066,
+        "ci_95": [
+          0.84,
+          9.68
+        ],
+        "significant": false
+      },
+      "Mamba3单链_ood_decay_pct": {
+        "treatment_mean": 0.91,
+        "control_mean": 0.66,
+        "treatment_std": 0.09,
+        "control_std": 3.25,
+        "t_stat": 0.1333,
+        "p_value": 0.90611,
+        "cohen_d": 0.1089,
+        "ci_95": [
+          -3.42,
+          3.92
+        ],
+        "significant": false
+      },
+      "三链Mamba3_val_ch_acc": {
+        "treatment_mean": 51.45,
+        "control_mean": 48.64,
+        "treatment_std": 1.24,
+        "control_std": 2.5,
+        "t_stat": 1.7422,
+        "p_value": 0.182243,
+        "cohen_d": 1.4225,
+        "ci_95": [
+          -0.35,
+          5.96
+        ],
+        "significant": false
+      },
+      "三链Mamba3_ood_ch_acc": {
+        "treatment_mean": 51.91,
+        "control_mean": 47.53,
+        "treatment_std": 1.3,
+        "control_std": 3.21,
+        "t_stat": 2.1896,
+        "p_value": 0.128685,
+        "cohen_d": 1.7878,
+        "ci_95": [
+          0.46,
+          8.3
+        ],
+        "significant": false
+      },
+      "三链Mamba3_ood_decay_pct": {
+        "treatment_mean": 0.91,
+        "control_mean": -2.33,
+        "treatment_std": 0.09,
+        "control_std": 1.65,
+        "t_stat": 3.3938,
+        "p_value": 0.076282,
+        "cohen_d": 2.771,
+        "ci_95": [
+          1.37,
+          5.11
+        ],
+        "significant": false
+      }
+    },
+    "adv_n6_k4": {
+      "Transformer_val_ch_acc": {
+        "treatment_mean": 67.82,
+        "control_mean": 10.21,
+        "treatment_std": 0.8,
+        "control_std": 0.47,
+        "t_stat": 108.0019,
+        "p_value": 1e-06,
+        "cohen_d": 88.1832,
+        "ci_95": [
+          56.56,
+          58.66
+        ],
+        "significant": true
+      },
+      "Transformer_ood_ch_acc": {
+        "treatment_mean": 68.4,
+        "control_mean": 10.15,
+        "treatment_std": 0.23,
+        "control_std": 0.27,
+        "t_stat": 285.7687,
+        "p_value": 0.0,
+        "cohen_d": 233.3291,
+        "ci_95": [
+          57.85,
+          58.65
+        ],
+        "significant": true
+      },
+      "Transformer_ood_decay_pct": {
+        "treatment_mean": 0.86,
+        "control_mean": -0.52,
+        "treatment_std": 0.84,
+        "control_std": 1.88,
+        "t_stat": 1.1654,
+        "p_value": 0.334306,
+        "cohen_d": 0.9515,
+        "ci_95": [
+          -0.94,
+          3.71
+        ],
+        "significant": false
+      },
+      "Mamba3单链_val_ch_acc": {
+        "treatment_mean": 67.82,
+        "control_mean": 10.34,
+        "treatment_std": 0.8,
+        "control_std": 0.31,
+        "t_stat": 116.4205,
+        "p_value": 7e-06,
+        "cohen_d": 95.057,
+        "ci_95": [
+          56.51,
+          58.45
+        ],
+        "significant": true
+      },
+      "Mamba3单链_ood_ch_acc": {
+        "treatment_mean": 68.4,
+        "control_mean": 10.23,
+        "treatment_std": 0.23,
+        "control_std": 0.18,
+        "t_stat": 342.5718,
+        "p_value": 0.0,
+        "cohen_d": 279.7087,
+        "ci_95": [
+          57.84,
+          58.5
+        ],
+        "significant": true
+      },
+      "Mamba3单链_ood_decay_pct": {
+        "treatment_mean": 0.86,
+        "control_mean": -1.04,
+        "treatment_std": 0.84,
+        "control_std": 2.5,
+        "t_stat": 1.2496,
+        "p_value": 0.317671,
+        "cohen_d": 1.0203,
+        "ci_95": [
+          -1.08,
+          4.89
+        ],
+        "significant": false
+      },
+      "三链Mamba3_val_ch_acc": {
+        "treatment_mean": 67.82,
+        "control_mean": 63.39,
+        "treatment_std": 0.8,
+        "control_std": 1.07,
+        "t_stat": 5.7415,
+        "p_value": 0.005806,
+        "cohen_d": 4.6879,
+        "ci_95": [
+          2.92,
+          5.94
+        ],
+        "significant": true
+      },
+      "三链Mamba3_ood_ch_acc": {
+        "treatment_mean": 68.4,
+        "control_mean": 61.79,
+        "treatment_std": 0.23,
+        "control_std": 0.9,
+        "t_stat": 12.2645,
+        "p_value": 0.004067,
+        "cohen_d": 10.0139,
+        "ci_95": [
+          5.55,
+          7.66
+        ],
+        "significant": true
+      },
+      "三链Mamba3_ood_decay_pct": {
+        "treatment_mean": 0.86,
+        "control_mean": -2.52,
+        "treatment_std": 0.84,
+        "control_std": 0.66,
+        "t_stat": 5.4923,
+        "p_value": 0.006301,
+        "cohen_d": 4.4844,
+        "ci_95": [
+          2.18,
+          4.59
+        ],
+        "significant": true
+      }
+    },
+    "adv_n6_k8": {
+      "Transformer_val_ch_acc": {
+        "treatment_mean": 50.19,
+        "control_mean": 6.13,
+        "treatment_std": 1.76,
+        "control_std": 0.36,
+        "t_stat": 42.369,
+        "p_value": 0.000333,
+        "cohen_d": 34.5942,
+        "ci_95": [
+          42.02,
+          46.1
+        ],
+        "significant": true
+      },
+      "Transformer_ood_ch_acc": {
+        "treatment_mean": 50.31,
+        "control_mean": 5.93,
+        "treatment_std": 0.56,
+        "control_std": 0.18,
+        "t_stat": 131.085,
+        "p_value": 1e-05,
+        "cohen_d": 107.0304,
+        "ci_95": [
+          43.72,
+          45.04
+        ],
+        "significant": true
+      },
+      "Transformer_ood_decay_pct": {
+        "treatment_mean": 0.31,
+        "control_mean": -3.06,
+        "treatment_std": 2.78,
+        "control_std": 3.47,
+        "t_stat": 1.3138,
+        "p_value": 0.26227,
+        "cohen_d": 1.0727,
+        "ci_95": [
+          -1.66,
+          8.4
+        ],
+        "significant": false
+      },
+      "Mamba3单链_val_ch_acc": {
+        "treatment_mean": 50.19,
+        "control_mean": 16.22,
+        "treatment_std": 1.76,
+        "control_std": 17.85,
+        "t_stat": 3.2802,
+        "p_value": 0.079614,
+        "cohen_d": 2.6783,
+        "ci_95": [
+          13.67,
+          54.27
+        ],
+        "significant": false
+      },
+      "Mamba3单链_ood_ch_acc": {
+        "treatment_mean": 50.31,
+        "control_mean": 15.84,
+        "treatment_std": 0.56,
+        "control_std": 17.31,
+        "t_stat": 3.4475,
+        "p_value": 0.0746,
+        "cohen_d": 2.8148,
+        "ci_95": [
+          14.87,
+          54.07
+        ],
+        "significant": false
+      },
+      "Mamba3单链_ood_decay_pct": {
+        "treatment_mean": 0.31,
+        "control_mean": -1.61,
+        "treatment_std": 2.78,
+        "control_std": 2.02,
+        "t_stat": 0.9637,
+        "p_value": 0.394519,
+        "cohen_d": 0.7869,
+        "ci_95": [
+          -1.98,
+          5.8
+        ],
+        "significant": false
+      },
+      "三链Mamba3_val_ch_acc": {
+        "treatment_mean": 50.19,
+        "control_mean": 54.4,
+        "treatment_std": 1.76,
+        "control_std": 4.43,
+        "t_stat": -1.5283,
+        "p_value": 0.236645,
+        "cohen_d": -1.2478,
+        "ci_95": [
+          -9.61,
+          1.19
+        ],
+        "significant": false
+      },
+      "三链Mamba3_ood_ch_acc": {
+        "treatment_mean": 50.31,
+        "control_mean": 54.21,
+        "treatment_std": 0.56,
+        "control_std": 4.89,
+        "t_stat": -1.3688,
+        "p_value": 0.301637,
+        "cohen_d": -1.1176,
+        "ci_95": [
+          -9.47,
+          1.68
+        ],
+        "significant": false
+      },
+      "三链Mamba3_ood_decay_pct": {
+        "treatment_mean": 0.31,
+        "control_mean": -0.39,
+        "treatment_std": 2.78,
+        "control_std": 1.4,
+        "t_stat": 0.3897,
+        "p_value": 0.723176,
+        "cohen_d": 0.3182,
+        "ci_95": [
+          -2.82,
+          4.22
+        ],
+        "significant": false
+      }
+    },
+    "adv_n8_k12": {
+      "Transformer_val_ch_acc": {
+        "treatment_mean": 56.12,
+        "control_mean": 52.48,
+        "treatment_std": 0.22,
+        "control_std": 0.0,
+        "t_stat": 29.2221,
+        "p_value": 0.001169,
+        "cohen_d": 23.8597,
+        "ci_95": [
+          3.4,
+          3.89
+        ],
+        "significant": true
+      },
+      "Transformer_ood_ch_acc": {
+        "treatment_mean": 56.54,
+        "control_mean": 53.38,
+        "treatment_std": 0.32,
+        "control_std": 0.0,
+        "t_stat": 16.9513,
+        "p_value": 0.003462,
+        "cohen_d": 13.8407,
+        "ci_95": [
+          2.79,
+          3.52
+        ],
+        "significant": true
+      },
+      "Transformer_ood_decay_pct": {
+        "treatment_mean": 0.74,
+        "control_mean": 1.7,
+        "treatment_std": 0.42,
+        "control_std": 0.0,
+        "t_stat": -4.0182,
+        "p_value": 0.056718,
+        "cohen_d": -3.2808,
+        "ci_95": [
+          -1.43,
+          -0.49
+        ],
+        "significant": false
+      },
+      "Mamba3单链_val_ch_acc": {
+        "treatment_mean": 56.12,
+        "control_mean": 52.37,
+        "treatment_std": 0.22,
+        "control_std": 0.1,
+        "t_stat": 27.2612,
+        "p_value": 0.000163,
+        "cohen_d": 22.2587,
+        "ci_95": [
+          3.48,
+          4.02
+        ],
+        "significant": true
+      },
+      "Mamba3单链_ood_ch_acc": {
+        "treatment_mean": 56.54,
+        "control_mean": 53.33,
+        "treatment_std": 0.32,
+        "control_std": 0.05,
+        "t_stat": 17.0362,
+        "p_value": 0.002892,
+        "cohen_d": 13.91,
+        "ci_95": [
+          2.83,
+          3.57
+        ],
+        "significant": true
+      },
+      "Mamba3单链_ood_decay_pct": {
+        "treatment_mean": 0.74,
+        "control_mean": 1.82,
+        "treatment_std": 0.42,
+        "control_std": 0.16,
+        "t_stat": -4.2208,
+        "p_value": 0.032764,
+        "cohen_d": -3.4463,
+        "ci_95": [
+          -1.59,
+          -0.58
+        ],
+        "significant": true
+      },
+      "三链Mamba3_val_ch_acc": {
+        "treatment_mean": 56.12,
+        "control_mean": 55.25,
+        "treatment_std": 0.22,
+        "control_std": 0.45,
+        "t_stat": 3.0464,
+        "p_value": 0.05828,
+        "cohen_d": 2.4874,
+        "ci_95": [
+          0.31,
+          1.43
+        ],
+        "significant": false
+      },
+      "三链Mamba3_ood_ch_acc": {
+        "treatment_mean": 56.54,
+        "control_mean": 56.41,
+        "treatment_std": 0.32,
+        "control_std": 0.57,
+        "t_stat": 0.3262,
+        "p_value": 0.76471,
+        "cohen_d": 0.2663,
+        "ci_95": [
+          -0.62,
+          0.86
+        ],
+        "significant": false
+      },
+      "三链Mamba3_ood_decay_pct": {
+        "treatment_mean": 0.74,
+        "control_mean": 2.09,
+        "treatment_std": 0.42,
+        "control_std": 0.22,
+        "t_stat": -4.9847,
+        "p_value": 0.014966,
+        "cohen_d": -4.07,
+        "ci_95": [
+          -1.89,
+          -0.82
+        ],
+        "significant": true
+      }
+    },
+    "adv_n8_k4": {
+      "Transformer_val_ch_acc": {
+        "treatment_mean": 66.36,
+        "control_mean": 10.12,
+        "treatment_std": 1.76,
+        "control_std": 0.2,
+        "t_stat": 55.0069,
+        "p_value": 0.000277,
+        "cohen_d": 44.913,
+        "ci_95": [
+          54.23,
+          58.24
+        ],
+        "significant": true
+      },
+      "Transformer_ood_ch_acc": {
+        "treatment_mean": 68.05,
+        "control_mean": 10.28,
+        "treatment_std": 2.55,
+        "control_std": 0.14,
+        "t_stat": 39.2034,
+        "p_value": 0.000625,
+        "cohen_d": 32.0094,
+        "ci_95": [
+          54.88,
+          60.66
+        ],
+        "significant": true
+      },
+      "Transformer_ood_decay_pct": {
+        "treatment_mean": 2.53,
+        "control_mean": 1.56,
+        "treatment_std": 1.49,
+        "control_std": 0.6,
+        "t_stat": 1.0473,
+        "p_value": 0.381553,
+        "cohen_d": 0.8551,
+        "ci_95": [
+          -0.85,
+          2.79
+        ],
+        "significant": false
+      },
+      "Mamba3单链_val_ch_acc": {
+        "treatment_mean": 66.36,
+        "control_mean": 10.59,
+        "treatment_std": 1.76,
+        "control_std": 0.02,
+        "t_stat": 54.9077,
+        "p_value": 0.000331,
+        "cohen_d": 44.832,
+        "ci_95": [
+          53.78,
+          57.76
+        ],
+        "significant": true
+      },
+      "Mamba3单链_ood_ch_acc": {
+        "treatment_mean": 68.05,
+        "control_mean": 10.43,
+        "treatment_std": 2.55,
+        "control_std": 0.05,
+        "t_stat": 39.1533,
+        "p_value": 0.000649,
+        "cohen_d": 31.9685,
+        "ci_95": [
+          54.73,
+          60.5
+        ],
+        "significant": true
+      },
+      "Mamba3单链_ood_decay_pct": {
+        "treatment_mean": 2.53,
+        "control_mean": -1.42,
+        "treatment_std": 1.49,
+        "control_std": 0.58,
+        "t_stat": 4.2688,
+        "p_value": 0.031621,
+        "cohen_d": 3.4854,
+        "ci_95": [
+          2.13,
+          5.76
+        ],
+        "significant": true
+      },
+      "三链Mamba3_val_ch_acc": {
+        "treatment_mean": 66.36,
+        "control_mean": 68.42,
+        "treatment_std": 1.76,
+        "control_std": 1.68,
+        "t_stat": -1.4673,
+        "p_value": 0.216343,
+        "cohen_d": -1.1981,
+        "ci_95": [
+          -4.81,
+          0.69
+        ],
+        "significant": false
+      },
+      "三链Mamba3_ood_ch_acc": {
+        "treatment_mean": 68.05,
+        "control_mean": 67.44,
+        "treatment_std": 2.55,
+        "control_std": 1.76,
+        "t_stat": 0.3373,
+        "p_value": 0.754821,
+        "cohen_d": 0.2754,
+        "ci_95": [
+          -2.9,
+          4.11
+        ],
+        "significant": false
+      },
+      "三链Mamba3_ood_decay_pct": {
+        "treatment_mean": 2.53,
+        "control_mean": -1.42,
+        "treatment_std": 1.49,
+        "control_std": 0.36,
+        "t_stat": 4.46,
+        "p_value": 0.038283,
+        "cohen_d": 3.6416,
+        "ci_95": [
+          2.22,
+          5.69
+        ],
+        "significant": true
+      }
+    },
+    "adv_n8_k8": {
+      "Transformer_val_ch_acc": {
+        "treatment_mean": 58.68,
+        "control_mean": 40.36,
+        "treatment_std": 1.9,
+        "control_std": 23.45,
+        "t_stat": 1.3488,
+        "p_value": 0.308363,
+        "cohen_d": 1.1013,
+        "ci_95": [
+          -8.3,
+          44.95
+        ],
+        "significant": false
+      },
+      "Transformer_ood_ch_acc": {
+        "treatment_mean": 59.15,
+        "control_mean": 47.57,
+        "treatment_std": 2.1,
+        "control_std": 11.37,
+        "t_stat": 1.7363,
+        "p_value": 0.216587,
+        "cohen_d": 1.4177,
+        "ci_95": [
+          -1.49,
+          24.67
+        ],
+        "significant": false
+      },
+      "Transformer_ood_decay_pct": {
+        "treatment_mean": 0.8,
+        "control_mean": 53.23,
+        "treatment_std": 0.32,
+        "control_std": 91.44,
+        "t_stat": -0.9932,
+        "p_value": 0.425274,
+        "cohen_d": -0.8109,
+        "ci_95": [
+          -155.92,
+          51.04
+        ],
+        "significant": false
+      },
+      "Mamba3单链_val_ch_acc": {
+        "treatment_mean": 58.68,
+        "control_mean": 5.74,
+        "treatment_std": 1.9,
+        "control_std": 0.62,
+        "t_stat": 45.8099,
+        "p_value": 0.000128,
+        "cohen_d": 37.4036,
+        "ci_95": [
+          50.68,
+          55.21
+        ],
+        "significant": true
+      },
+      "Mamba3单链_ood_ch_acc": {
+        "treatment_mean": 59.15,
+        "control_mean": 8.48,
+        "treatment_std": 2.1,
+        "control_std": 4.79,
+        "t_stat": 16.7835,
+        "p_value": 0.000761,
+        "cohen_d": 13.7037,
+        "ci_95": [
+          44.75,
+          56.59
+        ],
+        "significant": true
+      },
+      "Mamba3单链_ood_decay_pct": {
+        "treatment_mean": 0.8,
+        "control_mean": 45.02,
+        "treatment_std": 0.32,
+        "control_std": 70.53,
+        "t_stat": -1.0861,
+        "p_value": 0.390915,
+        "cohen_d": -0.8868,
+        "ci_95": [
+          -124.04,
+          35.59
+        ],
+        "significant": false
+      },
+      "三链Mamba3_val_ch_acc": {
+        "treatment_mean": 58.68,
+        "control_mean": 59.33,
+        "treatment_std": 1.9,
+        "control_std": 1.54,
+        "t_stat": -0.4577,
+        "p_value": 0.671892,
+        "cohen_d": -0.3737,
+        "ci_95": [
+          -3.42,
+          2.12
+        ],
+        "significant": false
+      },
+      "三链Mamba3_ood_ch_acc": {
+        "treatment_mean": 59.15,
+        "control_mean": 58.88,
+        "treatment_std": 2.1,
+        "control_std": 1.97,
+        "t_stat": 0.1663,
+        "p_value": 0.875994,
+        "cohen_d": 0.1358,
+        "ci_95": [
+          -2.98,
+          3.54
+        ],
+        "significant": false
+      },
+      "三链Mamba3_ood_decay_pct": {
+        "treatment_mean": 0.8,
+        "control_mean": -0.78,
+        "treatment_std": 0.32,
+        "control_std": 0.85,
+        "t_stat": 3.0078,
+        "p_value": 0.070438,
+        "cohen_d": 2.4558,
+        "ci_95": [
+          0.55,
+          2.6
+        ],
+        "significant": false
+      }
+    },
+    "ext_n12_k12": {
+      "Transformer_val_ch_acc": {
+        "treatment_mean": 55.5,
+        "control_mean": 53.19,
+        "treatment_std": 1.23,
+        "control_std": 0.0,
+        "t_stat": 3.2404,
+        "p_value": 0.083481,
+        "cohen_d": 2.6458,
+        "ci_95": [
+          0.91,
+          3.7
+        ],
+        "significant": false
+      },
+      "Transformer_ood_ch_acc": {
+        "treatment_mean": 57.12,
+        "control_mean": 54.02,
+        "treatment_std": 0.97,
+        "control_std": 0.0,
+        "t_stat": 5.5139,
+        "p_value": 0.031353,
+        "cohen_d": 4.5021,
+        "ci_95": [
+          2.0,
+          4.2
+        ],
+        "significant": true
+      },
+      "Transformer_ood_decay_pct": {
+        "treatment_mean": 2.93,
+        "control_mean": 1.56,
+        "treatment_std": 0.76,
+        "control_std": 0.0,
+        "t_stat": 3.1251,
+        "p_value": 0.088943,
+        "cohen_d": 2.5517,
+        "ci_95": [
+          0.51,
+          2.22
+        ],
+        "significant": false
+      },
+      "Mamba3单链_val_ch_acc": {
+        "treatment_mean": 55.5,
+        "control_mean": 53.19,
+        "treatment_std": 1.23,
+        "control_std": 0.0,
+        "t_stat": 3.2404,
+        "p_value": 0.083481,
+        "cohen_d": 2.6458,
+        "ci_95": [
+          0.91,
+          3.7
+        ],
+        "significant": false
+      },
+      "Mamba3单链_ood_ch_acc": {
+        "treatment_mean": 57.12,
+        "control_mean": 54.02,
+        "treatment_std": 0.97,
+        "control_std": 0.0,
+        "t_stat": 5.5139,
+        "p_value": 0.031353,
+        "cohen_d": 4.5021,
+        "ci_95": [
+          2.0,
+          4.2
+        ],
+        "significant": true
+      },
+      "Mamba3单链_ood_decay_pct": {
+        "treatment_mean": 2.93,
+        "control_mean": 1.56,
+        "treatment_std": 0.76,
+        "control_std": 0.0,
+        "t_stat": 3.1251,
+        "p_value": 0.088943,
+        "cohen_d": 2.5517,
+        "ci_95": [
+          0.51,
+          2.22
+        ],
+        "significant": false
+      },
+      "三链Mamba3_val_ch_acc": {
+        "treatment_mean": 55.5,
+        "control_mean": 56.77,
+        "treatment_std": 1.23,
+        "control_std": 1.59,
+        "t_stat": -1.0986,
+        "p_value": 0.337186,
+        "cohen_d": -0.897,
+        "ci_95": [
+          -3.55,
+          1.0
+        ],
+        "significant": false
+      },
+      "三链Mamba3_ood_ch_acc": {
+        "treatment_mean": 57.12,
+        "control_mean": 57.39,
+        "treatment_std": 0.97,
+        "control_std": 1.11,
+        "t_stat": -0.3209,
+        "p_value": 0.76458,
+        "cohen_d": -0.2621,
+        "ci_95": [
+          -1.94,
+          1.4
+        ],
+        "significant": false
+      },
+      "三链Mamba3_ood_decay_pct": {
+        "treatment_mean": 2.93,
+        "control_mean": 1.11,
+        "treatment_std": 0.76,
+        "control_std": 0.91,
+        "t_stat": 2.6548,
+        "p_value": 0.05874,
+        "cohen_d": 2.1676,
+        "ci_95": [
+          0.48,
+          3.16
+        ],
+        "significant": false
+      }
+    },
+    "ext_n6_k4": {
+      "Transformer_val_ch_acc": {
+        "treatment_mean": 59.93,
+        "control_mean": 10.52,
+        "treatment_std": 2.17,
+        "control_std": 0.06,
+        "t_stat": 39.371,
+        "p_value": 0.000638,
+        "cohen_d": 32.1463,
+        "ci_95": [
+          46.95,
+          51.87
+        ],
+        "significant": true
+      },
+      "Transformer_ood_ch_acc": {
+        "treatment_mean": 59.87,
+        "control_mean": 10.69,
+        "treatment_std": 1.59,
+        "control_std": 0.33,
+        "t_stat": 52.5718,
+        "p_value": 0.000202,
+        "cohen_d": 42.9247,
+        "ci_95": [
+          47.34,
+          51.01
+        ],
+        "significant": true
+      },
+      "Transformer_ood_decay_pct": {
+        "treatment_mean": -0.08,
+        "control_mean": 1.59,
+        "treatment_std": 1.56,
+        "control_std": 3.84,
+        "t_stat": -0.6968,
+        "p_value": 0.542274,
+        "cohen_d": -0.5689,
+        "ci_95": [
+          -6.36,
+          3.02
+        ],
+        "significant": false
+      },
+      "Mamba3单链_val_ch_acc": {
+        "treatment_mean": 59.93,
+        "control_mean": 10.51,
+        "treatment_std": 2.17,
+        "control_std": 0.06,
+        "t_stat": 39.3823,
+        "p_value": 0.000639,
+        "cohen_d": 32.1555,
+        "ci_95": [
+          46.96,
+          51.88
+        ],
+        "significant": true
+      },
+      "Mamba3单链_ood_ch_acc": {
+        "treatment_mean": 59.87,
+        "control_mean": 10.86,
+        "treatment_std": 1.59,
+        "control_std": 0.26,
+        "t_stat": 52.8584,
+        "p_value": 0.000253,
+        "cohen_d": 43.1587,
+        "ci_95": [
+          47.19,
+          50.82
+        ],
+        "significant": true
+      },
+      "Mamba3单链_ood_decay_pct": {
+        "treatment_mean": -0.08,
+        "control_mean": 3.32,
+        "treatment_std": 1.56,
+        "control_std": 2.95,
+        "t_stat": -1.7664,
+        "p_value": 0.174497,
+        "cohen_d": -1.4423,
+        "ci_95": [
+          -7.18,
+          0.37
+        ],
+        "significant": false
+      },
+      "三链Mamba3_val_ch_acc": {
+        "treatment_mean": 59.93,
+        "control_mean": 54.31,
+        "treatment_std": 2.17,
+        "control_std": 9.16,
+        "t_stat": 1.0348,
+        "p_value": 0.399969,
+        "cohen_d": 0.8449,
+        "ci_95": [
+          -5.03,
+          16.28
+        ],
+        "significant": false
+      },
+      "三链Mamba3_ood_ch_acc": {
+        "treatment_mean": 59.87,
+        "control_mean": 53.76,
+        "treatment_std": 1.59,
+        "control_std": 7.28,
+        "t_stat": 1.4204,
+        "p_value": 0.281193,
+        "cohen_d": 1.1598,
+        "ci_95": [
+          -2.32,
+          14.54
+        ],
+        "significant": false
+      },
+      "三链Mamba3_ood_decay_pct": {
+        "treatment_mean": -0.08,
+        "control_mean": -0.65,
+        "treatment_std": 1.56,
+        "control_std": 3.23,
+        "t_stat": 0.275,
+        "p_value": 0.801858,
+        "cohen_d": 0.2245,
+        "ci_95": [
+          -3.49,
+          4.63
+        ],
+        "significant": false
+      }
+    },
+    "ext_n8_k4_drone": {
+      "Transformer_val_ch_acc": {
+        "treatment_mean": 63.65,
+        "control_mean": 11.09,
+        "treatment_std": 1.83,
+        "control_std": 0.97,
+        "t_stat": 43.9858,
+        "p_value": 2.2e-05,
+        "cohen_d": 35.9143,
+        "ci_95": [
+          50.21,
+          54.9
+        ],
+        "significant": true
+      },
+      "Transformer_ood_ch_acc": {
+        "treatment_mean": 62.67,
+        "control_mean": 11.28,
+        "treatment_std": 2.65,
+        "control_std": 0.12,
+        "t_stat": 33.5308,
+        "p_value": 0.000867,
+        "cohen_d": 27.3777,
+        "ci_95": [
+          48.39,
+          54.39
+        ],
+        "significant": true
+      },
+      "Transformer_ood_decay_pct": {
+        "treatment_mean": -1.57,
+        "control_mean": 2.19,
+        "treatment_std": 1.37,
+        "control_std": 9.27,
+        "t_stat": -0.6942,
+        "p_value": 0.55673,
+        "cohen_d": -0.5668,
+        "ci_95": [
+          -14.36,
+          6.85
+        ],
+        "significant": false
+      },
+      "Mamba3单链_val_ch_acc": {
+        "treatment_mean": 63.65,
+        "control_mean": 11.64,
+        "treatment_std": 1.83,
+        "control_std": 0.08,
+        "t_stat": 49.2792,
+        "p_value": 0.000402,
+        "cohen_d": 40.2363,
+        "ci_95": [
+          49.94,
+          54.08
+        ],
+        "significant": true
+      },
+      "Mamba3单链_ood_ch_acc": {
+        "treatment_mean": 62.67,
+        "control_mean": 11.65,
+        "treatment_std": 2.65,
+        "control_std": 0.17,
+        "t_stat": 33.2534,
+        "p_value": 0.000862,
+        "cohen_d": 27.1513,
+        "ci_95": [
+          48.01,
+          54.02
+        ],
+        "significant": true
+      },
+      "Mamba3单链_ood_decay_pct": {
+        "treatment_mean": -1.57,
+        "control_mean": 0.19,
+        "treatment_std": 1.37,
+        "control_std": 1.22,
+        "t_stat": -1.6637,
+        "p_value": 0.172466,
+        "cohen_d": -1.3584,
+        "ci_95": [
+          -3.83,
+          0.31
+        ],
+        "significant": false
+      },
+      "三链Mamba3_val_ch_acc": {
+        "treatment_mean": 63.65,
+        "control_mean": 61.36,
+        "treatment_std": 1.83,
+        "control_std": 4.28,
+        "t_stat": 0.8519,
+        "p_value": 0.462963,
+        "cohen_d": 0.6956,
+        "ci_95": [
+          -2.97,
+          7.55
+        ],
+        "significant": false
+      },
+      "三链Mamba3_ood_ch_acc": {
+        "treatment_mean": 62.67,
+        "control_mean": 58.88,
+        "treatment_std": 2.65,
+        "control_std": 3.9,
+        "t_stat": 1.3912,
+        "p_value": 0.245587,
+        "cohen_d": 1.1359,
+        "ci_95": [
+          -1.55,
+          9.13
+        ],
+        "significant": false
+      },
+      "三链Mamba3_ood_decay_pct": {
+        "treatment_mean": -1.57,
+        "control_mean": -4.01,
+        "treatment_std": 1.37,
+        "control_std": 2.16,
+        "t_stat": 1.6603,
+        "p_value": 0.185046,
+        "cohen_d": 1.3556,
+        "ci_95": [
+          -0.44,
+          5.34
+        ],
+        "significant": false
+      }
+    },
+    "ext_n8_k8_hp": {
+      "Transformer_val_ch_acc": {
+        "treatment_mean": 58.94,
+        "control_mean": 37.65,
+        "treatment_std": 0.06,
+        "control_std": 27.56,
+        "t_stat": 1.3381,
+        "p_value": 0.312696,
+        "cohen_d": 1.0926,
+        "ci_95": [
+          -9.89,
+          52.47
+        ],
+        "significant": false
+      },
+      "Transformer_ood_ch_acc": {
+        "treatment_mean": 59.24,
+        "control_mean": 38.32,
+        "treatment_std": 0.07,
+        "control_std": 28.27,
+        "t_stat": 1.282,
+        "p_value": 0.328372,
+        "cohen_d": 1.0468,
+        "ci_95": [
+          -11.07,
+          52.92
+        ],
+        "significant": false
+      },
+      "Transformer_ood_decay_pct": {
+        "treatment_mean": 0.51,
+        "control_mean": 0.42,
+        "treatment_std": 0.22,
+        "control_std": 2.79,
+        "t_stat": 0.0557,
+        "p_value": 0.960568,
+        "cohen_d": 0.0455,
+        "ci_95": [
+          -3.08,
+          3.26
+        ],
+        "significant": false
+      },
+      "Mamba3单链_val_ch_acc": {
+        "treatment_mean": 58.94,
+        "control_mean": 37.25,
+        "treatment_std": 0.06,
+        "control_std": 27.16,
+        "t_stat": 1.3833,
+        "p_value": 0.300757,
+        "cohen_d": 1.1294,
+        "ci_95": [
+          -9.04,
+          52.43
+        ],
+        "significant": false
+      },
+      "Mamba3单链_ood_ch_acc": {
+        "treatment_mean": 59.24,
+        "control_mean": 38.53,
+        "treatment_std": 0.07,
+        "control_std": 27.48,
+        "t_stat": 1.3052,
+        "p_value": 0.321783,
+        "cohen_d": 1.0657,
+        "ci_95": [
+          -10.39,
+          51.81
+        ],
+        "significant": false
+      },
+      "Mamba3单链_ood_decay_pct": {
+        "treatment_mean": 0.51,
+        "control_mean": 6.98,
+        "treatment_std": 0.22,
+        "control_std": 7.28,
+        "t_stat": -1.5398,
+        "p_value": 0.26329,
+        "cohen_d": -1.2572,
+        "ci_95": [
+          -14.71,
+          1.77
+        ],
+        "significant": false
+      },
+      "三链Mamba3_val_ch_acc": {
+        "treatment_mean": 58.94,
+        "control_mean": 58.49,
+        "treatment_std": 0.06,
+        "control_std": 0.02,
+        "t_stat": 11.8906,
+        "p_value": 0.0026,
+        "cohen_d": 9.7086,
+        "ci_95": [
+          0.37,
+          0.52
+        ],
+        "significant": true
+      },
+      "三链Mamba3_ood_ch_acc": {
+        "treatment_mean": 59.24,
+        "control_mean": 59.41,
+        "treatment_std": 0.07,
+        "control_std": 0.08,
+        "t_stat": -2.799,
+        "p_value": 0.050335,
+        "cohen_d": -2.2854,
+        "ci_95": [
+          -0.29,
+          -0.05
+        ],
+        "significant": false
+      },
+      "三链Mamba3_ood_decay_pct": {
+        "treatment_mean": 0.51,
+        "control_mean": 1.57,
+        "treatment_std": 0.22,
+        "control_std": 0.1,
+        "t_stat": -7.6039,
+        "p_value": 0.005475,
+        "cohen_d": -6.2085,
+        "ci_95": [
+          -1.33,
+          -0.78
+        ],
+        "significant": true
+      }
+    },
+    "goal_n12_k12": {
+      "Transformer_val_ch_acc": {
+        "treatment_mean": 54.22,
+        "control_mean": 50.8,
+        "treatment_std": 2.02,
+        "control_std": 0.0,
+        "t_stat": 2.9356,
+        "p_value": 0.099091,
+        "cohen_d": 2.3969,
+        "ci_95": [
+          1.14,
+          5.7
+        ],
+        "significant": false
+      },
+      "Transformer_ood_ch_acc": {
+        "treatment_mean": 53.28,
+        "control_mean": 51.32,
+        "treatment_std": 2.37,
+        "control_std": 0.0,
+        "t_stat": 1.4345,
+        "p_value": 0.28788,
+        "cohen_d": 1.1713,
+        "ci_95": [
+          -0.72,
+          4.64
+        ],
+        "significant": false
+      },
+      "Transformer_ood_decay_pct": {
+        "treatment_mean": -1.74,
+        "control_mean": 1.04,
+        "treatment_std": 0.74,
+        "control_std": 0.0,
+        "t_stat": -6.5086,
+        "p_value": 0.022802,
+        "cohen_d": -5.3142,
+        "ci_95": [
+          -3.62,
+          -1.95
+        ],
+        "significant": true
+      },
+      "Mamba3单链_val_ch_acc": {
+        "treatment_mean": 54.22,
+        "control_mean": 50.8,
+        "treatment_std": 2.02,
+        "control_std": 0.0,
+        "t_stat": 2.9356,
+        "p_value": 0.099091,
+        "cohen_d": 2.3969,
+        "ci_95": [
+          1.14,
+          5.7
+        ],
+        "significant": false
+      },
+      "Mamba3单链_ood_ch_acc": {
+        "treatment_mean": 53.28,
+        "control_mean": 51.32,
+        "treatment_std": 2.37,
+        "control_std": 0.0,
+        "t_stat": 1.4345,
+        "p_value": 0.28788,
+        "cohen_d": 1.1713,
+        "ci_95": [
+          -0.72,
+          4.64
+        ],
+        "significant": false
+      },
+      "Mamba3单链_ood_decay_pct": {
+        "treatment_mean": -1.74,
+        "control_mean": 1.04,
+        "treatment_std": 0.74,
+        "control_std": 0.0,
+        "t_stat": -6.5086,
+        "p_value": 0.022802,
+        "cohen_d": -5.3142,
+        "ci_95": [
+          -3.62,
+          -1.95
+        ],
+        "significant": true
+      },
+      "三链Mamba3_val_ch_acc": {
+        "treatment_mean": 54.22,
+        "control_mean": 53.75,
+        "treatment_std": 2.02,
+        "control_std": 0.89,
+        "t_stat": 0.3718,
+        "p_value": 0.736817,
+        "cohen_d": 0.3036,
+        "ci_95": [
+          -2.02,
+          2.97
+        ],
+        "significant": false
+      },
+      "三链Mamba3_ood_ch_acc": {
+        "treatment_mean": 53.28,
+        "control_mean": 54.11,
+        "treatment_std": 2.37,
+        "control_std": 0.7,
+        "t_stat": -0.5799,
+        "p_value": 0.612756,
+        "cohen_d": -0.4735,
+        "ci_95": [
+          -3.62,
+          1.97
+        ],
+        "significant": false
+      },
+      "三链Mamba3_ood_decay_pct": {
+        "treatment_mean": -1.74,
+        "control_mean": 0.67,
+        "treatment_std": 0.74,
+        "control_std": 0.48,
+        "t_stat": -4.7319,
+        "p_value": 0.013113,
+        "cohen_d": -3.8636,
+        "ci_95": [
+          -3.41,
+          -1.41
+        ],
+        "significant": true
+      }
+    },
+    "goal_n12_k4": {
+      "Transformer_val_ch_acc": {
+        "treatment_mean": 62.15,
+        "control_mean": 53.51,
+        "treatment_std": 2.32,
+        "control_std": 0.0,
+        "t_stat": 6.4383,
+        "p_value": 0.023285,
+        "cohen_d": 5.2568,
+        "ci_95": [
+          6.01,
+          11.27
+        ],
+        "significant": true
+      },
+      "Transformer_ood_ch_acc": {
+        "treatment_mean": 62.89,
+        "control_mean": 55.02,
+        "treatment_std": 2.11,
+        "control_std": 0.0,
+        "t_stat": 6.466,
+        "p_value": 0.023093,
+        "cohen_d": 5.2794,
+        "ci_95": [
+          5.48,
+          10.26
+        ],
+        "significant": true
+      },
+      "Transformer_ood_decay_pct": {
+        "treatment_mean": 1.21,
+        "control_mean": 2.83,
+        "treatment_std": 1.7,
+        "control_std": 0.0,
+        "t_stat": -1.6552,
+        "p_value": 0.239713,
+        "cohen_d": -1.3515,
+        "ci_95": [
+          -3.54,
+          0.3
+        ],
+        "significant": false
+      },
+      "Mamba3单链_val_ch_acc": {
+        "treatment_mean": 62.15,
+        "control_mean": 53.51,
+        "treatment_std": 2.32,
+        "control_std": 0.0,
+        "t_stat": 6.4383,
+        "p_value": 0.023285,
+        "cohen_d": 5.2568,
+        "ci_95": [
+          6.01,
+          11.27
+        ],
+        "significant": true
+      },
+      "Mamba3单链_ood_ch_acc": {
+        "treatment_mean": 62.89,
+        "control_mean": 55.0,
+        "treatment_std": 2.11,
+        "control_std": 0.02,
+        "t_stat": 6.4793,
+        "p_value": 0.02299,
+        "cohen_d": 5.2904,
+        "ci_95": [
+          5.5,
+          10.27
+        ],
+        "significant": true
+      },
+      "Mamba3单链_ood_decay_pct": {
+        "treatment_mean": 1.21,
+        "control_mean": 2.8,
+        "treatment_std": 1.7,
+        "control_std": 0.04,
+        "t_stat": -1.6242,
+        "p_value": 0.245713,
+        "cohen_d": -1.3262,
+        "ci_95": [
+          -3.51,
+          0.33
+        ],
+        "significant": false
+      },
+      "三链Mamba3_val_ch_acc": {
+        "treatment_mean": 62.15,
+        "control_mean": 63.98,
+        "treatment_std": 2.32,
+        "control_std": 0.88,
+        "t_stat": -1.2754,
+        "p_value": 0.305446,
+        "cohen_d": -1.0414,
+        "ci_95": [
+          -4.64,
+          0.98
+        ],
+        "significant": false
+      },
+      "三链Mamba3_ood_ch_acc": {
+        "treatment_mean": 62.89,
+        "control_mean": 64.49,
+        "treatment_std": 2.11,
+        "control_std": 1.18,
+        "t_stat": -1.1444,
+        "p_value": 0.332061,
+        "cohen_d": -0.9344,
+        "ci_95": [
+          -4.33,
+          1.14
+        ],
+        "significant": false
+      },
+      "三链Mamba3_ood_decay_pct": {
+        "treatment_mean": 1.21,
+        "control_mean": 0.79,
+        "treatment_std": 1.7,
+        "control_std": 0.9,
+        "t_stat": 0.3764,
+        "p_value": 0.731387,
+        "cohen_d": 0.3073,
+        "ci_95": [
+          -1.75,
+          2.59
+        ],
+        "significant": false
+      }
+    },
+    "goal_n12_k4_l": {
+      "Transformer_val_ch_acc": {
+        "treatment_mean": 63.0,
+        "control_mean": 55.54,
+        "treatment_std": 1.02,
+        "control_std": 0.0,
+        "t_stat": 12.6842,
+        "p_value": 0.006158,
+        "cohen_d": 10.3566,
+        "ci_95": [
+          6.31,
+          8.62
+        ],
+        "significant": true
+      },
+      "Transformer_ood_ch_acc": {
+        "treatment_mean": 64.11,
+        "control_mean": 55.86,
+        "treatment_std": 0.41,
+        "control_std": 0.0,
+        "t_stat": 34.5257,
+        "p_value": 0.000838,
+        "cohen_d": 28.1901,
+        "ci_95": [
+          7.78,
+          8.72
+        ],
+        "significant": true
+      },
+      "Transformer_ood_decay_pct": {
+        "treatment_mean": 1.77,
+        "control_mean": 0.57,
+        "treatment_std": 1.01,
+        "control_std": 0.0,
+        "t_stat": 2.0573,
+        "p_value": 0.175927,
+        "cohen_d": 1.6798,
+        "ci_95": [
+          0.06,
+          2.34
+        ],
+        "significant": false
+      },
+      "Mamba3单链_val_ch_acc": {
+        "treatment_mean": 63.0,
+        "control_mean": 40.5,
+        "treatment_std": 1.02,
+        "control_std": 25.7,
+        "t_stat": 1.5156,
+        "p_value": 0.268497,
+        "cohen_d": 1.2374,
+        "ci_95": [
+          -6.6,
+          51.61
+        ],
+        "significant": false
+      },
+      "Mamba3单链_ood_ch_acc": {
+        "treatment_mean": 64.11,
+        "control_mean": 40.66,
+        "treatment_std": 0.41,
+        "control_std": 25.66,
+        "t_stat": 1.5828,
+        "p_value": 0.254242,
+        "cohen_d": 1.2923,
+        "ci_95": [
+          -5.59,
+          52.5
+        ],
+        "significant": false
+      },
+      "Mamba3单链_ood_decay_pct": {
+        "treatment_mean": 1.77,
+        "control_mean": 0.83,
+        "treatment_std": 1.01,
+        "control_std": 1.01,
+        "t_stat": 1.1315,
+        "p_value": 0.321082,
+        "cohen_d": 0.9239,
+        "ci_95": [
+          -0.68,
+          2.55
+        ],
+        "significant": false
+      },
+      "三链Mamba3_val_ch_acc": {
+        "treatment_mean": 63.0,
+        "control_mean": 59.5,
+        "treatment_std": 1.02,
+        "control_std": 2.58,
+        "t_stat": 2.185,
+        "p_value": 0.130143,
+        "cohen_d": 1.7841,
+        "ci_95": [
+          0.36,
+          6.64
+        ],
+        "significant": false
+      },
+      "三链Mamba3_ood_ch_acc": {
+        "treatment_mean": 64.11,
+        "control_mean": 58.94,
+        "treatment_std": 0.41,
+        "control_std": 2.67,
+        "t_stat": 3.3136,
+        "p_value": 0.075297,
+        "cohen_d": 2.7055,
+        "ci_95": [
+          2.11,
+          8.23
+        ],
+        "significant": false
+      },
+      "三链Mamba3_ood_decay_pct": {
+        "treatment_mean": 1.77,
+        "control_mean": -0.94,
+        "treatment_std": 1.01,
+        "control_std": 1.22,
+        "t_stat": 2.9563,
+        "p_value": 0.043648,
+        "cohen_d": 2.4138,
+        "ci_95": [
+          0.91,
+          4.5
+        ],
+        "significant": true
+      }
+    },
+    "goal_n12_k8": {
+      "Transformer_val_ch_acc": {
+        "treatment_mean": 57.94,
+        "control_mean": 52.54,
+        "treatment_std": 0.61,
+        "control_std": 0.0,
+        "t_stat": 15.2776,
+        "p_value": 0.004257,
+        "cohen_d": 12.4741,
+        "ci_95": [
+          4.71,
+          6.09
+        ],
+        "significant": true
+      },
+      "Transformer_ood_ch_acc": {
+        "treatment_mean": 57.48,
+        "control_mean": 53.81,
+        "treatment_std": 0.6,
+        "control_std": 0.0,
+        "t_stat": 10.645,
+        "p_value": 0.00871,
+        "cohen_d": 8.6916,
+        "ci_95": [
+          3.0,
+          4.35
+        ],
+        "significant": true
+      },
+      "Transformer_ood_decay_pct": {
+        "treatment_mean": -0.79,
+        "control_mean": 2.42,
+        "treatment_std": 0.72,
+        "control_std": 0.0,
+        "t_stat": -7.702,
+        "p_value": 0.016443,
+        "cohen_d": -6.2887,
+        "ci_95": [
+          -4.03,
+          -2.39
+        ],
+        "significant": true
+      },
+      "Mamba3单链_val_ch_acc": {
+        "treatment_mean": 57.94,
+        "control_mean": 52.54,
+        "treatment_std": 0.61,
+        "control_std": 0.0,
+        "t_stat": 15.2776,
+        "p_value": 0.004257,
+        "cohen_d": 12.4741,
+        "ci_95": [
+          4.71,
+          6.09
+        ],
+        "significant": true
+      },
+      "Mamba3单链_ood_ch_acc": {
+        "treatment_mean": 57.48,
+        "control_mean": 53.81,
+        "treatment_std": 0.6,
+        "control_std": 0.0,
+        "t_stat": 10.645,
+        "p_value": 0.00871,
+        "cohen_d": 8.6916,
+        "ci_95": [
+          3.0,
+          4.35
+        ],
+        "significant": true
+      },
+      "Mamba3单链_ood_decay_pct": {
+        "treatment_mean": -0.79,
+        "control_mean": 2.42,
+        "treatment_std": 0.72,
+        "control_std": 0.0,
+        "t_stat": -7.702,
+        "p_value": 0.016443,
+        "cohen_d": -6.2887,
+        "ci_95": [
+          -4.03,
+          -2.39
+        ],
+        "significant": true
+      },
+      "三链Mamba3_val_ch_acc": {
+        "treatment_mean": 57.94,
+        "control_mean": 57.41,
+        "treatment_std": 0.61,
+        "control_std": 0.98,
+        "t_stat": 0.7924,
+        "p_value": 0.48024,
+        "cohen_d": 0.647,
+        "ci_95": [
+          -0.78,
+          1.83
+        ],
+        "significant": false
+      },
+      "三链Mamba3_ood_ch_acc": {
+        "treatment_mean": 57.48,
+        "control_mean": 58.01,
+        "treatment_std": 0.6,
+        "control_std": 2.25,
+        "t_stat": -0.3936,
+        "p_value": 0.72771,
+        "cohen_d": -0.3213,
+        "ci_95": [
+          -3.17,
+          2.11
+        ],
+        "significant": false
+      },
+      "三链Mamba3_ood_decay_pct": {
+        "treatment_mean": -0.79,
+        "control_mean": 1.02,
+        "treatment_std": 0.72,
+        "control_std": 2.25,
+        "t_stat": -1.3287,
+        "p_value": 0.295867,
+        "cohen_d": -1.0849,
+        "ci_95": [
+          -4.49,
+          0.86
+        ],
+        "significant": false
+      }
+    },
+    "goal_n6_k12_l": {
+      "Transformer_val_ch_acc": {
+        "treatment_mean": 46.69,
+        "control_mean": 4.42,
+        "treatment_std": 2.75,
+        "control_std": 0.2,
+        "t_stat": 26.5904,
+        "p_value": 0.001337,
+        "cohen_d": 21.711,
+        "ci_95": [
+          39.16,
+          45.39
+        ],
+        "significant": true
+      },
+      "Transformer_ood_ch_acc": {
+        "treatment_mean": 46.13,
+        "control_mean": 4.58,
+        "treatment_std": 3.84,
+        "control_std": 0.08,
+        "t_stat": 18.7145,
+        "p_value": 0.002831,
+        "cohen_d": 15.2803,
+        "ci_95": [
+          37.19,
+          45.89
+        ],
+        "significant": true
+      },
+      "Transformer_ood_decay_pct": {
+        "treatment_mean": -1.29,
+        "control_mean": 3.9,
+        "treatment_std": 2.86,
+        "control_std": 2.88,
+        "t_stat": -2.2126,
+        "p_value": 0.09137,
+        "cohen_d": -1.8065,
+        "ci_95": [
+          -9.79,
+          -0.59
+        ],
+        "significant": false
+      },
+      "Mamba3单链_val_ch_acc": {
+        "treatment_mean": 46.69,
+        "control_mean": 31.37,
+        "treatment_std": 2.75,
+        "control_std": 23.58,
+        "t_stat": 1.118,
+        "p_value": 0.377202,
+        "cohen_d": 0.9129,
+        "ci_95": [
+          -11.54,
+          42.19
+        ],
+        "significant": false
+      },
+      "Mamba3单链_ood_ch_acc": {
+        "treatment_mean": 46.13,
+        "control_mean": 30.09,
+        "treatment_std": 3.84,
+        "control_std": 22.76,
+        "t_stat": 1.203,
+        "p_value": 0.346383,
+        "cohen_d": 0.9822,
+        "ci_95": [
+          -10.09,
+          42.16
+        ],
+        "significant": false
+      },
+      "Mamba3单链_ood_decay_pct": {
+        "treatment_mean": -1.29,
+        "control_mean": -3.6,
+        "treatment_std": 2.86,
+        "control_std": 3.51,
+        "t_stat": 0.8842,
+        "p_value": 0.428408,
+        "cohen_d": 0.7219,
+        "ci_95": [
+          -2.81,
+          7.43
+        ],
+        "significant": false
+      },
+      "三链Mamba3_val_ch_acc": {
+        "treatment_mean": 46.69,
+        "control_mean": 47.16,
+        "treatment_std": 2.75,
+        "control_std": 3.41,
+        "t_stat": -0.1874,
+        "p_value": 0.860859,
+        "cohen_d": -0.153,
+        "ci_95": [
+          -5.42,
+          4.48
+        ],
+        "significant": false
+      },
+      "三链Mamba3_ood_ch_acc": {
+        "treatment_mean": 46.13,
+        "control_mean": 46.36,
+        "treatment_std": 3.84,
+        "control_std": 3.16,
+        "t_stat": -0.0824,
+        "p_value": 0.938415,
+        "cohen_d": -0.0673,
+        "ci_95": [
+          -5.86,
+          5.39
+        ],
+        "significant": false
+      },
+      "三链Mamba3_ood_decay_pct": {
+        "treatment_mean": -1.29,
+        "control_mean": -1.66,
+        "treatment_std": 2.86,
+        "control_std": 1.94,
+        "t_stat": 0.1821,
+        "p_value": 0.865491,
+        "cohen_d": 0.1487,
+        "ci_95": [
+          -3.55,
+          4.27
+        ],
+        "significant": false
+      }
+    },
+    "goal_n6_k4": {
+      "Transformer_val_ch_acc": {
+        "treatment_mean": 60.23,
+        "control_mean": 10.71,
+        "treatment_std": 1.86,
+        "control_std": 0.02,
+        "t_stat": 46.2273,
+        "p_value": 0.000467,
+        "cohen_d": 37.7444,
+        "ci_95": [
+          47.41,
+          51.61
+        ],
+        "significant": true
+      },
+      "Transformer_ood_ch_acc": {
+        "treatment_mean": 61.17,
+        "control_mean": 10.99,
+        "treatment_std": 0.53,
+        "control_std": 0.27,
+        "t_stat": 145.4685,
+        "p_value": 1e-06,
+        "cohen_d": 118.7745,
+        "ci_95": [
+          49.5,
+          50.85
+        ],
+        "significant": true
+      },
+      "Transformer_ood_decay_pct": {
+        "treatment_mean": 1.61,
+        "control_mean": 2.61,
+        "treatment_std": 2.36,
+        "control_std": 2.5,
+        "t_stat": -0.5009,
+        "p_value": 0.642837,
+        "cohen_d": -0.409,
+        "ci_95": [
+          -4.88,
+          2.89
+        ],
+        "significant": false
+      },
+      "Mamba3单链_val_ch_acc": {
+        "treatment_mean": 60.23,
+        "control_mean": 10.76,
+        "treatment_std": 1.86,
+        "control_std": 0.1,
+        "t_stat": 46.1137,
+        "p_value": 0.000453,
+        "cohen_d": 37.6516,
+        "ci_95": [
+          47.36,
+          51.57
+        ],
+        "significant": true
+      },
+      "Mamba3单链_ood_ch_acc": {
+        "treatment_mean": 61.17,
+        "control_mean": 10.61,
+        "treatment_std": 0.53,
+        "control_std": 0.11,
+        "t_stat": 160.9614,
+        "p_value": 1.8e-05,
+        "cohen_d": 131.4245,
+        "ci_95": [
+          49.94,
+          51.18
+        ],
+        "significant": true
+      },
+      "Mamba3单链_ood_decay_pct": {
+        "treatment_mean": 1.61,
+        "control_mean": -1.38,
+        "treatment_std": 2.36,
+        "control_std": 1.97,
+        "t_stat": 1.6852,
+        "p_value": 0.16943,
+        "cohen_d": 1.376,
+        "ci_95": [
+          -0.49,
+          6.47
+        ],
+        "significant": false
+      },
+      "三链Mamba3_val_ch_acc": {
+        "treatment_mean": 60.23,
+        "control_mean": 57.21,
+        "treatment_std": 1.86,
+        "control_std": 3.12,
+        "t_stat": 1.4417,
+        "p_value": 0.238129,
+        "cohen_d": 1.1772,
+        "ci_95": [
+          -1.09,
+          7.13
+        ],
+        "significant": false
+      },
+      "三链Mamba3_ood_ch_acc": {
+        "treatment_mean": 61.17,
+        "control_mean": 56.72,
+        "treatment_std": 0.53,
+        "control_std": 4.12,
+        "t_stat": 1.8537,
+        "p_value": 0.200856,
+        "cohen_d": 1.5135,
+        "ci_95": [
+          -0.26,
+          9.16
+        ],
+        "significant": false
+      },
+      "三链Mamba3_ood_decay_pct": {
+        "treatment_mean": 1.61,
+        "control_mean": -0.91,
+        "treatment_std": 2.36,
+        "control_std": 1.82,
+        "t_stat": 1.4661,
+        "p_value": 0.22086,
+        "cohen_d": 1.1971,
+        "ci_95": [
+          -0.85,
+          5.9
+        ],
+        "significant": false
+      }
+    },
+    "goal_n6_k4_p6": {
+      "Transformer_val_ch_acc": {
+        "treatment_mean": 63.5,
+        "control_mean": 11.08,
+        "treatment_std": 2.27,
+        "control_std": 0.09,
+        "t_stat": 39.9626,
+        "p_value": 0.000614,
+        "cohen_d": 32.6294,
+        "ci_95": [
+          49.85,
+          54.99
+        ],
+        "significant": true
+      },
+      "Transformer_ood_ch_acc": {
+        "treatment_mean": 61.8,
+        "control_mean": 10.61,
+        "treatment_std": 1.53,
+        "control_std": 0.57,
+        "t_stat": 54.3858,
+        "p_value": 5.7e-05,
+        "cohen_d": 44.4058,
+        "ci_95": [
+          49.35,
+          53.04
+        ],
+        "significant": true
+      },
+      "Transformer_ood_decay_pct": {
+        "treatment_mean": -2.63,
+        "control_mean": -4.23,
+        "treatment_std": 2.32,
+        "control_std": 4.39,
+        "t_stat": 0.5587,
+        "p_value": 0.614912,
+        "cohen_d": 0.4562,
+        "ci_95": [
+          -4.01,
+          7.21
+        ],
+        "significant": false
+      },
+      "Mamba3单链_val_ch_acc": {
+        "treatment_mean": 63.5,
+        "control_mean": 11.07,
+        "treatment_std": 2.27,
+        "control_std": 0.09,
+        "t_stat": 39.9683,
+        "p_value": 0.000615,
+        "cohen_d": 32.634,
+        "ci_95": [
+          49.85,
+          54.99
+        ],
+        "significant": true
+      },
+      "Mamba3单链_ood_ch_acc": {
+        "treatment_mean": 61.8,
+        "control_mean": 10.61,
+        "treatment_std": 1.53,
+        "control_std": 0.58,
+        "t_stat": 54.2686,
+        "p_value": 5.4e-05,
+        "cohen_d": 44.3101,
+        "ci_95": [
+          49.34,
+          53.04
+        ],
+        "significant": true
+      },
+      "Mamba3单链_ood_decay_pct": {
+        "treatment_mean": -2.63,
+        "control_mean": -4.21,
+        "treatment_std": 2.32,
+        "control_std": 4.5,
+        "t_stat": 0.5434,
+        "p_value": 0.624751,
+        "cohen_d": 0.4436,
+        "ci_95": [
+          -4.14,
+          7.31
+        ],
+        "significant": false
+      },
+      "三链Mamba3_val_ch_acc": {
+        "treatment_mean": 63.5,
+        "control_mean": 58.93,
+        "treatment_std": 2.27,
+        "control_std": 8.64,
+        "t_stat": 0.8846,
+        "p_value": 0.45983,
+        "cohen_d": 0.7222,
+        "ci_95": [
+          -5.55,
+          14.67
+        ],
+        "significant": false
+      },
+      "三链Mamba3_ood_ch_acc": {
+        "treatment_mean": 61.8,
+        "control_mean": 61.18,
+        "treatment_std": 1.53,
+        "control_std": 7.43,
+        "t_stat": 0.1416,
+        "p_value": 0.899488,
+        "cohen_d": 0.1156,
+        "ci_95": [
+          -7.96,
+          9.2
+        ],
+        "significant": false
+      },
+      "三链Mamba3_ood_decay_pct": {
+        "treatment_mean": -2.63,
+        "control_mean": 4.1,
+        "treatment_std": 2.32,
+        "control_std": 2.94,
+        "t_stat": -3.1148,
+        "p_value": 0.038354,
+        "cohen_d": -2.5432,
+        "ci_95": [
+          -10.96,
+          -2.49
+        ],
+        "significant": true
+      }
+    },
+    "goal_n6_k8": {
+      "Transformer_val_ch_acc": {
+        "treatment_mean": 49.74,
+        "control_mean": 6.12,
+        "treatment_std": 6.26,
+        "control_std": 0.1,
+        "t_stat": 12.0748,
+        "p_value": 0.006776,
+        "cohen_d": 9.859,
+        "ci_95": [
+          36.54,
+          50.7
+        ],
+        "significant": true
+      },
+      "Transformer_ood_ch_acc": {
+        "treatment_mean": 49.76,
+        "control_mean": 5.9,
+        "treatment_std": 6.61,
+        "control_std": 0.23,
+        "t_stat": 11.4859,
+        "p_value": 0.00743,
+        "cohen_d": 9.3782,
+        "ci_95": [
+          36.38,
+          51.35
+        ],
+        "significant": true
+      },
+      "Transformer_ood_decay_pct": {
+        "treatment_mean": -0.03,
+        "control_mean": -3.62,
+        "treatment_std": 0.81,
+        "control_std": 2.43,
+        "t_stat": 2.4248,
+        "p_value": 0.113248,
+        "cohen_d": 1.9799,
+        "ci_95": [
+          0.69,
+          6.49
+        ],
+        "significant": false
+      },
+      "Mamba3单链_val_ch_acc": {
+        "treatment_mean": 49.74,
+        "control_mean": 6.02,
+        "treatment_std": 6.26,
+        "control_std": 0.02,
+        "t_stat": 12.1049,
+        "p_value": 0.006755,
+        "cohen_d": 9.8836,
+        "ci_95": [
+          36.65,
+          50.81
+        ],
+        "significant": true
+      },
+      "Mamba3单链_ood_ch_acc": {
+        "treatment_mean": 49.76,
+        "control_mean": 5.9,
+        "treatment_std": 6.61,
+        "control_std": 0.18,
+        "t_stat": 11.4879,
+        "p_value": 0.007454,
+        "cohen_d": 9.3798,
+        "ci_95": [
+          36.38,
+          51.34
+        ],
+        "significant": true
+      },
+      "Mamba3单链_ood_decay_pct": {
+        "treatment_mean": -0.03,
+        "control_mean": -1.97,
+        "treatment_std": 0.81,
+        "control_std": 2.86,
+        "t_stat": 1.1295,
+        "p_value": 0.361736,
+        "cohen_d": 0.9222,
+        "ci_95": [
+          -1.42,
+          5.3
+        ],
+        "significant": false
+      },
+      "三链Mamba3_val_ch_acc": {
+        "treatment_mean": 49.74,
+        "control_mean": 47.19,
+        "treatment_std": 6.26,
+        "control_std": 4.73,
+        "t_stat": 0.5641,
+        "p_value": 0.604963,
+        "cohen_d": 0.4605,
+        "ci_95": [
+          -6.32,
+          11.43
+        ],
+        "significant": false
+      },
+      "三链Mamba3_ood_ch_acc": {
+        "treatment_mean": 49.76,
+        "control_mean": 47.27,
+        "treatment_std": 6.61,
+        "control_std": 3.84,
+        "t_stat": 0.5641,
+        "p_value": 0.609669,
+        "cohen_d": 0.4606,
+        "ci_95": [
+          -6.16,
+          11.14
+        ],
+        "significant": false
+      },
+      "三链Mamba3_ood_decay_pct": {
+        "treatment_mean": -0.03,
+        "control_mean": 0.31,
+        "treatment_std": 0.81,
+        "control_std": 2.8,
+        "t_stat": -0.2062,
+        "p_value": 0.853223,
+        "cohen_d": -0.1684,
+        "ci_95": [
+          -3.64,
+          2.95
+        ],
+        "significant": false
+      }
+    },
+    "goal_n8_k12": {
+      "Transformer_val_ch_acc": {
+        "treatment_mean": 51.45,
+        "control_mean": 49.43,
+        "treatment_std": 1.64,
+        "control_std": 0.0,
+        "t_stat": 2.1361,
+        "p_value": 0.166176,
+        "cohen_d": 1.7441,
+        "ci_95": [
+          0.17,
+          3.87
+        ],
+        "significant": false
+      },
+      "Transformer_ood_ch_acc": {
+        "treatment_mean": 52.18,
+        "control_mean": 50.57,
+        "treatment_std": 1.49,
+        "control_std": 0.0,
+        "t_stat": 1.8735,
+        "p_value": 0.201861,
+        "cohen_d": 1.5297,
+        "ci_95": [
+          -0.07,
+          3.3
+        ],
+        "significant": false
+      },
+      "Transformer_ood_decay_pct": {
+        "treatment_mean": 1.43,
+        "control_mean": 2.3,
+        "treatment_std": 0.33,
+        "control_std": 0.0,
+        "t_stat": -4.5705,
+        "p_value": 0.044686,
+        "cohen_d": -3.7318,
+        "ci_95": [
+          -1.24,
+          -0.5
+        ],
+        "significant": true
+      },
+      "Mamba3单链_val_ch_acc": {
+        "treatment_mean": 51.45,
+        "control_mean": 48.59,
+        "treatment_std": 1.64,
+        "control_std": 1.43,
+        "t_stat": 2.279,
+        "p_value": 0.086107,
+        "cohen_d": 1.8608,
+        "ci_95": [
+          0.4,
+          5.32
+        ],
+        "significant": false
+      },
+      "Mamba3单链_ood_ch_acc": {
+        "treatment_mean": 52.18,
+        "control_mean": 50.03,
+        "treatment_std": 1.49,
+        "control_std": 0.91,
+        "t_stat": 2.1299,
+        "p_value": 0.114459,
+        "cohen_d": 1.7391,
+        "ci_95": [
+          0.17,
+          4.13
+        ],
+        "significant": false
+      },
+      "Mamba3单链_ood_decay_pct": {
+        "treatment_mean": 1.43,
+        "control_mean": 2.99,
+        "treatment_std": 0.33,
+        "control_std": 1.18,
+        "t_stat": -2.2091,
+        "p_value": 0.140461,
+        "cohen_d": -1.8037,
+        "ci_95": [
+          -2.94,
+          -0.18
+        ],
+        "significant": false
+      },
+      "三链Mamba3_val_ch_acc": {
+        "treatment_mean": 51.45,
+        "control_mean": 49.77,
+        "treatment_std": 1.64,
+        "control_std": 3.34,
+        "t_stat": 0.7811,
+        "p_value": 0.493318,
+        "cohen_d": 0.6378,
+        "ci_95": [
+          -2.53,
+          5.88
+        ],
+        "significant": false
+      },
+      "三链Mamba3_ood_ch_acc": {
+        "treatment_mean": 52.18,
+        "control_mean": 50.91,
+        "treatment_std": 1.49,
+        "control_std": 2.62,
+        "t_stat": 0.7318,
+        "p_value": 0.514585,
+        "cohen_d": 0.5975,
+        "ci_95": [
+          -2.14,
+          4.68
+        ],
+        "significant": false
+      },
+      "三链Mamba3_ood_decay_pct": {
+        "treatment_mean": 1.43,
+        "control_mean": 2.36,
+        "treatment_std": 0.33,
+        "control_std": 2.17,
+        "t_stat": -0.7368,
+        "p_value": 0.534994,
+        "cohen_d": -0.6016,
+        "ci_95": [
+          -3.42,
+          1.55
+        ],
+        "significant": false
+      }
+    },
+    "goal_n8_k4": {
+      "Transformer_val_ch_acc": {
+        "treatment_mean": 59.68,
+        "control_mean": 11.48,
+        "treatment_std": 1.87,
+        "control_std": 0.28,
+        "t_stat": 44.2243,
+        "p_value": 0.000382,
+        "cohen_d": 36.109,
+        "ci_95": [
+          46.07,
+          50.34
+        ],
+        "significant": true
+      },
+      "Transformer_ood_ch_acc": {
+        "treatment_mean": 60.69,
+        "control_mean": 10.78,
+        "treatment_std": 2.41,
+        "control_std": 0.59,
+        "t_stat": 34.86,
+        "p_value": 0.000418,
+        "cohen_d": 28.4631,
+        "ci_95": [
+          47.11,
+          52.72
+        ],
+        "significant": true
+      },
+      "Transformer_ood_decay_pct": {
+        "treatment_mean": 1.67,
+        "control_mean": -6.18,
+        "treatment_std": 1.59,
+        "control_std": 3.01,
+        "t_stat": 4.0001,
+        "p_value": 0.02746,
+        "cohen_d": 3.2661,
+        "ci_95": [
+          4.0,
+          11.7
+        ],
+        "significant": true
+      },
+      "Mamba3单链_val_ch_acc": {
+        "treatment_mean": 59.68,
+        "control_mean": 11.54,
+        "treatment_std": 1.87,
+        "control_std": 0.37,
+        "t_stat": 43.8154,
+        "p_value": 0.000318,
+        "cohen_d": 35.7751,
+        "ci_95": [
+          45.99,
+          50.3
+        ],
+        "significant": true
+      },
+      "Mamba3单链_ood_ch_acc": {
+        "treatment_mean": 60.69,
+        "control_mean": 10.77,
+        "treatment_std": 2.41,
+        "control_std": 0.56,
+        "t_stat": 34.9532,
+        "p_value": 0.000441,
+        "cohen_d": 28.5392,
+        "ci_95": [
+          47.12,
+          52.72
+        ],
+        "significant": true
+      },
+      "Mamba3单链_ood_decay_pct": {
+        "treatment_mean": 1.67,
+        "control_mean": -6.71,
+        "treatment_std": 1.59,
+        "control_std": 1.86,
+        "t_stat": 5.9429,
+        "p_value": 0.00435,
+        "cohen_d": 4.8524,
+        "ci_95": [
+          5.62,
+          11.15
+        ],
+        "significant": true
+      },
+      "三链Mamba3_val_ch_acc": {
+        "treatment_mean": 59.68,
+        "control_mean": 61.51,
+        "treatment_std": 1.87,
+        "control_std": 4.24,
+        "t_stat": -0.6824,
+        "p_value": 0.548083,
+        "cohen_d": -0.5572,
+        "ci_95": [
+          -7.07,
+          3.42
+        ],
+        "significant": false
+      },
+      "三链Mamba3_ood_ch_acc": {
+        "treatment_mean": 60.69,
+        "control_mean": 64.23,
+        "treatment_std": 2.41,
+        "control_std": 4.06,
+        "t_stat": -1.3002,
+        "p_value": 0.277963,
+        "cohen_d": -1.0616,
+        "ci_95": [
+          -8.88,
+          1.8
+        ],
+        "significant": false
+      },
+      "三链Mamba3_ood_decay_pct": {
+        "treatment_mean": 1.67,
+        "control_mean": 4.46,
+        "treatment_std": 1.59,
+        "control_std": 0.64,
+        "t_stat": -2.8179,
+        "p_value": 0.07742,
+        "cohen_d": -2.3008,
+        "ci_95": [
+          -4.72,
+          -0.85
+        ],
+        "significant": false
+      }
+    },
+    "goal_n8_k8": {
+      "Transformer_val_ch_acc": {
+        "treatment_mean": 55.38,
+        "control_mean": 32.56,
+        "treatment_std": 3.1,
+        "control_std": 23.8,
+        "t_stat": 1.6468,
+        "p_value": 0.237285,
+        "cohen_d": 1.3446,
+        "ci_95": [
+          -4.34,
+          49.99
+        ],
+        "significant": false
+      },
+      "Transformer_ood_ch_acc": {
+        "treatment_mean": 54.55,
+        "control_mean": 34.95,
+        "treatment_std": 2.72,
+        "control_std": 25.21,
+        "t_stat": 1.3383,
+        "p_value": 0.310086,
+        "cohen_d": 1.0927,
+        "ci_95": [
+          -9.1,
+          48.29
+        ],
+        "significant": false
+      },
+      "Transformer_ood_decay_pct": {
+        "treatment_mean": -1.48,
+        "control_mean": 6.49,
+        "treatment_std": 0.66,
+        "control_std": 6.96,
+        "t_stat": -1.9736,
+        "p_value": 0.184904,
+        "cohen_d": -1.6114,
+        "ci_95": [
+          -15.89,
+          -0.05
+        ],
+        "significant": false
+      },
+      "Mamba3单链_val_ch_acc": {
+        "treatment_mean": 55.38,
+        "control_mean": 26.81,
+        "treatment_std": 3.1,
+        "control_std": 23.32,
+        "t_stat": 2.1035,
+        "p_value": 0.165743,
+        "cohen_d": 1.7175,
+        "ci_95": [
+          1.95,
+          55.18
+        ],
+        "significant": false
+      },
+      "Mamba3单链_ood_ch_acc": {
+        "treatment_mean": 54.55,
+        "control_mean": 27.07,
+        "treatment_std": 2.72,
+        "control_std": 24.28,
+        "t_stat": 1.9478,
+        "p_value": 0.187666,
+        "cohen_d": 1.5904,
+        "ci_95": [
+          -0.17,
+          55.13
+        ],
+        "significant": false
+      },
+      "Mamba3单链_ood_decay_pct": {
+        "treatment_mean": -1.48,
+        "control_mean": -0.82,
+        "treatment_std": 0.66,
+        "control_std": 3.26,
+        "t_stat": -0.3452,
+        "p_value": 0.760626,
+        "cohen_d": -0.2819,
+        "ci_95": [
+          -4.43,
+          3.1
+        ],
+        "significant": false
+      },
+      "三链Mamba3_val_ch_acc": {
+        "treatment_mean": 55.38,
+        "control_mean": 57.38,
+        "treatment_std": 3.1,
+        "control_std": 0.31,
+        "t_stat": -1.1128,
+        "p_value": 0.37973,
+        "cohen_d": -0.9086,
+        "ci_95": [
+          -5.53,
+          1.53
+        ],
+        "significant": false
+      },
+      "三链Mamba3_ood_ch_acc": {
+        "treatment_mean": 54.55,
+        "control_mean": 58.38,
+        "treatment_std": 2.72,
+        "control_std": 0.24,
+        "t_stat": -2.426,
+        "p_value": 0.134137,
+        "cohen_d": -1.9809,
+        "ci_95": [
+          -6.92,
+          -0.74
+        ],
+        "significant": false
+      },
+      "三链Mamba3_ood_decay_pct": {
+        "treatment_mean": -1.48,
+        "control_mean": 1.73,
+        "treatment_std": 0.66,
+        "control_std": 0.54,
+        "t_stat": -6.5074,
+        "p_value": 0.003244,
+        "cohen_d": -5.3132,
+        "ci_95": [
+          -4.18,
+          -2.24
+        ],
+        "significant": true
+      }
+    },
+    "goal_n8_k8_p6": {
+      "Transformer_val_ch_acc": {
+        "treatment_mean": 57.16,
+        "control_mean": 28.4,
+        "treatment_std": 0.14,
+        "control_std": 22.32,
+        "t_stat": 2.2311,
+        "p_value": 0.155375,
+        "cohen_d": 1.8217,
+        "ci_95": [
+          3.49,
+          54.01
+        ],
+        "significant": false
+      },
+      "Transformer_ood_ch_acc": {
+        "treatment_mean": 58.1,
+        "control_mean": 34.94,
+        "treatment_std": 0.28,
+        "control_std": 25.42,
+        "t_stat": 1.5783,
+        "p_value": 0.255206,
+        "cohen_d": 1.2887,
+        "ci_95": [
+          -5.6,
+          51.94
+        ],
+        "significant": false
+      },
+      "Transformer_ood_decay_pct": {
+        "treatment_mean": 1.66,
+        "control_mean": 22.41,
+        "treatment_std": 0.68,
+        "control_std": 30.21,
+        "t_stat": -1.1899,
+        "p_value": 0.356078,
+        "cohen_d": -0.9716,
+        "ci_95": [
+          -54.95,
+          13.43
+        ],
+        "significant": false
+      },
+      "Mamba3单链_val_ch_acc": {
+        "treatment_mean": 57.16,
+        "control_mean": 6.12,
+        "treatment_std": 0.14,
+        "control_std": 0.46,
+        "t_stat": 182.5706,
+        "p_value": 6e-06,
+        "cohen_d": 149.0682,
+        "ci_95": [
+          50.49,
+          51.59
+        ],
+        "significant": true
+      },
+      "Mamba3单链_ood_ch_acc": {
+        "treatment_mean": 58.1,
+        "control_mean": 5.87,
+        "treatment_std": 0.28,
+        "control_std": 0.17,
+        "t_stat": 271.7523,
+        "p_value": 0.0,
+        "cohen_d": 221.8848,
+        "ci_95": [
+          51.86,
+          52.61
+        ],
+        "significant": true
+      },
+      "Mamba3单链_ood_decay_pct": {
+        "treatment_mean": 1.66,
+        "control_mean": -3.81,
+        "treatment_std": 0.68,
+        "control_std": 4.41,
+        "t_stat": 2.1242,
+        "p_value": 0.161844,
+        "cohen_d": 1.7344,
+        "ci_95": [
+          0.42,
+          10.52
+        ],
+        "significant": false
+      },
+      "三链Mamba3_val_ch_acc": {
+        "treatment_mean": 57.16,
+        "control_mean": 57.06,
+        "treatment_std": 0.14,
+        "control_std": 1.34,
+        "t_stat": 0.1285,
+        "p_value": 0.909274,
+        "cohen_d": 0.1049,
+        "ci_95": [
+          -1.42,
+          1.62
+        ],
+        "significant": false
+      },
+      "三链Mamba3_ood_ch_acc": {
+        "treatment_mean": 58.1,
+        "control_mean": 57.39,
+        "treatment_std": 0.28,
+        "control_std": 1.43,
+        "t_stat": 0.8487,
+        "p_value": 0.479737,
+        "cohen_d": 0.693,
+        "ci_95": [
+          -0.93,
+          2.36
+        ],
+        "significant": false
+      },
+      "三链Mamba3_ood_decay_pct": {
+        "treatment_mean": 1.66,
+        "control_mean": 0.58,
+        "treatment_std": 0.68,
+        "control_std": 0.83,
+        "t_stat": 1.7383,
+        "p_value": 0.160116,
+        "cohen_d": 1.4194,
+        "ci_95": [
+          -0.14,
+          2.29
+        ],
+        "significant": false
+      }
+    },
+    "rand_n12_k12": {
+      "Transformer_val_ch_acc": {
+        "treatment_mean": 55.85,
+        "control_mean": 51.98,
+        "treatment_std": 0.13,
+        "control_std": 0.0,
+        "t_stat": 50.6702,
+        "p_value": 0.000389,
+        "cohen_d": 41.372,
+        "ci_95": [
+          3.72,
+          4.02
+        ],
+        "significant": true
+      },
+      "Transformer_ood_ch_acc": {
+        "treatment_mean": 56.33,
+        "control_mean": 53.08,
+        "treatment_std": 0.03,
+        "control_std": 0.0,
+        "t_stat": 184.0687,
+        "p_value": 3e-05,
+        "cohen_d": 150.2915,
+        "ci_95": [
+          3.21,
+          3.28
+        ],
+        "significant": true
+      },
+      "Transformer_ood_decay_pct": {
+        "treatment_mean": 0.85,
+        "control_mean": 2.11,
+        "treatment_std": 0.24,
+        "control_std": 0.0,
+        "t_stat": -9.0,
+        "p_value": 0.012122,
+        "cohen_d": -7.3485,
+        "ci_95": [
+          -1.53,
+          -0.99
+        ],
+        "significant": true
+      },
+      "Mamba3单链_val_ch_acc": {
+        "treatment_mean": 55.85,
+        "control_mean": 51.98,
+        "treatment_std": 0.13,
+        "control_std": 0.0,
+        "t_stat": 50.6702,
+        "p_value": 0.000389,
+        "cohen_d": 41.372,
+        "ci_95": [
+          3.72,
+          4.02
+        ],
+        "significant": true
+      },
+      "Mamba3单链_ood_ch_acc": {
+        "treatment_mean": 56.33,
+        "control_mean": 53.08,
+        "treatment_std": 0.03,
+        "control_std": 0.0,
+        "t_stat": 184.0687,
+        "p_value": 3e-05,
+        "cohen_d": 150.2915,
+        "ci_95": [
+          3.21,
+          3.28
+        ],
+        "significant": true
+      },
+      "Mamba3单链_ood_decay_pct": {
+        "treatment_mean": 0.85,
+        "control_mean": 2.11,
+        "treatment_std": 0.24,
+        "control_std": 0.0,
+        "t_stat": -9.0,
+        "p_value": 0.012122,
+        "cohen_d": -7.3485,
+        "ci_95": [
+          -1.53,
+          -0.99
+        ],
+        "significant": true
+      },
+      "三链Mamba3_val_ch_acc": {
+        "treatment_mean": 55.85,
+        "control_mean": 55.55,
+        "treatment_std": 0.13,
+        "control_std": 0.06,
+        "t_stat": 3.6203,
+        "p_value": 0.043348,
+        "cohen_d": 2.956,
+        "ci_95": [
+          0.14,
+          0.46
+        ],
+        "significant": true
+      },
+      "三链Mamba3_ood_ch_acc": {
+        "treatment_mean": 56.33,
+        "control_mean": 56.58,
+        "treatment_std": 0.03,
+        "control_std": 0.05,
+        "t_stat": -7.2795,
+        "p_value": 0.00413,
+        "cohen_d": -5.9437,
+        "ci_95": [
+          -0.32,
+          -0.19
+        ],
+        "significant": true
+      },
+      "三链Mamba3_ood_decay_pct": {
+        "treatment_mean": 0.85,
+        "control_mean": 1.86,
+        "treatment_std": 0.24,
+        "control_std": 0.04,
+        "t_stat": -7.1181,
+        "p_value": 0.016599,
+        "cohen_d": -5.8119,
+        "ci_95": [
+          -1.29,
+          -0.73
+        ],
+        "significant": true
+      }
+    },
+    "rand_n12_k8": {
+      "Transformer_val_ch_acc": {
+        "treatment_mean": 59.36,
+        "control_mean": 53.99,
+        "treatment_std": 0.14,
+        "control_std": 0.0,
+        "t_stat": 68.7558,
+        "p_value": 0.000211,
+        "cohen_d": 56.1389,
+        "ci_95": [
+          5.22,
+          5.52
+        ],
+        "significant": true
+      },
+      "Transformer_ood_ch_acc": {
+        "treatment_mean": 59.47,
+        "control_mean": 55.32,
+        "treatment_std": 0.09,
+        "control_std": 0.0,
+        "t_stat": 77.2984,
+        "p_value": 0.000167,
+        "cohen_d": 63.1139,
+        "ci_95": [
+          4.04,
+          4.25
+        ],
+        "significant": true
+      },
+      "Transformer_ood_decay_pct": {
+        "treatment_mean": 0.18,
+        "control_mean": 2.46,
+        "treatment_std": 0.38,
+        "control_std": 0.0,
+        "t_stat": -10.2965,
+        "p_value": 0.009301,
+        "cohen_d": -8.407,
+        "ci_95": [
+          -2.71,
+          -1.85
+        ],
+        "significant": true
+      },
+      "Mamba3单链_val_ch_acc": {
+        "treatment_mean": 59.36,
+        "control_mean": 53.99,
+        "treatment_std": 0.14,
+        "control_std": 0.0,
+        "t_stat": 68.7558,
+        "p_value": 0.000211,
+        "cohen_d": 56.1389,
+        "ci_95": [
+          5.22,
+          5.52
+        ],
+        "significant": true
+      },
+      "Mamba3单链_ood_ch_acc": {
+        "treatment_mean": 59.47,
+        "control_mean": 55.32,
+        "treatment_std": 0.09,
+        "control_std": 0.0,
+        "t_stat": 77.2984,
+        "p_value": 0.000167,
+        "cohen_d": 63.1139,
+        "ci_95": [
+          4.04,
+          4.25
+        ],
+        "significant": true
+      },
+      "Mamba3单链_ood_decay_pct": {
+        "treatment_mean": 0.18,
+        "control_mean": 2.46,
+        "treatment_std": 0.38,
+        "control_std": 0.0,
+        "t_stat": -10.2965,
+        "p_value": 0.009301,
+        "cohen_d": -8.407,
+        "ci_95": [
+          -2.71,
+          -1.85
+        ],
+        "significant": true
+      },
+      "三链Mamba3_val_ch_acc": {
+        "treatment_mean": 59.36,
+        "control_mean": 59.0,
+        "treatment_std": 0.14,
+        "control_std": 0.29,
+        "t_stat": 1.9445,
+        "p_value": 0.152067,
+        "cohen_d": 1.5877,
+        "ci_95": [
+          -0.0,
+          0.72
+        ],
+        "significant": false
+      },
+      "三链Mamba3_ood_ch_acc": {
+        "treatment_mean": 59.47,
+        "control_mean": 60.0,
+        "treatment_std": 0.09,
+        "control_std": 0.23,
+        "t_stat": -3.7864,
+        "p_value": 0.039948,
+        "cohen_d": -3.0916,
+        "ci_95": [
+          -0.81,
+          -0.26
+        ],
+        "significant": true
+      },
+      "三链Mamba3_ood_decay_pct": {
+        "treatment_mean": 0.18,
+        "control_mean": 1.7,
+        "treatment_std": 0.38,
+        "control_std": 0.45,
+        "t_stat": -4.4625,
+        "p_value": 0.011724,
+        "cohen_d": -3.6436,
+        "ci_95": [
+          -2.18,
+          -0.85
+        ],
+        "significant": true
+      }
+    },
+    "rand_n6_k12": {
+      "Transformer_val_ch_acc": {
+        "treatment_mean": 49.38,
+        "control_mean": 30.19,
+        "treatment_std": 1.0,
+        "control_std": 23.15,
+        "t_stat": 1.4341,
+        "p_value": 0.287536,
+        "cohen_d": 1.171,
+        "ci_95": [
+          -7.03,
+          45.4
+        ],
+        "significant": false
+      },
+      "Transformer_ood_ch_acc": {
+        "treatment_mean": 48.24,
+        "control_mean": 29.13,
+        "treatment_std": 1.93,
+        "control_std": 22.63,
+        "t_stat": 1.4571,
+        "p_value": 0.280728,
+        "cohen_d": 1.1897,
+        "ci_95": [
+          -6.6,
+          44.82
+        ],
+        "significant": false
+      },
+      "Transformer_ood_decay_pct": {
+        "treatment_mean": -2.34,
+        "control_mean": -3.34,
+        "treatment_std": 1.92,
+        "control_std": 3.38,
+        "t_stat": 0.4442,
+        "p_value": 0.685484,
+        "cohen_d": 0.3627,
+        "ci_95": [
+          -3.4,
+          5.39
+        ],
+        "significant": false
+      },
+      "Mamba3单链_val_ch_acc": {
+        "treatment_mean": 49.38,
+        "control_mean": 26.57,
+        "treatment_std": 1.0,
+        "control_std": 21.43,
+        "t_stat": 1.8419,
+        "p_value": 0.20628,
+        "cohen_d": 1.5039,
+        "ci_95": [
+          -1.46,
+          47.08
+        ],
+        "significant": false
+      },
+      "Mamba3单链_ood_ch_acc": {
+        "treatment_mean": 48.24,
+        "control_mean": 26.7,
+        "treatment_std": 1.93,
+        "control_std": 20.74,
+        "t_stat": 1.7908,
+        "p_value": 0.213061,
+        "cohen_d": 1.4622,
+        "ci_95": [
+          -2.03,
+          45.11
+        ],
+        "significant": false
+      },
+      "Mamba3单链_ood_decay_pct": {
+        "treatment_mean": -2.34,
+        "control_mean": 6.24,
+        "treatment_std": 1.92,
+        "control_std": 12.38,
+        "t_stat": -1.1864,
+        "p_value": 0.35251,
+        "cohen_d": -0.9687,
+        "ci_95": [
+          -22.76,
+          5.6
+        ],
+        "significant": false
+      },
+      "三链Mamba3_val_ch_acc": {
+        "treatment_mean": 49.38,
+        "control_mean": 50.08,
+        "treatment_std": 1.0,
+        "control_std": 1.83,
+        "t_stat": -0.585,
+        "p_value": 0.598499,
+        "cohen_d": -0.4777,
+        "ci_95": [
+          -3.06,
+          1.65
+        ],
+        "significant": false
+      },
+      "三链Mamba3_ood_ch_acc": {
+        "treatment_mean": 48.24,
+        "control_mean": 49.33,
+        "treatment_std": 1.93,
+        "control_std": 1.81,
+        "t_stat": -0.7135,
+        "p_value": 0.515106,
+        "cohen_d": -0.5826,
+        "ci_95": [
+          -4.08,
+          1.9
+        ],
+        "significant": false
+      },
+      "三链Mamba3_ood_decay_pct": {
+        "treatment_mean": -2.34,
+        "control_mean": -1.5,
+        "treatment_std": 1.92,
+        "control_std": 0.04,
+        "t_stat": -0.7596,
+        "p_value": 0.526761,
+        "cohen_d": -0.6202,
+        "ci_95": [
+          -3.02,
+          1.33
+        ],
+        "significant": false
+      }
+    },
+    "rand_n6_k4": {
+      "Transformer_val_ch_acc": {
+        "treatment_mean": 64.05,
+        "control_mean": 10.51,
+        "treatment_std": 2.3,
+        "control_std": 0.01,
+        "t_stat": 40.2991,
+        "p_value": 0.000615,
+        "cohen_d": 32.9041,
+        "ci_95": [
+          50.94,
+          56.14
+        ],
+        "significant": true
+      },
+      "Transformer_ood_ch_acc": {
+        "treatment_mean": 64.96,
+        "control_mean": 10.08,
+        "treatment_std": 2.36,
+        "control_std": 0.03,
+        "t_stat": 40.2137,
+        "p_value": 0.000616,
+        "cohen_d": 32.8343,
+        "ci_95": [
+          52.21,
+          57.55
+        ],
+        "significant": true
+      },
+      "Transformer_ood_decay_pct": {
+        "treatment_mean": 1.43,
+        "control_mean": -4.03,
+        "treatment_std": 0.23,
+        "control_std": 0.25,
+        "t_stat": 27.3709,
+        "p_value": 1.1e-05,
+        "cohen_d": 22.3483,
+        "ci_95": [
+          5.07,
+          5.85
+        ],
+        "significant": true
+      },
+      "Mamba3单链_val_ch_acc": {
+        "treatment_mean": 64.05,
+        "control_mean": 10.5,
+        "treatment_std": 2.3,
+        "control_std": 0.01,
+        "t_stat": 40.3012,
+        "p_value": 0.000615,
+        "cohen_d": 32.9058,
+        "ci_95": [
+          50.94,
+          56.15
+        ],
+        "significant": true
+      },
+      "Mamba3单链_ood_ch_acc": {
+        "treatment_mean": 64.96,
+        "control_mean": 10.08,
+        "treatment_std": 2.36,
+        "control_std": 0.04,
+        "t_stat": 40.2146,
+        "p_value": 0.000616,
+        "cohen_d": 32.835,
+        "ci_95": [
+          52.21,
+          57.56
+        ],
+        "significant": true
+      },
+      "Mamba3单链_ood_decay_pct": {
+        "treatment_mean": 1.43,
+        "control_mean": -4.05,
+        "treatment_std": 0.23,
+        "control_std": 0.35,
+        "t_stat": 22.6506,
+        "p_value": 6.3e-05,
+        "cohen_d": 18.4941,
+        "ci_95": [
+          5.01,
+          5.95
+        ],
+        "significant": true
+      },
+      "三链Mamba3_val_ch_acc": {
+        "treatment_mean": 64.05,
+        "control_mean": 62.14,
+        "treatment_std": 2.3,
+        "control_std": 4.12,
+        "t_stat": 0.6995,
+        "p_value": 0.53257,
+        "cohen_d": 0.5712,
+        "ci_95": [
+          -3.44,
+          7.25
+        ],
+        "significant": false
+      },
+      "三链Mamba3_ood_ch_acc": {
+        "treatment_mean": 64.96,
+        "control_mean": 62.94,
+        "treatment_std": 2.36,
+        "control_std": 4.16,
+        "t_stat": 0.7298,
+        "p_value": 0.515734,
+        "cohen_d": 0.5959,
+        "ci_95": [
+          -3.4,
+          7.43
+        ],
+        "significant": false
+      },
+      "三链Mamba3_ood_decay_pct": {
+        "treatment_mean": 1.43,
+        "control_mean": 1.29,
+        "treatment_std": 0.23,
+        "control_std": 0.25,
+        "t_stat": 0.7202,
+        "p_value": 0.51149,
+        "cohen_d": 0.588,
+        "ci_95": [
+          -0.25,
+          0.53
+        ],
+        "significant": false
+      }
+    },
+    "rand_n6_k8": {
+      "Transformer_val_ch_acc": {
+        "treatment_mean": 47.51,
+        "control_mean": 21.42,
+        "treatment_std": 6.89,
+        "control_std": 26.81,
+        "t_stat": 1.6324,
+        "p_value": 0.229668,
+        "cohen_d": 1.3328,
+        "ci_95": [
+          -5.24,
+          57.42
+        ],
+        "significant": false
+      },
+      "Transformer_ood_ch_acc": {
+        "treatment_mean": 47.96,
+        "control_mean": 21.64,
+        "treatment_std": 5.93,
+        "control_std": 27.42,
+        "t_stat": 1.6253,
+        "p_value": 0.235001,
+        "cohen_d": 1.3271,
+        "ci_95": [
+          -5.42,
+          58.06
+        ],
+        "significant": false
+      },
+      "Transformer_ood_decay_pct": {
+        "treatment_mean": 1.19,
+        "control_mean": -0.76,
+        "treatment_std": 2.94,
+        "control_std": 3.57,
+        "t_stat": 0.7309,
+        "p_value": 0.506737,
+        "cohen_d": 0.5968,
+        "ci_95": [
+          -3.28,
+          7.19
+        ],
+        "significant": false
+      },
+      "Mamba3单链_val_ch_acc": {
+        "treatment_mean": 47.51,
+        "control_mean": 11.43,
+        "treatment_std": 6.89,
+        "control_std": 5.76,
+        "t_stat": 6.9618,
+        "p_value": 0.002509,
+        "cohen_d": 5.6843,
+        "ci_95": [
+          25.92,
+          46.23
+        ],
+        "significant": true
+      },
+      "Mamba3单链_ood_ch_acc": {
+        "treatment_mean": 47.96,
+        "control_mean": 12.34,
+        "treatment_std": 5.93,
+        "control_std": 6.74,
+        "t_stat": 6.8768,
+        "p_value": 0.002485,
+        "cohen_d": 5.6149,
+        "ci_95": [
+          25.47,
+          45.78
+        ],
+        "significant": true
+      },
+      "Mamba3单链_ood_decay_pct": {
+        "treatment_mean": 1.19,
+        "control_mean": 5.57,
+        "treatment_std": 2.94,
+        "control_std": 9.65,
+        "t_stat": -0.7523,
+        "p_value": 0.519484,
+        "cohen_d": -0.6143,
+        "ci_95": [
+          -15.8,
+          7.04
+        ],
+        "significant": false
+      },
+      "三链Mamba3_val_ch_acc": {
+        "treatment_mean": 47.51,
+        "control_mean": 47.19,
+        "treatment_std": 6.89,
+        "control_std": 3.8,
+        "t_stat": 0.0697,
+        "p_value": 0.948654,
+        "cohen_d": 0.0569,
+        "ci_95": [
+          -8.59,
+          9.22
+        ],
+        "significant": false
+      },
+      "三链Mamba3_ood_ch_acc": {
+        "treatment_mean": 47.96,
+        "control_mean": 47.51,
+        "treatment_std": 5.93,
+        "control_std": 4.22,
+        "t_stat": 0.1071,
+        "p_value": 0.92038,
+        "cohen_d": 0.0875,
+        "ci_95": [
+          -7.78,
+          8.68
+        ],
+        "significant": false
+      },
+      "三链Mamba3_ood_decay_pct": {
+        "treatment_mean": 1.19,
+        "control_mean": 0.62,
+        "treatment_std": 2.94,
+        "control_std": 0.93,
+        "t_stat": 0.3178,
+        "p_value": 0.776267,
+        "cohen_d": 0.2595,
+        "ci_95": [
+          -2.93,
+          4.06
+        ],
+        "significant": false
+      }
+    },
+    "rand_n8_k12": {
+      "Transformer_val_ch_acc": {
+        "treatment_mean": 54.1,
+        "control_mean": 51.27,
+        "treatment_std": 0.09,
+        "control_std": 0.0,
+        "t_stat": 56.2264,
+        "p_value": 0.000316,
+        "cohen_d": 45.9087,
+        "ci_95": [
+          2.73,
+          2.93
+        ],
+        "significant": true
+      },
+      "Transformer_ood_ch_acc": {
+        "treatment_mean": 54.55,
+        "control_mean": 51.39,
+        "treatment_std": 0.06,
+        "control_std": 0.0,
+        "t_stat": 86.0909,
+        "p_value": 0.000135,
+        "cohen_d": 70.2929,
+        "ci_95": [
+          3.08,
+          3.23
+        ],
+        "significant": true
+      },
+      "Transformer_ood_decay_pct": {
+        "treatment_mean": 0.83,
+        "control_mean": 0.24,
+        "treatment_std": 0.25,
+        "control_std": 0.0,
+        "t_stat": 4.0602,
+        "p_value": 0.055645,
+        "cohen_d": 3.3152,
+        "ci_95": [
+          0.3,
+          0.87
+        ],
+        "significant": false
+      },
+      "Mamba3单链_val_ch_acc": {
+        "treatment_mean": 54.1,
+        "control_mean": 51.27,
+        "treatment_std": 0.09,
+        "control_std": 0.0,
+        "t_stat": 56.2264,
+        "p_value": 0.000316,
+        "cohen_d": 45.9087,
+        "ci_95": [
+          2.73,
+          2.93
+        ],
+        "significant": true
+      },
+      "Mamba3单链_ood_ch_acc": {
+        "treatment_mean": 54.55,
+        "control_mean": 51.39,
+        "treatment_std": 0.06,
+        "control_std": 0.0,
+        "t_stat": 86.0909,
+        "p_value": 0.000135,
+        "cohen_d": 70.2929,
+        "ci_95": [
+          3.08,
+          3.23
+        ],
+        "significant": true
+      },
+      "Mamba3单链_ood_decay_pct": {
+        "treatment_mean": 0.83,
+        "control_mean": 0.24,
+        "treatment_std": 0.25,
+        "control_std": 0.0,
+        "t_stat": 4.0602,
+        "p_value": 0.055645,
+        "cohen_d": 3.3152,
+        "ci_95": [
+          0.3,
+          0.87
+        ],
+        "significant": false
+      },
+      "三链Mamba3_val_ch_acc": {
+        "treatment_mean": 54.1,
+        "control_mean": 53.93,
+        "treatment_std": 0.09,
+        "control_std": 1.07,
+        "t_stat": 0.2754,
+        "p_value": 0.808582,
+        "cohen_d": 0.2248,
+        "ci_95": [
+          -1.04,
+          1.38
+        ],
+        "significant": false
+      },
+      "三链Mamba3_ood_ch_acc": {
+        "treatment_mean": 54.55,
+        "control_mean": 53.84,
+        "treatment_std": 0.06,
+        "control_std": 1.15,
+        "t_stat": 1.0673,
+        "p_value": 0.397037,
+        "cohen_d": 0.8714,
+        "ci_95": [
+          -0.59,
+          2.01
+        ],
+        "significant": false
+      },
+      "三链Mamba3_ood_decay_pct": {
+        "treatment_mean": 0.83,
+        "control_mean": -0.18,
+        "treatment_std": 0.25,
+        "control_std": 0.18,
+        "t_stat": 5.6857,
+        "p_value": 0.006347,
+        "cohen_d": 4.6423,
+        "ci_95": [
+          0.66,
+          1.36
+        ],
+        "significant": true
+      }
+    },
+    "rand_n8_k4": {
+      "Transformer_val_ch_acc": {
+        "treatment_mean": 67.75,
+        "control_mean": 10.51,
+        "treatment_std": 0.12,
+        "control_std": 0.07,
+        "t_stat": 730.2702,
+        "p_value": 0.0,
+        "cohen_d": 596.2632,
+        "ci_95": [
+          57.09,
+          57.4
+        ],
+        "significant": true
+      },
+      "Transformer_ood_ch_acc": {
+        "treatment_mean": 68.16,
+        "control_mean": 10.3,
+        "treatment_std": 0.09,
+        "control_std": 0.02,
+        "t_stat": 1109.0897,
+        "p_value": 0.0,
+        "cohen_d": 905.568,
+        "ci_95": [
+          57.76,
+          57.97
+        ],
+        "significant": true
+      },
+      "Transformer_ood_decay_pct": {
+        "treatment_mean": 0.61,
+        "control_mean": -2.04,
+        "treatment_std": 0.2,
+        "control_std": 0.43,
+        "t_stat": 9.6008,
+        "p_value": 0.002971,
+        "cohen_d": 7.839,
+        "ci_95": [
+          2.11,
+          3.2
+        ],
+        "significant": true
+      },
+      "Mamba3单链_val_ch_acc": {
+        "treatment_mean": 67.75,
+        "control_mean": 10.52,
+        "treatment_std": 0.12,
+        "control_std": 0.05,
+        "t_stat": 782.1176,
+        "p_value": 0.0,
+        "cohen_d": 638.5964,
+        "ci_95": [
+          57.09,
+          57.38
+        ],
+        "significant": true
+      },
+      "Mamba3单链_ood_ch_acc": {
+        "treatment_mean": 68.16,
+        "control_mean": 10.29,
+        "treatment_std": 0.09,
+        "control_std": 0.03,
+        "t_stat": 1102.5516,
+        "p_value": 0.0,
+        "cohen_d": 900.2296,
+        "ci_95": [
+          57.77,
+          57.98
+        ],
+        "significant": true
+      },
+      "Mamba3单链_ood_decay_pct": {
+        "treatment_mean": 0.61,
+        "control_mean": -2.16,
+        "treatment_std": 0.2,
+        "control_std": 0.27,
+        "t_stat": 14.2557,
+        "p_value": 0.000215,
+        "cohen_d": 11.6398,
+        "ci_95": [
+          2.39,
+          3.15
+        ],
+        "significant": true
+      },
+      "三链Mamba3_val_ch_acc": {
+        "treatment_mean": 67.75,
+        "control_mean": 66.18,
+        "treatment_std": 0.12,
+        "control_std": 1.4,
+        "t_stat": 1.9455,
+        "p_value": 0.189362,
+        "cohen_d": 1.5885,
+        "ci_95": [
+          -0.01,
+          3.16
+        ],
+        "significant": false
+      },
+      "三链Mamba3_ood_ch_acc": {
+        "treatment_mean": 68.16,
+        "control_mean": 66.87,
+        "treatment_std": 0.09,
+        "control_std": 1.32,
+        "t_stat": 1.6958,
+        "p_value": 0.230923,
+        "cohen_d": 1.3846,
+        "ci_95": [
+          -0.2,
+          2.79
+        ],
+        "significant": false
+      },
+      "三链Mamba3_ood_decay_pct": {
+        "treatment_mean": 0.61,
+        "control_mean": 1.04,
+        "treatment_std": 0.2,
+        "control_std": 0.38,
+        "t_stat": -1.736,
+        "p_value": 0.17867,
+        "cohen_d": -1.4174,
+        "ci_95": [
+          -0.92,
+          0.06
+        ],
+        "significant": false
+      }
+    },
+    "rand_n8_k8": {
+      "Transformer_val_ch_acc": {
+        "treatment_mean": 59.09,
+        "control_mean": 21.83,
+        "treatment_std": 0.1,
+        "control_std": 28.1,
+        "t_stat": 2.2969,
+        "p_value": 0.148459,
+        "cohen_d": 1.8754,
+        "ci_95": [
+          5.47,
+          69.05
+        ],
+        "significant": false
+      },
+      "Transformer_ood_ch_acc": {
+        "treatment_mean": 59.68,
+        "control_mean": 22.29,
+        "treatment_std": 0.02,
+        "control_std": 28.11,
+        "t_stat": 2.304,
+        "p_value": 0.147745,
+        "cohen_d": 1.8812,
+        "ci_95": [
+          5.58,
+          69.2
+        ],
+        "significant": false
+      },
+      "Transformer_ood_decay_pct": {
+        "treatment_mean": 1.01,
+        "control_mean": 5.72,
+        "treatment_std": 0.18,
+        "control_std": 8.38,
+        "t_stat": -0.9746,
+        "p_value": 0.432459,
+        "cohen_d": -0.7958,
+        "ci_95": [
+          -14.2,
+          4.77
+        ],
+        "significant": false
+      },
+      "Mamba3单链_val_ch_acc": {
+        "treatment_mean": 59.09,
+        "control_mean": 31.6,
+        "treatment_std": 0.1,
+        "control_std": 7.58,
+        "t_stat": 6.2814,
+        "p_value": 0.0244,
+        "cohen_d": 5.1288,
+        "ci_95": [
+          18.91,
+          36.06
+        ],
+        "significant": true
+      },
+      "Mamba3单链_ood_ch_acc": {
+        "treatment_mean": 59.68,
+        "control_mean": 41.26,
+        "treatment_std": 0.02,
+        "control_std": 2.12,
+        "t_stat": 15.0181,
+        "p_value": 0.004401,
+        "cohen_d": 12.2622,
+        "ci_95": [
+          16.02,
+          20.82
+        ],
+        "significant": true
+      },
+      "Mamba3单链_ood_decay_pct": {
+        "treatment_mean": 1.01,
+        "control_mean": 34.7,
+        "treatment_std": 0.18,
+        "control_std": 26.66,
+        "t_stat": -2.1889,
+        "p_value": 0.160044,
+        "cohen_d": -1.7872,
+        "ci_95": [
+          -63.87,
+          -3.52
+        ],
+        "significant": false
+      },
+      "三链Mamba3_val_ch_acc": {
+        "treatment_mean": 59.09,
+        "control_mean": 58.61,
+        "treatment_std": 0.1,
+        "control_std": 1.1,
+        "t_stat": 0.7436,
+        "p_value": 0.533555,
+        "cohen_d": 0.6072,
+        "ci_95": [
+          -0.77,
+          1.72
+        ],
+        "significant": false
+      },
+      "三链Mamba3_ood_ch_acc": {
+        "treatment_mean": 59.68,
+        "control_mean": 58.74,
+        "treatment_std": 0.02,
+        "control_std": 0.98,
+        "t_stat": 1.6574,
+        "p_value": 0.239175,
+        "cohen_d": 1.3533,
+        "ci_95": [
+          -0.17,
+          2.04
+        ],
+        "significant": false
+      },
+      "三链Mamba3_ood_decay_pct": {
+        "treatment_mean": 1.01,
+        "control_mean": 0.22,
+        "treatment_std": 0.18,
+        "control_std": 0.26,
+        "t_stat": 4.2934,
+        "p_value": 0.01711,
+        "cohen_d": 3.5055,
+        "ci_95": [
+          0.43,
+          1.14
+        ],
+        "significant": true
+      }
+    }
+  },
+  "summary": {
+    "Transformer_val_ch_acc": {
+      "treatment_mean": 57.62,
+      "control_mean": 30.07,
+      "n_treatment": 96,
+      "n_control": 96,
+      "t_stat": 11.8572,
+      "p_value": 0.0,
+      "cohen_d": 1.7114,
+      "ci_95": [
+        23.0,
+        32.1
+      ],
+      "significant": true
+    },
+    "Transformer_ood_ch_acc": {
+      "treatment_mean": 57.95,
+      "control_mean": 30.86,
+      "n_treatment": 96,
+      "n_control": 96,
+      "t_stat": 11.4042,
+      "p_value": 0.0,
+      "cohen_d": 1.646,
+      "ci_95": [
+        22.43,
+        31.74
+      ],
+      "significant": true
+    },
+    "Transformer_ood_decay_pct": {
+      "treatment_mean": 0.54,
+      "control_mean": 2.75,
+      "n_treatment": 96,
+      "n_control": 96,
+      "t_stat": -1.2238,
+      "p_value": 0.223994,
+      "cohen_d": -0.1766,
+      "ci_95": [
+        -5.75,
+        1.33
+      ],
+      "significant": false
+    },
+    "Mamba3单链_val_ch_acc": {
+      "treatment_mean": 57.62,
+      "control_mean": 29.99,
+      "n_treatment": 96,
+      "n_control": 96,
+      "t_stat": 12.4602,
+      "p_value": 0.0,
+      "cohen_d": 1.7985,
+      "ci_95": [
+        23.28,
+        31.98
+      ],
+      "significant": true
+    },
+    "Mamba3单链_ood_ch_acc": {
+      "treatment_mean": 57.95,
+      "control_mean": 30.67,
+      "n_treatment": 96,
+      "n_control": 96,
+      "t_stat": 12.0602,
+      "p_value": 0.0,
+      "cohen_d": 1.7407,
+      "ci_95": [
+        22.84,
+        31.71
+      ],
+      "significant": true
+    },
+    "Mamba3单链_ood_decay_pct": {
+      "treatment_mean": 0.54,
+      "control_mean": 2.83,
+      "n_treatment": 96,
+      "n_control": 96,
+      "t_stat": -1.4609,
+      "p_value": 0.147268,
+      "cohen_d": -0.2109,
+      "ci_95": [
+        -5.35,
+        0.78
+      ],
+      "significant": false
+    },
+    "三链Mamba3_val_ch_acc": {
+      "treatment_mean": 57.62,
+      "control_mean": 56.91,
+      "n_treatment": 96,
+      "n_control": 96,
+      "t_stat": 0.8301,
+      "p_value": 0.407525,
+      "cohen_d": 0.1198,
+      "ci_95": [
+        -0.97,
+        2.39
+      ],
+      "significant": false
+    },
+    "三链Mamba3_ood_ch_acc": {
+      "treatment_mean": 57.95,
+      "control_mean": 57.14,
+      "n_treatment": 96,
+      "n_control": 96,
+      "t_stat": 0.9232,
+      "p_value": 0.357066,
+      "cohen_d": 0.1333,
+      "ci_95": [
+        -0.91,
+        2.53
+      ],
+      "significant": false
+    },
+    "三链Mamba3_ood_decay_pct": {
+      "treatment_mean": 0.54,
+      "control_mean": 0.41,
+      "n_treatment": 96,
+      "n_control": 96,
+      "t_stat": 0.4839,
+      "p_value": 0.629055,
+      "cohen_d": 0.0698,
+      "ci_95": [
+        -0.42,
+        0.69
+      ],
+      "significant": false
+    }
+  },
+  "bp_alpha": {}
+}

@@ -1,181 +1,272 @@
-# ===== Large binaries (never commit) =====
-*.pt
-*.npz
-*.pth
-*.ckpt
-*.bin
-*.onnx
-
-# ===== Exception: include OOD test data for reproducibility (6.2M, 72 files) =====
-!data/ood_T150/
-!data/ood_T150/**
-
-# ===== Data: exclude large/generated, keep OOD test set + scripts =====
-data/data/
-data/data_cache/
-data/ood_T200_noise/
-data/ood_T250_mask/
-data_split/
-data_cache/
-
-# ===== Results: exclude checkpoints, keep JSON metrics (for reproducibility) =====
-results_wsl/**/*.pt
-results_wsl/**/*.npz
-results/
-runs/
-killer_experiments/
-
-# ===== Python cache =====
+# ===== Python =====
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
 .pytest_cache/
+.eggs/
 *.egg-info/
 
-# ===== Logs =====
-*.log
-*.out
-*.err
-
-# ===== Environment / IDE =====
-.vscode/
-.idea/
-.trae/
-
-# ===== API Keys (Never commit!) =====
+# ===== 环境 =====
 .env
 .env.*
+!.env.example
+venv/
+.venv/
+
+# ===== IDE =====
+.vscode/
+.idea/
 *.swp
 *.swo
-.DS_Store
+
+# ===== 数据 =====
+data_battle32/
+data/ood_T150/
+*.npz
+*.pt
+*.pth
+*.ckpt
+
+# ===== 日志 =====
+*.log
+nohup.out
+battle32_c500_log.txt
+
+# ===== Conda =====
+CUsersAdministrator/
+
+# ===== OS =====
 Thumbs.db
+.DS_Store
 
-# ===== Temp files =====
+# ===== 临时/敏感脚本 =====
+
+# C500 服务器编排脚本
+c500_deploy.py
+c500_diag.py
+c500_restart*.py
+c500_kill.py
+c500_monitor.py
+c500_logtail.py
+c500_post_reboot.py
+c500_progress.py
+c500_unstick.py
+c500_watchdog.py
+c500_wait_boot.py
+c500_iotest.py
+c500_gputest.py
+c500_mamba3test2.py
+c500_patch_ref.py
+c500_upload_mamba.py
+c500_ssh_reboot.py
+c500_sysrq_reboot.py
+c500_status.txt
+_c500_*.py
+
+# 基准测试临时脚本
+_bp_v2_mini.py
+_bp_v2_quick_compare.py
+_test_bp*.py
+_smoke_*.py
+bp_v2_mini_results.json
+
+# 含 API key 的脚本
+ask_deepseek.py
+ask_d_plan.py
+ask_ds*.py
+ask_ctm_jepa.py
+
+# 测试/调试脚本
+simple_test*.py
+test_plink*.py
+plink_*.txt
+
+# 检查脚本 (保留 check_bad_npz.py)
+check_*.py
+!check_bad_npz.py
+
+# 云端运行/传输脚本
+run_*_cloud.py
+download_*.py
+upload_*.py
+install_*.py
+
+# 监控/清理脚本
+monitor_*.py
+cleanup_*.py
+emergency_cleanup.py
+
+# 远程控制脚本
+remote_control.py
+takeover_install.py
+shutdown_cloud.py
+
+# scripts_sdd 下下划线开头的脚本
+scripts_sdd/_*.py
+
+# 进程文件
+*.pid
+
+# 补丁发送脚本
+send_patch*.py
+
+# 诊断运行脚本
+run_diag*.py
+
+# Shell 临时脚本
+_wait_and_run.sh
+_run_remaining.sh
+_ablation_self_mirror.sh
+
+# 探测/测试脚本
+_mamba2_src.py
+_probe_mamba2.py
+_wsl_speed_test.py
+_count_transformer_params.py
+
+# ===== WSL临时脚本 =====
+wsl_*.sh
+wsl_*.py
+wsl_*.txt
+
+# ===== Battle临时脚本 =====
+battle32_gpu.py
+battle32_console.txt
+battle32_log.txt
+battle32_results.json
+battle32_stats.json
+battle6_*.py
+battle6_*.txt
+battle6_*.json
+battle_royale.py
+battle_wsl.py
+battle_wsl_log.txt
+battle_wsl_results.json
+battle_log.txt
+battle_remaining.py
+battle_results.json
+run_battle*.sh
+
+# ===== 云端实验临时脚本 =====
+run_30m_500_multi_seed.py
+run_700m_1000m.py
+run_all_experiments.py
+run_all_seeds.py
+run_extended.py
+run_final.py
+run_ablation*.py
+run_light_ablation.py
+run_m3_*.py
+run_rerun_failed.py
+run_stage*.py
+run_train*.py
+run_evolve*.py
+run_measure*.py
+run_humaneval*.py
+run_cloud_*.sh
+run_extreme*.sh
+run_full_benchmark.sh
+run_mamba*.sh
+run_A_local.py
+run_C_cloud.py
+run_D_local.py
+
+# ===== 更多临时脚本 =====
 _*.txt
-safe_benchmark.log
+_*.sh
+_*.bat
+_*.ps1
+_*.html
+_*.tar.gz
+_*.zip
+check_plink.ps1
+test_plink.*
+test_*.py
+test_*.sh
+test_*.ps1
+diag*.py
+diag_*.md
+diag_*.txt
+b64_*.txt
+debug_*.py
+fix_*.py
+fix_*.sh
+smoke_*.py
+smoke_*.sh
+probe_*.py
+collect_*.py
+analyze_*.py
+plot_*.py
+gen_*.py
+show_*.py
+find_*.py
+patch_*.py
+status*.py
+wait_*.py
+pack_for_cloud.py
+export_onnx.py
+mamba3_encoder.py
+quick_compare*.py
+quick_check.py
+quick_status.py
+summarize_*.py
+extract_*.py
+add_*.py
+update_v4.py
+regen_figures.py
+generate_*.py
+verify_*.py
+verify_*.sh
+prepare_*.py
+start_*.py
+daemon_*.py
+install_*.sh
+check_*.sh
+check_*.ps1
+setup_mamba3_venv.sh
+build_mamba3*.sh
+make_subset.sh
+clean_zombies.sh
+cleanup.sh
+restart_bench.sh
+smoke_train.sh
+test_import.sh
+test_mamba3*.sh
+test_train*.sh
 
-# ===== Large local artifacts (TeX Live installer, third-party refs, m3 data/snapshots) =====
-# 这些是本地构建/下载产物, 不属于源码, 且体积巨大, 永不提交
-_texlive/
-_mamba3_ref/
-data_split_m3/
-m3_snapshots/
-*.zip
-
-# ===== Stage 3 results: 保留 JSON 指标用于复现, 忽略巨大 checkpoint =====
-results_stage3/**/*.pt
-results_stage3/**/*.npz
-results_stage3/**/*.pth
-results_stage3/**/*.ckpt
-
-# ===== Cloud orchestration scratch (临时编排脚本输出, 与本地 results 重叠) =====
-results_cloud/
-
-# ===== Build / packaging artifacts =====
-build/
-dist/
-*.tar.gz
-*.tgz
-
-# ===== Sub-projects (separate repos) =====
+# ===== 其他不需要的目录 =====
+.trae/
 Alife/
 EchoBot/
 alice/
-
-# ===== Temp scripts and logs =====
-_tmp_*.sh
-_tmp_*.py
-_check_*.py
-_upload_*.py
+killer_experiments/
+m3_snapshots/
+_mamba3_ref/
+_texlive/
 _wsl_setup/
-battle32_*
-battle6_*
-battle_results.json
-battle_log.txt
-b64_*
-api_kimi.py
-c500_*
-diag_*
-debug_*
-daemon_*
-check_auto.py
-check_cloud_env.py
-check_download.py
-check_loss.py
-check_plink.ps1
-dbg_*.txt
-m3_*_output.txt
-*_console.txt
-
-# ===== Debug/temp scripts (one-off experiments) =====
-battle_remaining.py
-battle_royale.py
-battle_wsl.py
-diagnose_serve.py
-download_qwen.py
-download_qwen_v2.py
-fix_torch.py
-install_mamba.py
-install_mamba2.py
-install_mamba_old.py
-install_mamba_src.py
-install_qwen_env.py
-install_step1.py
-monitor_qlora.py
-quick_compare.py
-quick_compare_c500.py
-run_battle32.sh
-run_battle6.sh
-run_battle6_complete.sh
-run_battle_fused.sh
-run_battle_wsl.sh
-run_diag.py
-run_diag_v2.py
-run_diag_v3.py
-run_evolve2.py
-run_humaneval.py
-run_humaneval_v2.py
-run_measure.py
-run_measure2.py
-run_measure3.py
-run_stage2_sdd_transformer_cloud.py
-run_train2.py
-send_patch.py
-send_patch2.py
-send_patch3.py
-simple_test.py
-prepare_humaneval.py
-prepare_humaneval_v2.py
-prepare_project.py
-plink_*.txt
-plink_*.log
-plink_*.py
-demo_reproducible.html
-
-# ===== Experimental sub-projects (may be split later) =====
 survival_sandbox/
 taiwan_strait_sim/
-ssh_run.py
-start_*.py
-stats_analysis.py
-simple_test*.py
-battle_wsl_*
+results/
+results_cloud/
+data/data/
 
-# ===== Session/record files =====
-*.jsonl
-records/
+# ===== 实验结果(大文件) =====
+battle32_c500_log.txt
+battle32_rtx4060_deep_report.txt
+_bp_2000_log.txt
+_bpv2_2000_log.txt
+_transformer_tiny_2000_log.txt
+battle32_console.txt
+battle32_log.txt
+battle_log.txt
 
-# ===== Test/debug scripts (not core) =====
-test_*.py
-test_*.ps1
-test_*.cmd
-trae_submission.html
-simple_test_results.txt
-wsl_*
-upload_phase*
-upload_project.py
-upload_serve.py
-upload_sft_data.py
-verify_*.py
-train_debug.py
+# ===== 临时分析脚本 =====
+_bp_v21_analysis.py
+_bp_v21_final_report.py
+_check_c500.py
+_check_missing.py
+_check_evolve_ready.py
+_check_results_fmt.py
+_upload_*.py
+_tmp_*.sh
